@@ -1,3 +1,18 @@
+# UNIX
+if(UNIX OR CMAKE_HOST_UNIX)
+    # Check UNIX first, MacOS is a kind of UNIX
+    option(HOST_OS_SUPPORTED "Host is supported." ON)
+    option(HOST_LINUX "Host System: UNIX or Likes." ON)
+    set(HOST_SYSTEM_NAME "linux" CACHE INTERNAL "Host OS Name" FORCE)
+endif()
+
+# MacOSX
+if(APPLE OR CMAKE_HOST_APPLE)
+    option(HOST_OS_SUPPORTED "Host is supported." ON)
+    option(HOST_MACOS "Host System: MacOSX." ON)
+    set(HOST_SYSTEM_NAME "macos" CACHE INTERNAL "Host OS Name" FORCE)
+endif()
+
 # Windows
 if(WIN32)
     option(HOST_OS_SUPPORTED "Host is supported." ON)
@@ -21,21 +36,6 @@ if(MINGW OR CMAKE_HOST_SYSTEM_NAME MATCHES "MINGW")
     option(HOST_OS_SUPPORTED "Host is supported." ON)
     option(HOST_WINDOWS_MINGW "Host System: Windows/MinGW." ON)
     set(HOST_SYSTEM_NAME "windows/mingw" CACHE INTERNAL "Host OS Name" FORCE)
-endif()
-
-# UNIX
-if(UNIX OR CMAKE_HOST_UNIX)
-    # Check UNIX first, MacOS is a kind of UNIX
-    option(HOST_OS_SUPPORTED "Host is supported." ON)
-    option(HOST_LINUX "Host System: UNIX or Likes." ON)
-    set(HOST_SYSTEM_NAME "linux" CACHE INTERNAL "Host OS Name" FORCE)
-endif()
-
-# MacOSX
-if(APPLE OR CMAKE_HOST_APPLE)
-    option(HOST_OS_SUPPORTED "Host is supported." ON)
-    option(HOST_MACOS "Host System: MacOSX." ON)
-    set(HOST_SYSTEM_NAME "macos" CACHE INTERNAL "Host OS Name" FORCE)
 endif()
 
 set(HOST_SYSTEM_VERSION

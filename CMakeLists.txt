@@ -6,7 +6,7 @@ set(XBUILD_VERSION_MINOR 0)
 set(XBUILD_VERSION_PATCH 0)
 set(XBUILD_VERSION_TWEAK "release")
 
-option(XBUILD_EXPORT_AS_COMPILER_ARGS "" ON)
+option(XBUILD_EXPORT_AS_COMPILER_ARGS "" OFF)
 
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -28,5 +28,5 @@ include_directories(${CMAKE_BINARY_DIR})
 add_executable(check ${SOURCES})
 # target_link_libraries(check m --verbose)
 
-include(BuildLibok)
-add_dependencies(check libok)
+#include(BuildLibok)
+#add_dependencies(check libok)

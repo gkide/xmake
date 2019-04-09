@@ -179,12 +179,13 @@ function(HostNameUserName user_name host_name)
 endfunction()
 
 function(HostSystemInfo os_name os_version)
-    if(HOST_LINUX)
-        HostSystemInfoLinux(${os_name} ${os_version})
-    elseif(HOST_MACOS)
+    if(HOST_MACOS)
         HostSystemInfoMacosx(${os_name} ${os_version})
-    else()
+    elseif(HOST_WINDOWS OR HOST_WINDOWS_MSYS
+           OR HOST_WINDOWS_MINGW OR HOST_WINDOWS_CYGWIN)
         HostSystemInfoWindows(${os_name} ${os_version})
+    else()
+        HostSystemInfoLinux(${os_name} ${os_version})
     endif()
 endfunction()
 

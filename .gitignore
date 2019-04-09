@@ -1,6 +1,7 @@
 local.mk
 CMakeLists.txt.user
 
+todo/
 .deps/
 build/
 .standard-release/
