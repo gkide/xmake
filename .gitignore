@@ -1,0 +1,6 @@
+local.mk
+CMakeLists.txt.user
+
+.deps/
+build/
+.standard-release/
