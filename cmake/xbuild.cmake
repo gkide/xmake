@@ -34,6 +34,7 @@ include(PreventInTreeBuilds)
 include(CheckHostSystem)
 include(GetGitRepoInfo)
 include(Dependencies)
+#include(PrintCmake)
 
 if(XBUILD_EXPORT_AS_COMPILER_ARGS)
     add_definitions(-DHOST_NAME=\"${HOST_NAME}\")
@@ -89,5 +90,3 @@ if(XBUILD_EXPORT_AS_COMPILER_ARGS)
         add_definitions(-DHOST_BIG_ENDIAN)
     endif()
 endif()
-
-#include(PrintCmake)

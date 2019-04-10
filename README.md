@@ -3,11 +3,92 @@
 cmake & make template for quick project creation!
 
 # Support
-- MacOS
-- Linux & likes
-- Windows/Msys
-- WIndows/MinGW
-- Windows/Cygwin
+
+## MacOS
+
+## Linux & Likes
+
+## Windows/Msys
+
+- HOST_LINUX
+- HOST_WINDOWS
+- HOST_WINDOWS_MSYS
+- HOST_ARCH_64            : little endian
+- HOST_NAME               : 书生
+- HOST_USER               : ThinkPad
+- HOST_ARCH               : x86_64
+- HOST_SYSTEM_NAME        : windows/msys
+- HOST_SYSTEM_VERSION     : 2.8.2(0.313/5/3)
+- HOST_OS_DIST_NAME       : Windows 7
+- HOST_OS_DIST_VERSION    : 6.1.7601
+- XBUILD_VERSION_MAJOR    : 1
+- XBUILD_VERSION_MINOR    : 0
+- XBUILD_VERSION_PATCH    : 0
+- XBUILD_VERSION_TWEAK    : release
+- XBUILD_RELEASE_TYPE     : Debug
+- XBUILD_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
+- XBUILD_RELEASE_TIMESTAMP: 2019-04-10 21:26:52 +0800
+
+## Windows/MinGW32
+
+- HOST_WINDOWS
+- HOST_WINDOWS_MINGW
+- HOST_ARCH_32            : little endian
+- HOST_NAME               : 书生
+- HOST_USER               : ThinkPad
+- HOST_ARCH               : x86
+- HOST_SYSTEM_NAME        : windows/mingw
+- HOST_SYSTEM_VERSION     : 6.1.7601
+- HOST_OS_DIST_NAME       : Windows 7
+- HOST_OS_DIST_VERSION    : 6.1.7601
+- XBUILD_VERSION_MAJOR    : 1
+- XBUILD_VERSION_MINOR    : 0
+- XBUILD_VERSION_PATCH    : 0
+- XBUILD_VERSION_TWEAK    : release
+- XBUILD_RELEASE_TYPE     : Debug
+- XBUILD_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
+- XBUILD_RELEASE_TIMESTAMP: 2019-04-10 21:57:53
+
+## Windows/MinGW64
+
+- HOST_WINDOWS
+- HOST_WINDOWS_MINGW
+- HOST_ARCH_64            : little endian
+- HOST_NAME               : 书生
+- HOST_USER               : ThinkPad
+- HOST_ARCH               : x86_64
+- HOST_SYSTEM_NAME        : windows/mingw
+- HOST_SYSTEM_VERSION     : 6.1.7601
+- HOST_OS_DIST_NAME       : Windows 7
+- HOST_OS_DIST_VERSION    : 6.1.7601
+- XBUILD_VERSION_MAJOR    : 1
+- XBUILD_VERSION_MINOR    : 0
+- XBUILD_VERSION_PATCH    : 0
+- XBUILD_VERSION_TWEAK    : release
+- XBUILD_RELEASE_TYPE     : Debug
+- XBUILD_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
+- XBUILD_RELEASE_TIMESTAMP: 2019-04-10 21:02:43
+
+## Windows/Cygwin
+
+- HOST_LINUX
+- HOST_WINDOWS
+- HOST_WINDOWS_CYGWIN
+- HOST_ARCH_64            : little endian
+- HOST_NAME               : 书生
+- HOST_USER               : ThinkPad
+- HOST_ARCH               : x86_64
+- HOST_SYSTEM_NAME        : windows/cygwin
+- HOST_SYSTEM_VERSION     : 3.0.6(0.338/5/3)
+- HOST_OS_DIST_NAME       : Windows 7
+- HOST_OS_DIST_VERSION    : 6.1.7601
+- XBUILD_VERSION_MAJOR    : 1
+- XBUILD_VERSION_MINOR    : 0
+- XBUILD_VERSION_PATCH    : 0
+- XBUILD_VERSION_TWEAK    : release
+- XBUILD_RELEASE_TYPE     : Debug
+- XBUILD_RELEASE_VERSION  : v1.0.0-release
+- XBUILD_RELEASE_TIMESTAMP: 2019-04-10 21:40:14 +0800
 
 # Support External Project Build
 

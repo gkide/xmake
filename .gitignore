@@ -1,3 +1,4 @@
+*.log
 local.mk
 CMakeLists.txt.user
 
