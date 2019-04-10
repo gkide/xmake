@@ -131,6 +131,19 @@ ifeq ($(IS_VERBOSE), 1)
     CMAKE_ARGS += -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 endif
 
+DEPS_BUILD_TYPE ?= Release
+DEPS_ROOT_DIR ?= $(SOURCE_DIR)/.deps
+CMAKE_ARGS += -DDEPS_ROOT_DIR=$(DEPS_ROOT_DIR)
+CMAKE_ARGS += -DDEPS_BUILD_TYPE=$(DEPS_BUILD_TYPE)
+
+ifneq ($(GIT_PROGRAM),)
+    CMAKE_ARGS += -DGIT_PROGRAM=$(GIT_PROGRAM)
+endif
+
+ifneq ($(MAKE_PROGRAM),)
+    CMAKE_ARGS += -DMAKE_PROGRAM=$(MAKE_PROGRAM)
+endif
+
 ifneq ($(EXTRA_CMAKE_ARGS),)
     CMAKE_ARGS += $(EXTRA_CMAKE_ARGS)
 endif
@@ -158,7 +171,7 @@ clean:
 	$(Q)rm -rf $(BUILD_DIR)
 
 distclean: clean
-	$(Q)rm -rf $(SOURCE_DIR)/.deps
+	$(Q)rm -rf $(DEPS_ROOT_DIR)
 
 PHONY += test
 test: all

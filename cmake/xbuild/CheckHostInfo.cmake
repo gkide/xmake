@@ -97,10 +97,14 @@ function(HostSystemInfoLinux os_name os_version)
 endfunction()
 
 function(HostSystemInfoWindows os_name os_version)
-    set(${os_version} "${CMAKE_HOST_SYSTEM_VERSION}"
-        CACHE INTERNAL "System Version" FORCE)
+    execute_process(COMMAND cmd /c ver
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        OUTPUT_VARIABLE win_ver_val)
 
-    string(SUBSTRING "${CMAKE_HOST_SYSTEM_VERSION}" 0 3 major_version)
+    string(REGEX MATCH "[0-9.]+" win_ver ${win_ver_val})
+    set(${os_version} "${win_ver}" CACHE INTERNAL "System Version" FORCE)
+
+    string(SUBSTRING "${win_ver}" 0 3 major_version)
     if(major_version STREQUAL "6.1")
         set(${os_name} "Windows 7" CACHE INTERNAL "System Name" FORCE)
         return()
@@ -111,13 +115,13 @@ function(HostSystemInfoWindows os_name os_version)
         return()
     endif()
 
-    string(SUBSTRING "${CMAKE_HOST_SYSTEM_VERSION}" 0 4 major_version)
+    string(SUBSTRING "${win_ver}" 0 4 major_version)
     if(major_version STREQUAL "6.10")
         set(${os_name} "Windows 10" CACHE INTERNAL "System Name" FORCE)
         return()
     endif()
 
-    set(${os_name} "Windows" CACHE INTERNAL "Host System Name" FORCE)
+    set(${os_name} "Windows" CACHE INTERNAL "System Name" FORCE)
 endfunction()
 
 function(HostSystemInfoMacosx os_name os_version)

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 2.8.12)
 project(xbuild) # Replace 'xbuild' to the real name
 
 set(XBUILD_VERSION_MAJOR 1)
@@ -28,5 +28,5 @@ include_directories(${CMAKE_BINARY_DIR})
 add_executable(check ${SOURCES})
 # target_link_libraries(check m --verbose)
 
-#include(BuildLibok)
-#add_dependencies(check libok)
+include(BuildLibok)
+add_dependencies(check libok)
