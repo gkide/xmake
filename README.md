@@ -6,6 +6,24 @@ cmake & make template for quick project creation!
 
 ## MacOS
 
+- HOST_LINUX
+- HOST_MACOS
+- HOST_ARCH_64		      : little endian
+- HOST_NAME               : charlie
+- HOST_USER               : BlackMacOS.local
+- HOST_ARCH               : x86_64
+- HOST_SYSTEM_NAME        : macos
+- HOST_SYSTEM_VERSION     : 15.0.0
+- HOST_OS_DIST_NAME       : Mac OS X
+- HOST_OS_DIST_VERSION    : 10.11.1-15B42
+- XBUILD_VERSION_MAJOR    : 1
+- XBUILD_VERSION_MINOR    : 0
+- XBUILD_VERSION_PATCH    : 0
+- XBUILD_VERSION_TWEAK    : release
+- XBUILD_RELEASE_TYPE     : Debug
+- XBUILD_RELEASE_VERSION  : v1.0.0-release~20190411@c13ea86
+- XBUILD_RELEASE_TIMESTAMP: 2019-04-10 21:26:52 +0800
+
 ## Linux & Likes
 
 ## Windows/Msys

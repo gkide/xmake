@@ -8,6 +8,9 @@ endif()
 
 # MacOSX
 if(APPLE OR CMAKE_HOST_APPLE)
+    if(NOT MACOSX_RPATH)
+        set(MACOSX_RPATH ON)
+    endif()
     option(HOST_OS_SUPPORTED "Host is supported." ON)
     option(HOST_MACOS "Host System: MacOSX." ON)
     set(HOST_SYSTEM_NAME "macos" CACHE INTERNAL "Host OS Name" FORCE)

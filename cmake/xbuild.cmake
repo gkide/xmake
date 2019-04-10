@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 2.8.12)
 string(TOUPPER ${PROJECT_NAME} PNUC) # upper project name
 
 string(APPEND ${PNUC}_RELEASE_VERSION "v${${PNUC}_VERSION_MAJOR}")
