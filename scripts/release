@@ -11,7 +11,7 @@ if [ "$REPO_HOOKS" != "" -a -f ${SYNC_RELEASE} ]; then
 fi
 
 if ! $IS_REPO_HOOKS; then
-    echo "GIT hooks path is not repo-hooks, https://github.com/gkide/repo-hooks"
+    echo "GIT hooks is not repo-hooks of https://github.com/gkide/repo-hooks"
     exit 1;
 fi
 
