@@ -29,11 +29,17 @@ foreach(CFGNAME ${CMAKE_CONFIGURATION_TYPES})
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CFGNAME} ${CMAKE_BINARY_DIR}/lib)
 endforeach()
 
+# Change the default cmake value without overriding the user-provided one
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/usr" CACHE PATH "" FORCE)
+endif()
+
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xbuild")
 include(PreventInTreeBuilds)
 include(CheckHostSystem)
 include(GetGitRepoInfo)
+include(InstallHelper)
 include(Dependencies)
 #include(PrintCmake)
 
@@ -91,3 +97,5 @@ if(XBUILD_EXPORT_AS_COMPILER_ARGS)
         add_definitions(-DHOST_BIG_ENDIAN)
     endif()
 endif()
+
+mark_as_advanced(FORCE PNUC)

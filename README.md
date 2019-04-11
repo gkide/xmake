@@ -125,6 +125,31 @@ cmake & make template for quick project creation!
 - XBUILD_RELEASE_VERSION  : v1.0.0-release
 - XBUILD_RELEASE_TIMESTAMP: 2019-04-10 21:40:14 +0800
 
+# `InstallHelper` is cmake install helper for convenience
+
+* `USR_PREFIX` => `${CMAKE_INSTALL_PREFIX}`, install root
+* `USR_BINDIR` => `${CMAKE_INSTALL_PREFIX}/bin`, executable
+* `USR_ETCDIR` => `${CMAKE_INSTALL_PREFIX}/etc`, configuration
+* `USR_DOCDIR` => `${CMAKE_INSTALL_PREFIX}/doc`, documentation
+* `USR_LIBDIR` => `${CMAKE_INSTALL_PREFIX}/lib`, C/C++ library
+* `USR_SHADIR` => `${CMAKE_INSTALL_PREFIX}/share`, share data
+* `USR_PLGDIR` => `${CMAKE_INSTALL_PREFIX}/plugin`, plugin data
+* `USR_INCDIR` => `${CMAKE_INSTALL_PREFIX}/include`, C/C++ header
+
+- `TARGETS` of cmake **executables**, **static libraries**,
+  **shared libraries**, **module libraries**, **import libraries**
+  will be installed into `${USR_BINDIR}` or `${USR_LIBDIR}`
+
+- installs contents of `DIRECTORY` into `DESTINATION` with optional permissions,
+  if not set `FILE_PERMISSIONS`, the default value is **rw-r--r--**,
+  if not set `DIRECTORY_PERMISSIONS` the default value is **rwxr-xr-x**
+
+- install `FILES` into `DESTINATION` with optional `FILE_PERMISSIONS`,
+  if not set, the default value is **rw-r--r--**, rename if set `RENAME`
+
+- install `PROGRAMS` into `DESTINATION` with optional `FILE_PERMISSIONS`,
+  if not set, the default value is **rwxr-xr-x**, rename if set `RENAME`
+
 # Support External Project Build
 
 ## The following values can be set by user if need

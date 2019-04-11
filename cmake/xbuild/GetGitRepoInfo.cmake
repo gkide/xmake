@@ -50,3 +50,5 @@ endif()
 
 message(STATUS "${PROJECT_NAME} Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "${PROJECT_NAME} Release version: ${${PNUC}_RELEASE_VERSION}")
+
+mark_as_advanced(FORCE FOUND_GIT_REPO GIT_REPO_DIR)

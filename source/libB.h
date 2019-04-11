@@ -1,0 +1,1 @@
+void libB(void);

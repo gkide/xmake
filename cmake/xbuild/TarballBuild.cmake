@@ -48,20 +48,20 @@ function(BuildDepsTarBall name)
         EXPECTED_SHA256 "${${BDTB}_SHA256}")
 
     ExternalProject_Add(    ${name}
-    # General
+        # General
         PREFIX              ${DEPS_BUILD_DIR}
         STAMP_DIR           ${DEPS_BUILD_DIR}/${name}-stamp
-    # Download
+        # Download
         DOWNLOAD_DIR        ${DEPS_DOWNLOAD_DIR}
-    # Patch
+        # Patch
         PATCH_COMMAND       "${${BDTB}_PATCH_CMD}"
-    # Configure
+        # Configure
         SOURCE_DIR          ${DEPS_BUILD_DIR}/${name}
         CONFIGURE_COMMAND   "${${BDTB}_CONFIG_CMD}"
-    # Build
+        # Build
         BINARY_DIR          ${DEPS_BUILD_DIR}/${name}
         BUILD_COMMAND       "${${BDTB}_BUILD_CMD}"
-    # Install
+        # Install
         INSTALL_DIR         ${DEPS_INSTALL_DIR}
         INSTALL_COMMAND     "${${BDTB}_INSTALL_CMD}")
 endfunction()

@@ -52,6 +52,8 @@ if(NOT HOST_OS_SUPPORTED)
     message(FATAL_ERROR "${err_msg}")
 endif()
 
+mark_as_advanced(FORCE HOST_OS_SUPPORTED)
+
 # set HOST_ARCH to the normalized name: x86 or x86_64
 # See https://github.com/axr/solar-cmake/blob/master/TargetArch.cmake
 include(CheckSymbolExists)

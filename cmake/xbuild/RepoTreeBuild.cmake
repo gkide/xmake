@@ -39,22 +39,22 @@ function(BuildDepsRepo name)
     set(BUILD_DIR ${DEPS_BUILD_DIR}/${name})
     
     ExternalProject_Add(   ${name}
-    # General
+        # General
         PREFIX             ${DEPS_BUILD_DIR}
         STAMP_DIR          ${BUILD_DIR}-stamp
-    # Download
+        # Download
         DOWNLOAD_DIR       ${DEPS_DOWNLOAD_DIR}
         DOWNLOAD_COMMAND   ${CMAKE_COMMAND}
             -E copy_directory ${REPO_DIR} ${BUILD_DIR}
-    # Patch
+        # Patch
         PATCH_COMMAND       "${${BDTB}_PATCH_CMD}"
-    # Configure
+        # Configure
         SOURCE_DIR         ${BUILD_DIR}
         CONFIGURE_COMMAND  "${${BDTB}_CONFIG_CMD}"
-    # Build
+        # Build
         BINARY_DIR         ${BUILD_DIR}
         BUILD_COMMAND      "${${BDTB}_BUILD_CMD}"
-    # Install
+        # Install
         INSTALL_DIR        ${DEPS_INSTALL_DIR}
         INSTALL_COMMAND    "${${BDTB}_INSTALL_CMD}")
         

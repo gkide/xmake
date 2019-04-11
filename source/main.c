@@ -5,6 +5,8 @@
     #include "config.generated.h"
 #endif
 
+#include "libC.h"
+
 static int is_big_endian(void)
 {
     union
@@ -18,6 +20,8 @@ static int is_big_endian(void)
 
 int main(int argc, char **argv)
 {
+    libC();
+
 #ifdef HOST_LINUX
     printf("HOST_LINUX\n");
 #endif
