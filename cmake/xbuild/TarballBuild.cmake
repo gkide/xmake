@@ -1,6 +1,6 @@
 include(CMakeParseArguments)
 
-function(BuildDepsTarBall name)
+function(BuildDepsTarball name)
     string(TOUPPER ${name} BDTB)
     cmake_parse_arguments(${BDTB} # prefix
         "" # options
