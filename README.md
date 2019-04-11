@@ -26,6 +26,23 @@ cmake & make template for quick project creation!
 
 ## Linux & Likes
 
+- HOST_LINUX
+- HOST_ARCH_64            : little endian
+- HOST_NAME               : charlie
+- HOST_USER               : ThinkPad
+- HOST_ARCH               : x86_64
+- HOST_SYSTEM_NAME        : linux
+- HOST_SYSTEM_VERSION     : 3.16.0-30-generic
+- HOST_OS_DIST_NAME       : Ubuntu
+- HOST_OS_DIST_VERSION    : 14.04
+- XBUILD_VERSION_MAJOR    : 1
+- XBUILD_VERSION_MINOR    : 0
+- XBUILD_VERSION_PATCH    : 0
+- XBUILD_VERSION_TWEAK    : release
+- XBUILD_RELEASE_TYPE     : Debug
+- XBUILD_RELEASE_VERSION  : v1.0.0-release~20190411@a419980
+- XBUILD_RELEASE_TIMESTAMP: 2019-04-10 21:50:38 +0800
+
 ## Windows/Msys
 
 - HOST_LINUX

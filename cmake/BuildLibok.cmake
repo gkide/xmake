@@ -9,9 +9,9 @@ if(true)
 else()
     # Download tarball & build
     BuildDepsTarBall(libok
-        VERSION     1.0.4
-        URL         https://github.com/gkide/ok/archive/v1.0.4.tar.gz
-        SHA256      b001fa83bbe963c32ba952ea2d678f92fe1646fc8b43419386012c0c21046820
+        VERSION     1.0.5
+        URL         https://github.com/gkide/ok/archive/v1.0.5.tar.gz
+        SHA256      28de511c368b27e5e3f1ab2bbdac390495e6c2ed324439cd9eff13b1a6a27485
         BUILD_CMD   ${GNU_MAKE}
             BUILD_TYPE=${DEPS_BUILD_TYPE}
             INSTALL_PERFIX=${DEPS_INSTALL_DIR}
