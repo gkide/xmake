@@ -136,19 +136,18 @@ cmake & make template for quick project creation!
 * `USR_PLGDIR` => `${CMAKE_INSTALL_PREFIX}/plugin`, plugin data
 * `USR_INCDIR` => `${CMAKE_INSTALL_PREFIX}/include`, C/C++ header
 
-- `TARGETS` of cmake **executables**, **static libraries**,
-  **shared libraries**, **module libraries**, **import libraries**
-  will be installed into `${USR_BINDIR}` or `${USR_LIBDIR}`
+- `TARGETS` of cmake **executables**, **static**/**shared**/**module**
+  /**import** libraries will be installed into `${USR_BINDIR}` or `${USR_LIBDIR}`
 
-- installs contents of `DIRECTORY` into `DESTINATION` with optional permissions,
-  if not set `FILE_PERMISSIONS`, the default value is **rw-r--r--**,
-  if not set `DIRECTORY_PERMISSIONS` the default value is **rwxr-xr-x**
+- installs contents of `DIRECTORY` into `DESTINATION` with optional permissions
+  * if not set `FILE_PERMISSIONS`, the default value is **rw-r--r--**,
+  * if not set `DIRECTORY_PERMISSIONS` the default value is **rwxr-xr-x**
 
-- install `FILES` into `DESTINATION` with optional `FILE_PERMISSIONS`,
-  if not set, the default value is **rw-r--r--**, rename if set `RENAME`
+- install `FILES` into `DESTINATION` with optional `FILE_PERMISSIONS`
+  * if not set, the default value is **rw-r--r--**, rename if set `RENAME`
 
-- install `PROGRAMS` into `DESTINATION` with optional `FILE_PERMISSIONS`,
-  if not set, the default value is **rwxr-xr-x**, rename if set `RENAME`
+- install `PROGRAMS` into `DESTINATION` with optional `FILE_PERMISSIONS`
+  * if not set, the default value is **rwxr-xr-x**, rename if set `RENAME`
 
 # Support External Project Build
 
@@ -157,12 +156,12 @@ cmake & make template for quick project creation!
 - `DEPS_ROOT_DIR`, Download & build directory, default is **.deps/**
 - `DEPS_BUILD_TYPE`, External project build type, default is **Release**
 
-- `MAKE_PROGRAM`, The GNU make progame used for external project building. If
-   NOT set, then it will auto detected by cmake from **PATH**, can not missing!
-   Set `GNU_MAKE` if found for user to be used!
-- `GIT_PROGRAM`, The git programe used for clone external project. If NOT set
-   then it will auto detected by cmake from **PATH**, can missing!
-   Set `GIT_PROG` if found for user to be used!
+- `MAKE_PROGRAM`, The GNU make progame used for external project building.
+  * If NOT set, then it will auto detected by cmake from **PATH**,
+    can not missing! Set `GNU_MAKE` if found for user to be used!
+- `GIT_PROGRAM`, The git programe used for clone external project.
+  * If NOT set then it will auto detected by cmake from **PATH**,
+    can missing! Set `GIT_PROG` if found for user to be used!
 
 ## The following values do not recommend to change
 
