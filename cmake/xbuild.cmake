@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.8.12)
-string(TOUPPER ${PROJECT_NAME} PNUC) # upper project name
+string(TOUPPER ${PROJECT_NAME} XBUILD) # upper project name
 
-string(APPEND ${PNUC}_RELEASE_VERSION "v${${PNUC}_VERSION_MAJOR}")
-string(APPEND ${PNUC}_RELEASE_VERSION ".${${PNUC}_VERSION_MINOR}")
-string(APPEND ${PNUC}_RELEASE_VERSION ".${${PNUC}_VERSION_PATCH}")
+string(APPEND ${XBUILD}_RELEASE_VERSION "v${${XBUILD}_VERSION_MAJOR}")
+string(APPEND ${XBUILD}_RELEASE_VERSION ".${${XBUILD}_VERSION_MINOR}")
+string(APPEND ${XBUILD}_RELEASE_VERSION ".${${XBUILD}_VERSION_PATCH}")
 
-if(${PNUC}_VERSION_TWEAK)
-    string(APPEND ${PNUC}_RELEASE_VERSION "-${${PNUC}_VERSION_TWEAK}")
+if(${XBUILD}_VERSION_TWEAK)
+    string(APPEND ${XBUILD}_RELEASE_VERSION "-${${XBUILD}_VERSION_TWEAK}")
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -52,14 +52,14 @@ if(XBUILD_EXPORT_AS_COMPILER_ARGS)
     add_definitions(-DHOST_OS_DIST_NAME=\"${HOST_OS_DIST_NAME}\")
     add_definitions(-DHOST_OS_DIST_VERSION=\"${HOST_OS_DIST_VERSION}\")
 
-    add_definitions(-D${PNUC}_VERSION_MAJOR=${${PNUC}_VERSION_MAJOR})
-    add_definitions(-D${PNUC}_VERSION_MINOR=${${PNUC}_VERSION_MINOR})
-    add_definitions(-D${PNUC}_VERSION_PATCH=${${PNUC}_VERSION_PATCH})
-    add_definitions(-D${PNUC}_VERSION_TWEAK=\"${${PNUC}_VERSION_TWEAK}\")
+    add_definitions(-D${XBUILD}_VERSION_MAJOR=${${XBUILD}_VERSION_MAJOR})
+    add_definitions(-D${XBUILD}_VERSION_MINOR=${${XBUILD}_VERSION_MINOR})
+    add_definitions(-D${XBUILD}_VERSION_PATCH=${${XBUILD}_VERSION_PATCH})
+    add_definitions(-D${XBUILD}_VERSION_TWEAK=\"${${XBUILD}_VERSION_TWEAK}\")
 
-    add_definitions(-D${PNUC}_RELEASE_TYPE=\"${CMAKE_BUILD_TYPE}\")
-    add_definitions(-D${PNUC}_RELEASE_VERSION=\"${${PNUC}_RELEASE_VERSION}\")
-    add_definitions(-D${PNUC}_RELEASE_TIMESTAMP=\"${${PNUC}_RELEASE_TIMESTAMP}\")
+    add_definitions(-D${XBUILD}_RELEASE_TYPE=\"${CMAKE_BUILD_TYPE}\")
+    add_definitions(-D${XBUILD}_RELEASE_VERSION=\"${${XBUILD}_RELEASE_VERSION}\")
+    add_definitions(-D${XBUILD}_RELEASE_TIMESTAMP=\"${${XBUILD}_RELEASE_TIMESTAMP}\")
 
     if(HOST_LINUX)
         add_definitions(-DHOST_LINUX)
@@ -98,4 +98,4 @@ if(XBUILD_EXPORT_AS_COMPILER_ARGS)
     endif()
 endif()
 
-mark_as_advanced(FORCE PNUC)
+mark_as_advanced(FORCE XBUILD)

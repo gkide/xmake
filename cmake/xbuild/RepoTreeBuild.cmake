@@ -4,8 +4,8 @@ function(BuildDepsRepo name)
     string(TOUPPER ${name} BDTB)
     cmake_parse_arguments(${BDTB} # prefix
         "" # options
-        "REPO_URL" # one_value_keywords
-        "PATCH_CMD;CONFIG_CMD;BUILD_CMD;INSTALL_CMD" # multi_value_keywords
+        "REPO_URL" # one value keywords
+        "PATCH_CMD;CONFIG_CMD;BUILD_CMD;INSTALL_CMD" # multi value keywords
         ${ARGN})
 
     if(NOT ${BDTB}_REPO_URL)

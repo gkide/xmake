@@ -4,8 +4,8 @@ function(BuildDepsTarball name)
     string(TOUPPER ${name} BDTB)
     cmake_parse_arguments(${BDTB} # prefix
         "" # options
-        "VERSION;URL;SHA256" # one_value_keywords
-        "PATCH_CMD;CONFIG_CMD;BUILD_CMD;INSTALL_CMD" # multi_value_keywords
+        "VERSION;URL;SHA256" # one value keywords
+        "PATCH_CMD;CONFIG_CMD;BUILD_CMD;INSTALL_CMD" # multi value keywords
         ${ARGN})
 
     if(NOT ${BDTB}_VERSION)

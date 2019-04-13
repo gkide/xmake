@@ -1,20 +1,29 @@
-set(USR_PREFIX ${CMAKE_INSTALL_PREFIX}) # install root
-set(USR_BINDIR ${CMAKE_INSTALL_PREFIX}/bin) # executable
-set(USR_ETCDIR ${CMAKE_INSTALL_PREFIX}/etc) # configuration
-set(USR_DOCDIR ${CMAKE_INSTALL_PREFIX}/doc) # documentation
-set(USR_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib) # C/C++ library
-set(USR_SHADIR ${CMAKE_INSTALL_PREFIX}/share) # share data
-set(USR_PLGDIR ${CMAKE_INSTALL_PREFIX}/plugin) # plugin data
-set(USR_INCDIR ${CMAKE_INSTALL_PREFIX}/include) # C/C++ header
+set(${XBUILD}_PREFIX ${CMAKE_INSTALL_PREFIX}) # install root
+set(${XBUILD}_BINDIR ${CMAKE_INSTALL_PREFIX}/bin) # executable
+set(${XBUILD}_ETCDIR ${CMAKE_INSTALL_PREFIX}/etc) # configuration
+set(${XBUILD}_DOCDIR ${CMAKE_INSTALL_PREFIX}/doc) # documentation
+set(${XBUILD}_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib) # C/C++ library
+set(${XBUILD}_SHADIR ${CMAKE_INSTALL_PREFIX}/share) # share data
+set(${XBUILD}_PLGDIR ${CMAKE_INSTALL_PREFIX}/plugin) # plugin data
+set(${XBUILD}_INCDIR ${CMAKE_INSTALL_PREFIX}/include) # C/C++ header
 
-if(false)
-    message(STATUS "USR_BINDIR=${USR_BINDIR}")
-    message(STATUS "USR_ETCDIR=${USR_ETCDIR}")
-    message(STATUS "USR_DOCDIR=${USR_DOCDIR}")
-    message(STATUS "USR_LIBDIR=${USR_LIBDIR}")
-    message(STATUS "USR_SHADIR=${USR_SHADIR}")
-    message(STATUS "USR_PLGDIR=${USR_PLGDIR}")
-    message(STATUS "USR_INCDIR=${USR_INCDIR}")
+# If installed targets' default RPATH is NOT system implicit link
+# directories, then reset it to the cmake install library directory
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_RPATH}" isSysDir)
+if(NOT XBUILD_SKIP_RPATH_ORIGIN AND "${isSysDir}" STREQUAL "-1")
+    # For installed target's property INSTALL_RPATH
+    # https://www.technovelty.org/linux/exploring-origin.html
+    list(APPEND CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+endif()
+
+if(false) # xbuild debug message
+    message(STATUS "${XBUILD}_BINDIR=${${XBUILD}_BINDIR}")
+    message(STATUS "${XBUILD}_ETCDIR=${${XBUILD}_ETCDIR}")
+    message(STATUS "${XBUILD}_DOCDIR=${${XBUILD}_DOCDIR}")
+    message(STATUS "${XBUILD}_LIBDIR=${${XBUILD}_LIBDIR}")
+    message(STATUS "${XBUILD}_SHADIR=${${XBUILD}_SHADIR}")
+    message(STATUS "${XBUILD}_PLGDIR=${${XBUILD}_PLGDIR}")
+    message(STATUS "${XBUILD}_INCDIR=${${XBUILD}_INCDIR}")
 endif()
 
 # This will create any directories that need to be created in the destination
@@ -71,9 +80,10 @@ function(CreateDestDirWithPerms)
 endfunction()
 
 function(InstallHelper)
-    cmake_parse_arguments(install_helper
-        ""
-        "DESTINATION;DIRECTORY;RENAME"
+    cmake_parse_arguments(install_helper # prefix
+        "" # options
+        "DESTINATION;DIRECTORY;RENAME;DOMAIN" # one value keywords
+        # multi value keywords
         "FILES;PROGRAMS;TARGETS;DIRECTORY_PERMISSIONS;FILE_PERMISSIONS"
         ${ARGN})
 
@@ -109,21 +119,141 @@ function(InstallHelper)
             WORLD_READ WORLD_EXECUTE)
     endif()
 
+    if(install_helper_DOMAIN AND
+       NOT "${install_helper_DOMAIN}" MATCHES "^[A-Za-z0-9]+$")
+        message(FATAL_ERROR "DOMAIN must consist of [A-Za-z0-9]")
+    endif()
+
     if(install_helper_TARGETS)
-        if(install_helper_DESTINATION)
-            set(SUBDIR /${install_helper_DESTINATION})
+        # The default domain for targets is empty
+        set(DomainPrefix ${${XBUILD}_PREFIX})
+        set(DomainBin ${${XBUILD}_BINDIR})
+        set(DomainLib ${${XBUILD}_LIBDIR})
+        set(DomainShare ${${XBUILD}_SHADIR})
+        set(DomainInclude ${${XBUILD}_INCDIR})
+        if(install_helper_DOMAIN)
+            set(DomainPrefix ${${XBUILD}_PREFIX}/${install_helper_DOMAIN})
+            set(DomainBin ${${XBUILD}_BINDIR}/${install_helper_DOMAIN})
+            set(DomainLib ${${XBUILD}_LIBDIR}/${install_helper_DOMAIN})
+            set(DomainShare ${${XBUILD}_SHADIR}/${install_helper_DOMAIN})
+            set(DomainInclude ${${XBUILD}_INCDIR}/${install_helper_DOMAIN})
         endif()
 
         # Create directory with the correct permissions.
-        CreateDestDirWithPerms(DESTINATION ${USR_BINDIR}${SUBDIR})
-        CreateDestDirWithPerms(DESTINATION ${USR_LIBDIR}${SUBDIR})
-        install(TARGETS ${install_helper_TARGETS}
-                # Executables, Shared Libraries(DLL)
-                RUNTIME DESTINATION ${USR_BINDIR}${SUBDIR}
-                # Module Libraries
-                LIBRARY DESTINATION ${USR_LIBDIR}${SUBDIR}
-                # Static Libraries, Import Libraries(DLL)
-                ARCHIVE DESTINATION ${USR_LIBDIR}${SUBDIR})
+        CreateDestDirWithPerms(DESTINATION ${DomainBin})
+        CreateDestDirWithPerms(DESTINATION ${DomainLib})
+
+        string(REGEX REPLACE " +" ";"
+               install_targets "${install_helper_TARGETS}")
+        foreach(target ${install_targets}) # processed target one by one
+            get_target_property(target_type ${target} TYPE)
+            get_target_property(target_resources ${target} RESOURCE)
+            get_target_property(macosx_bundle ${target} MACOSX_BUNDLE)
+
+            set(install_resources)
+            if(target_resources)
+                if(XBUILD_VERBOSE_MESSAGE)
+                    message(STATUS "${target} resources")
+                    string(REGEX REPLACE " +" ";" items "${target_resources}")
+                    string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
+                           resource_directory "${DomainShare}/resource")
+                    foreach(item ${items}) # pretty output message
+                        message(STATUS "* ${item} => ${resource_directory}")
+                    endforeach()
+                endif()
+                CreateDestDirWithPerms(DESTINATION ${DomainShare}/resource)
+                set(install_resources
+                    RESOURCE DESTINATION ${DomainShare}/resource)
+            endif()
+
+            if(target_type STREQUAL EXECUTABLE) # Executable
+                if(HOST_MACOS AND macosx_bundle)
+                    # install(TARGETS ${target}
+                    #    BUNDLE DESTINATION ${DomainPrefix})
+                    message(FATAL_ERROR "MACOSX: Executable")
+                else()
+                    install(TARGETS ${target} ${install_resources}
+                        RUNTIME  DESTINATION ${DomainBin})
+                endif()
+
+                if(XBUILD_VERBOSE_MESSAGE)
+                    string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
+                        domain_directory "${DomainBin}")
+                    message(STATUS "${target} Executable => ${domain_directory}")
+                endif()
+
+                continue()
+            endif()
+
+            if(target_type STREQUAL STATIC_LIBRARY)
+                set(lib_type "Static Library")
+            elseif(target_type STREQUAL SHARED_LIBRARY)
+                set(lib_type "Shared Library")
+            elseif(target_type STREQUAL MODULE_LIBRARY)
+                set(lib_type "Module Library")
+            elseif(target_type STREQUAL INTERFACE_LIBRARY)
+                set(lib_type "Interface Library")
+            endif()
+
+            if(XBUILD_VERBOSE_MESSAGE)
+                string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
+                    domain_directory "${DomainLib}")
+                message(STATUS "${target} ${lib_type} => ${domain_directory}")
+            endif()
+
+            get_target_property(public_headers ${target} PUBLIC_HEADER)
+            get_target_property(private_headers ${target} PRIVATE_HEADER)
+
+            set(install_public_headers)
+            if(public_headers)
+                if(XBUILD_VERBOSE_MESSAGE)
+                    message(STATUS "${target} Library Public Headers")
+                    string(REGEX REPLACE " +" ";" items "${public_headers}")
+                    string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
+                        domain_directory "${DomainInclude}")
+                    foreach(item ${items}) # pretty output message
+                        message(STATUS "* ${item} => ${domain_directory}")
+                    endforeach()
+                endif()
+                CreateDestDirWithPerms(DESTINATION ${DomainInclude})
+                set(install_public_headers
+                    PUBLIC_HEADER DESTINATION ${DomainInclude})
+            endif()
+
+            set(install_private_headers)
+            if(private_headers)
+                if(XBUILD_VERBOSE_MESSAGE)
+                    message(STATUS "${target} Library Private Headers")
+                    string(REGEX REPLACE " +" ";" items "${private_headers}")
+                    string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
+                        domain_directory "${DomainInclude}/private")
+                    foreach(item ${items}) # pretty output message
+                        message(STATUS "* ${item} => ${domain_directory}")
+                    endforeach()
+                endif()
+                CreateDestDirWithPerms(DESTINATION ${DomainInclude}/private)
+                set(install_private_headers
+                    PRIVATE_HEADER DESTINATION ${DomainInclude}/private)
+            endif()
+
+            get_target_property(macosx_framework ${target} FRAMEWORK)
+            if(HOST_MACOS AND macosx_framework)
+                # install(TARGETS ${target}
+                #    FRAMEWORK DESTINATION ${DomainPrefix})
+                message(FATAL_ERROR "MACOSX: framework shared libraries")
+            else()
+                install(TARGETS ${target}
+                    # Shared Library(DLL)
+                    RUNTIME DESTINATION ${DomainBin}
+                    # Module Library, Shared Library(non-DLL)
+                    LIBRARY DESTINATION ${DomainLib}
+                    # Static Library, Shared Import Library(DLL)
+                    ARCHIVE DESTINATION ${DomainLib}
+                    ${install_resources}
+                    ${install_public_headers}
+                    ${install_private_headers})
+            endif()
+        endforeach()
         return()
     endif()
 

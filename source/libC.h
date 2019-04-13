@@ -1,1 +1,0 @@
-void libC(void);
