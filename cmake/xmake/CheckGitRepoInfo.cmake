@@ -31,8 +31,8 @@ endif()
 # must run the following at "include" time, not at function call time,
 # to find the full path to this file(CheckGitRepoInfo.cmake) rather than
 # the path to a calling list file
-get_filename_component(XBUILD_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
-mark_as_advanced(FORCE XBUILD_DIR __CheckGitRepoInfo__)
+get_filename_component(XMAKE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+mark_as_advanced(FORCE XMAKE_DIR __CheckGitRepoInfo__)
 
 function(GetGitRepoDir git_dir)
     if(FORCED_GIT_DIR) # check FORCED_GIT_DIR first
@@ -90,7 +90,7 @@ function(GetGitBranchInfo branch_name commit_sha1)
     # @ONLY
     # - Restrict variable replacement to references of the form @VAR@
     # - This is useful for configuring scripts that use ${VAR} syntax
-    configure_file(${XBUILD_DIR}/CheckGitRepoInfo.cmake.in
+    configure_file(${XMAKE_DIR}/CheckGitRepoInfo.cmake.in
         ${USER_MODULES_DIR}/CheckGitRepoInfo.cmake @ONLY)
     include(${USER_MODULES_DIR}/CheckGitRepoInfo.cmake)
 

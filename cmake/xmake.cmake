@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 2.8.12)
-string(TOUPPER ${PROJECT_NAME} XBUILD) # upper project name
+string(TOUPPER ${PROJECT_NAME} XMAKE) # upper project name
 
-string(APPEND ${XBUILD}_RELEASE_VERSION "v${${XBUILD}_VERSION_MAJOR}")
-string(APPEND ${XBUILD}_RELEASE_VERSION ".${${XBUILD}_VERSION_MINOR}")
-string(APPEND ${XBUILD}_RELEASE_VERSION ".${${XBUILD}_VERSION_PATCH}")
+string(APPEND ${XMAKE}_RELEASE_VERSION "v${${XMAKE}_VERSION_MAJOR}")
+string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_MINOR}")
+string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_PATCH}")
 
-if(${XBUILD}_VERSION_TWEAK)
-    string(APPEND ${XBUILD}_RELEASE_VERSION "-${${XBUILD}_VERSION_TWEAK}")
+if(${XMAKE}_VERSION_TWEAK)
+    string(APPEND ${XMAKE}_RELEASE_VERSION "-${${XMAKE}_VERSION_TWEAK}")
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -35,7 +35,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 # Cmake modules
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xbuild")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")
 include(PreventInTreeBuilds)
 include(CheckHostSystem)
 include(GetGitRepoInfo)
@@ -43,7 +43,7 @@ include(InstallHelper)
 include(Dependencies)
 #include(PrintCmake)
 
-if(XBUILD_EXPORT_AS_COMPILER_ARGS)
+if(XMAKE_EXPORT_AS_COMPILER_ARGS)
     add_definitions(-DHOST_NAME=\"${HOST_NAME}\")
     add_definitions(-DHOST_USER=\"${HOST_USER}\")
     add_definitions(-DHOST_ARCH=\"${HOST_ARCH}\")
@@ -52,14 +52,14 @@ if(XBUILD_EXPORT_AS_COMPILER_ARGS)
     add_definitions(-DHOST_OS_DIST_NAME=\"${HOST_OS_DIST_NAME}\")
     add_definitions(-DHOST_OS_DIST_VERSION=\"${HOST_OS_DIST_VERSION}\")
 
-    add_definitions(-D${XBUILD}_VERSION_MAJOR=${${XBUILD}_VERSION_MAJOR})
-    add_definitions(-D${XBUILD}_VERSION_MINOR=${${XBUILD}_VERSION_MINOR})
-    add_definitions(-D${XBUILD}_VERSION_PATCH=${${XBUILD}_VERSION_PATCH})
-    add_definitions(-D${XBUILD}_VERSION_TWEAK=\"${${XBUILD}_VERSION_TWEAK}\")
+    add_definitions(-D${XMAKE}_VERSION_MAJOR=${${XMAKE}_VERSION_MAJOR})
+    add_definitions(-D${XMAKE}_VERSION_MINOR=${${XMAKE}_VERSION_MINOR})
+    add_definitions(-D${XMAKE}_VERSION_PATCH=${${XMAKE}_VERSION_PATCH})
+    add_definitions(-D${XMAKE}_VERSION_TWEAK=\"${${XMAKE}_VERSION_TWEAK}\")
 
-    add_definitions(-D${XBUILD}_RELEASE_TYPE=\"${CMAKE_BUILD_TYPE}\")
-    add_definitions(-D${XBUILD}_RELEASE_VERSION=\"${${XBUILD}_RELEASE_VERSION}\")
-    add_definitions(-D${XBUILD}_RELEASE_TIMESTAMP=\"${${XBUILD}_RELEASE_TIMESTAMP}\")
+    add_definitions(-D${XMAKE}_RELEASE_TYPE=\"${CMAKE_BUILD_TYPE}\")
+    add_definitions(-D${XMAKE}_RELEASE_VERSION=\"${${XMAKE}_RELEASE_VERSION}\")
+    add_definitions(-D${XMAKE}_RELEASE_TIMESTAMP=\"${${XMAKE}_RELEASE_TIMESTAMP}\")
 
     if(HOST_LINUX)
         add_definitions(-DHOST_LINUX)
@@ -98,4 +98,4 @@ if(XBUILD_EXPORT_AS_COMPILER_ARGS)
     endif()
 endif()
 
-mark_as_advanced(FORCE XBUILD)
+mark_as_advanced(FORCE XMAKE)

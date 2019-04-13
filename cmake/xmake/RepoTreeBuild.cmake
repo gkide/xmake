@@ -37,7 +37,7 @@ function(BuildDepsRepo name)
 
     set(REPO_DIR ${DEPS_DOWNLOAD_DIR}/${name})
     set(BUILD_DIR ${DEPS_BUILD_DIR}/${name})
-    
+
     ExternalProject_Add(   ${name}
         # General
         PREFIX             ${DEPS_BUILD_DIR}
@@ -57,8 +57,8 @@ function(BuildDepsRepo name)
         # Install
         INSTALL_DIR        ${DEPS_INSTALL_DIR}
         INSTALL_COMMAND    "${${BDTB}_INSTALL_CMD}")
-        
-    if(NOT (EXISTS ${REPO_DIR} AND IS_DIRECTORY ${REPO_DIR} 
+
+    if(NOT (EXISTS ${REPO_DIR} AND IS_DIRECTORY ${REPO_DIR}
             AND EXISTS ${REPO_DIR}/.git AND IS_DIRECTORY ${REPO_DIR}/.git))
         ExternalProject_Add_Step(${name} ${name}-repo-clone
             COMMENT "git clone ${${BDTB}_REPO_URL} ${name}"

@@ -1,23 +1,23 @@
-# xbuild
+# xmake
 
 cmake & make template for quick project creation!
 
-- `XBUILD`
-  `XBUILD` variable will auto set to `${PROJECT_NAME}` of uppercase
+- `XMAKE`
+  `XMAKE` variable will auto set to `${PROJECT_NAME}` of uppercase
 
-- `XBUILD_SKIP_RPATH_ORIGIN`
+- `XMAKE_SKIP_RPATH_ORIGIN`
   If **ON**, **RPATH** will be set to `$ORIGIN/../lib`,
   if **OFF**(default), **RPATH** will be set to empty
 
-- `XBUILD_VERBOSE_MESSAGE`
-  If **ON**, do not show verbose xbuild cmake message,
-  if **OFF**(default), show verbose xbuild cmake message
+- `XMAKE_VERBOSE_MESSAGE`
+  If **ON**, do not show verbose xmake cmake message,
+  if **OFF**(default), show verbose xmake cmake message
 
-# Host Support Status for project `xbuild`
+# Host Support Status for project `xmake`
 
 - use cmake `configure_file()` command to get following configurations
-- `XBUILD_EXPORT_AS_COMPILER_ARGS` if **ON**, also export as CC cmd args
-- `XBUILD_EXPORT_AS_COMPILER_ARGS` if **OFF**(default), do not export to CC
+- `XMAKE_EXPORT_AS_COMPILER_ARGS` if **ON**, also export as CC cmd args
+- `XMAKE_EXPORT_AS_COMPILER_ARGS` if **OFF**(default), do not export to CC
 
 ## MacOS
 
@@ -31,13 +31,13 @@ cmake & make template for quick project creation!
 - HOST_SYSTEM_VERSION     : 15.0.0
 - HOST_OS_DIST_NAME       : Mac OS X
 - HOST_OS_DIST_VERSION    : 10.11.1-15B42
-- **${XBUILD}**_VERSION_MAJOR    : 1
-- **${XBUILD}**_VERSION_MINOR    : 0
-- **${XBUILD}**_VERSION_PATCH    : 0
-- **${XBUILD}**_VERSION_TWEAK    : release
-- **${XBUILD}**_RELEASE_TYPE     : Debug
-- **${XBUILD}**_RELEASE_VERSION  : v1.0.0-release~20190411@c13ea86
-- **${XBUILD}**_RELEASE_TIMESTAMP: 2019-04-10 21:26:52 +0800
+- **${XMAKE}**_VERSION_MAJOR    : 1
+- **${XMAKE}**_VERSION_MINOR    : 0
+- **${XMAKE}**_VERSION_PATCH    : 0
+- **${XMAKE}**_VERSION_TWEAK    : release
+- **${XMAKE}**_RELEASE_TYPE     : Debug
+- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release~20190411@c13ea86
+- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:26:52 +0800
 
 ## Linux & Likes
 
@@ -50,13 +50,13 @@ cmake & make template for quick project creation!
 - HOST_SYSTEM_VERSION     : 3.16.0-30-generic
 - HOST_OS_DIST_NAME       : Ubuntu
 - HOST_OS_DIST_VERSION    : 14.04
-- **${XBUILD}**_VERSION_MAJOR    : 1
-- **${XBUILD}**_VERSION_MINOR    : 0
-- **${XBUILD}**_VERSION_PATCH    : 0
-- **${XBUILD}**_VERSION_TWEAK    : release
-- **${XBUILD}**_RELEASE_TYPE     : Debug
-- **${XBUILD}**_RELEASE_VERSION  : v1.0.0-release~20190411@a419980
-- **${XBUILD}**_RELEASE_TIMESTAMP: 2019-04-10 21:50:38 +0800
+- **${XMAKE}**_VERSION_MAJOR    : 1
+- **${XMAKE}**_VERSION_MINOR    : 0
+- **${XMAKE}**_VERSION_PATCH    : 0
+- **${XMAKE}**_VERSION_TWEAK    : release
+- **${XMAKE}**_RELEASE_TYPE     : Debug
+- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release~20190411@a419980
+- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:50:38 +0800
 
 ## Windows/Msys
 
@@ -71,13 +71,13 @@ cmake & make template for quick project creation!
 - HOST_SYSTEM_VERSION     : 2.8.2(0.313/5/3)
 - HOST_OS_DIST_NAME       : Windows 7
 - HOST_OS_DIST_VERSION    : 6.1.7601
-- **${XBUILD}**_VERSION_MAJOR    : 1
-- **${XBUILD}**_VERSION_MINOR    : 0
-- **${XBUILD}**_VERSION_PATCH    : 0
-- **${XBUILD}**_VERSION_TWEAK    : release
-- **${XBUILD}**_RELEASE_TYPE     : Debug
-- **${XBUILD}**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
-- **${XBUILD}**_RELEASE_TIMESTAMP: 2019-04-10 21:26:52 +0800
+- **${XMAKE}**_VERSION_MAJOR    : 1
+- **${XMAKE}**_VERSION_MINOR    : 0
+- **${XMAKE}**_VERSION_PATCH    : 0
+- **${XMAKE}**_VERSION_TWEAK    : release
+- **${XMAKE}**_RELEASE_TYPE     : Debug
+- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
+- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:26:52 +0800
 
 ## Windows/MinGW32
 
@@ -91,13 +91,13 @@ cmake & make template for quick project creation!
 - HOST_SYSTEM_VERSION     : 6.1.7601
 - HOST_OS_DIST_NAME       : Windows 7
 - HOST_OS_DIST_VERSION    : 6.1.7601
-- **${XBUILD}**_VERSION_MAJOR    : 1
-- **${XBUILD}**_VERSION_MINOR    : 0
-- **${XBUILD}**_VERSION_PATCH    : 0
-- **${XBUILD}**_VERSION_TWEAK    : release
-- **${XBUILD}**_RELEASE_TYPE     : Debug
-- **${XBUILD}**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
-- **${XBUILD}**_RELEASE_TIMESTAMP: 2019-04-10 21:57:53
+- **${XMAKE}**_VERSION_MAJOR    : 1
+- **${XMAKE}**_VERSION_MINOR    : 0
+- **${XMAKE}**_VERSION_PATCH    : 0
+- **${XMAKE}**_VERSION_TWEAK    : release
+- **${XMAKE}**_RELEASE_TYPE     : Debug
+- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
+- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:57:53
 
 ## Windows/MinGW64
 
@@ -111,13 +111,13 @@ cmake & make template for quick project creation!
 - HOST_SYSTEM_VERSION     : 6.1.7601
 - HOST_OS_DIST_NAME       : Windows 7
 - HOST_OS_DIST_VERSION    : 6.1.7601
-- **${XBUILD}**_VERSION_MAJOR    : 1
-- **${XBUILD}**_VERSION_MINOR    : 0
-- **${XBUILD}**_VERSION_PATCH    : 0
-- **${XBUILD}**_VERSION_TWEAK    : release
-- **${XBUILD}**_RELEASE_TYPE     : Debug
-- **${XBUILD}**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
-- **${XBUILD}**_RELEASE_TIMESTAMP: 2019-04-10 21:02:43
+- **${XMAKE}**_VERSION_MAJOR    : 1
+- **${XMAKE}**_VERSION_MINOR    : 0
+- **${XMAKE}**_VERSION_PATCH    : 0
+- **${XMAKE}**_VERSION_TWEAK    : release
+- **${XMAKE}**_RELEASE_TYPE     : Debug
+- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
+- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:02:43
 
 ## Windows/Cygwin
 
@@ -132,28 +132,28 @@ cmake & make template for quick project creation!
 - HOST_SYSTEM_VERSION     : 3.0.6(0.338/5/3)
 - HOST_OS_DIST_NAME       : Windows 7
 - HOST_OS_DIST_VERSION    : 6.1.7601
-- **${XBUILD}**_VERSION_MAJOR    : 1
-- **${XBUILD}**_VERSION_MINOR    : 0
-- **${XBUILD}**_VERSION_PATCH    : 0
-- **${XBUILD}**_VERSION_TWEAK    : release
-- **${XBUILD}**_RELEASE_TYPE     : Debug
-- **${XBUILD}**_RELEASE_VERSION  : v1.0.0-release
-- **${XBUILD}**_RELEASE_TIMESTAMP: 2019-04-10 21:40:14 +0800
+- **${XMAKE}**_VERSION_MAJOR    : 1
+- **${XMAKE}**_VERSION_MINOR    : 0
+- **${XMAKE}**_VERSION_PATCH    : 0
+- **${XMAKE}**_VERSION_TWEAK    : release
+- **${XMAKE}**_RELEASE_TYPE     : Debug
+- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release
+- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:40:14 +0800
 
 # `InstallHelper` is cmake install helper for convenience
 
-* `${XBUILD}_PREFIX` => `${CMAKE_INSTALL_PREFIX}`, install root
-* `${XBUILD}_BINDIR` => `${CMAKE_INSTALL_PREFIX}/bin`, executable
-* `${XBUILD}_ETCDIR` => `${CMAKE_INSTALL_PREFIX}/etc`, configuration
-* `${XBUILD}_DOCDIR` => `${CMAKE_INSTALL_PREFIX}/doc`, documentation
-* `${XBUILD}_LIBDIR` => `${CMAKE_INSTALL_PREFIX}/lib`, C/C++ library
-* `${XBUILD}_SHADIR` => `${CMAKE_INSTALL_PREFIX}/share`, share data
-* `${XBUILD}_PLGDIR` => `${CMAKE_INSTALL_PREFIX}/plugin`, plugin data
-* `${XBUILD}_INCDIR` => `${CMAKE_INSTALL_PREFIX}/include`, C/C++ header
+* `${XMAKE}_PREFIX` => `${CMAKE_INSTALL_PREFIX}`, install root
+* `${XMAKE}_BINDIR` => `${CMAKE_INSTALL_PREFIX}/bin`, executable
+* `${XMAKE}_ETCDIR` => `${CMAKE_INSTALL_PREFIX}/etc`, configuration
+* `${XMAKE}_DOCDIR` => `${CMAKE_INSTALL_PREFIX}/doc`, documentation
+* `${XMAKE}_LIBDIR` => `${CMAKE_INSTALL_PREFIX}/lib`, C/C++ library
+* `${XMAKE}_SHADIR` => `${CMAKE_INSTALL_PREFIX}/share`, share data
+* `${XMAKE}_PLGDIR` => `${CMAKE_INSTALL_PREFIX}/plugin`, plugin data
+* `${XMAKE}_INCDIR` => `${CMAKE_INSTALL_PREFIX}/include`, C/C++ header
 
 - `TARGETS` of cmake **executables**, **static**/**shared**/**module**
-  /**import** libraries will be installed into `${${XBUILD}_BINDIR}` or `${${XBUILD}_LIBDIR}`
-  * The executable resources will be installed into `${${XBUILD}_SHADIR}/resource` if NOT **MacOS**
+  /**import** libraries will be installed into `${${XMAKE}_BINDIR}` or `${${XMAKE}_LIBDIR}`
+  * The executable resources will be installed into `${${XMAKE}_SHADIR}/resource` if NOT **MacOS**
 
 - installs contents of `DIRECTORY` into `DESTINATION` with optional permissions
   * if not set `FILE_PERMISSIONS`, the default value is **rw-r--r--**,

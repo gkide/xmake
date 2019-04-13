@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 2.8.12)
-project(xbuild) # Replace 'xbuild' to the real name
+project(xmake)
 
-set(XBUILD_VERSION_MAJOR 1)
-set(XBUILD_VERSION_MINOR 0)
-set(XBUILD_VERSION_PATCH 0)
-set(XBUILD_VERSION_TWEAK "release")
+set(XMAKE_VERSION_MAJOR 1)
+set(XMAKE_VERSION_MINOR 0)
+set(XMAKE_VERSION_PATCH 0)
+set(XMAKE_VERSION_TWEAK "release")
 
-option(XBUILD_VERBOSE_MESSAGE "Show verbose xbuild message" OFF)
-option(XBUILD_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" OFF)
-option(XBUILD_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" OFF)
+option(XMAKE_VERBOSE_MESSAGE "Show verbose xmake message" OFF)
+option(XMAKE_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" OFF)
+option(XMAKE_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" OFF)
 
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
-include(xbuild)
+include(xmake)
 
 add_compile_options(-Wall)
 include_directories(${CMAKE_SOURCE_DIR})
@@ -75,7 +75,7 @@ InstallHelper(TARGETS xlc
 )
 # include/anywhere/xlc.h
 InstallHelper(FILES source/xlc.h
-    DESTINATION ${${XBUILD}_PREFIX}/anywhere
+    DESTINATION ${${XMAKE}_PREFIX}/anywhere
 )
 
 # Install Shared Library Example 1
@@ -135,18 +135,18 @@ InstallHelper(TARGETS ylc
 )
 # include/anywhere/ylc.h
 InstallHelper(FILES source/ylc.h
-    DESTINATION ${${XBUILD}_PREFIX}/anywhere
+    DESTINATION ${${XMAKE}_PREFIX}/anywhere
 )
 
 file(GLOB SOURCES source/main.c)
 
-if(NOT XBUILD_EXPORT_AS_COMPILER_ARGS)
+if(NOT XMAKE_EXPORT_AS_COMPILER_ARGS)
     configure_file(
         "${CMAKE_SOURCE_DIR}/source/config.h.in"
         "${CMAKE_BINARY_DIR}/config.generated.h")
     list(APPEND SOURCES
         "${CMAKE_BINARY_DIR}/config.generated.h")
-    add_definitions(-DXBUILD_EXPORT_AS_CONFIG_FILE)
+    add_definitions(-DXMAKE_EXPORT_AS_CONFIG_FILE)
 endif()
 
 # Install Executable Example 1
@@ -168,7 +168,9 @@ InstallHelper(TARGETS prog)
 # Install Executable Example 3
 ########################################
 add_executable(another ${SOURCES})
-target_link_libraries(another ylc) # --verbose
+target_link_libraries(another ylc)
+# show link detail command for target another
+# target_link_libraries(another ylc --verbose)
 set_target_properties(another PROPERTIES
     # Shared library search path overwrite the default value
     INSTALL_RPATH $ANY/lib/anywhere
@@ -177,13 +179,13 @@ InstallHelper(TARGETS check another)
 
 # Install Executable Example 4
 ########################################
-add_executable(test ${SOURCES})
-target_link_libraries(test ylc --verbose)
-set_target_properties(test PROPERTIES
+add_executable(xtest ${SOURCES})
+target_link_libraries(xtest ylc)
+set_target_properties(xtest PROPERTIES
     # make shared linked test programes only work in the build directory
     INSTALL_RPATH ""
 )
-InstallHelper(TARGETS test)
+InstallHelper(TARGETS xtest)
 
 # Install Executable Example 5
 ########################################
@@ -200,18 +202,18 @@ InstallHelper(TARGETS bundle)
 # Install Executable of NOT Target
 ########################################
 InstallHelper(PROGRAMS scripts/release
-    DESTINATION ${XBUILD_PLGDIR})
+    DESTINATION ${XMAKE_PLGDIR})
 InstallHelper(PROGRAMS scripts/release
-    DESTINATION ${XBUILD_PLGDIR}/scripts)
+    DESTINATION ${XMAKE_PLGDIR}/scripts)
 
 # Install Normal Files
 ########################################
 InstallHelper(FILES LICENSE
-    DESTINATION ${XBUILD_PREFIX})
+    DESTINATION ${XMAKE_PREFIX})
 InstallHelper(FILES docs/local.mk
-    DESTINATION ${XBUILD_DOCDIR})
+    DESTINATION ${XMAKE_DOCDIR})
 
 # Install Directory
 ########################################
 InstallHelper(DIRECTORY cmake
-    DESTINATION ${XBUILD_SHADIR})
+    DESTINATION ${XMAKE_SHADIR})

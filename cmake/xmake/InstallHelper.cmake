@@ -1,29 +1,29 @@
-set(${XBUILD}_PREFIX ${CMAKE_INSTALL_PREFIX}) # install root
-set(${XBUILD}_BINDIR ${CMAKE_INSTALL_PREFIX}/bin) # executable
-set(${XBUILD}_ETCDIR ${CMAKE_INSTALL_PREFIX}/etc) # configuration
-set(${XBUILD}_DOCDIR ${CMAKE_INSTALL_PREFIX}/doc) # documentation
-set(${XBUILD}_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib) # C/C++ library
-set(${XBUILD}_SHADIR ${CMAKE_INSTALL_PREFIX}/share) # share data
-set(${XBUILD}_PLGDIR ${CMAKE_INSTALL_PREFIX}/plugin) # plugin data
-set(${XBUILD}_INCDIR ${CMAKE_INSTALL_PREFIX}/include) # C/C++ header
+set(${XMAKE}_PREFIX ${CMAKE_INSTALL_PREFIX}) # install root
+set(${XMAKE}_BINDIR ${CMAKE_INSTALL_PREFIX}/bin) # executable
+set(${XMAKE}_ETCDIR ${CMAKE_INSTALL_PREFIX}/etc) # configuration
+set(${XMAKE}_DOCDIR ${CMAKE_INSTALL_PREFIX}/doc) # documentation
+set(${XMAKE}_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib) # C/C++ library
+set(${XMAKE}_SHADIR ${CMAKE_INSTALL_PREFIX}/share) # share data
+set(${XMAKE}_PLGDIR ${CMAKE_INSTALL_PREFIX}/plugin) # plugin data
+set(${XMAKE}_INCDIR ${CMAKE_INSTALL_PREFIX}/include) # C/C++ header
 
 # If installed targets' default RPATH is NOT system implicit link
 # directories, then reset it to the cmake install library directory
 list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_RPATH}" isSysDir)
-if(NOT XBUILD_SKIP_RPATH_ORIGIN AND "${isSysDir}" STREQUAL "-1")
+if(NOT XMAKE_SKIP_RPATH_ORIGIN AND "${isSysDir}" STREQUAL "-1")
     # For installed target's property INSTALL_RPATH
     # https://www.technovelty.org/linux/exploring-origin.html
     list(APPEND CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 endif()
 
-if(false) # xbuild debug message
-    message(STATUS "${XBUILD}_BINDIR=${${XBUILD}_BINDIR}")
-    message(STATUS "${XBUILD}_ETCDIR=${${XBUILD}_ETCDIR}")
-    message(STATUS "${XBUILD}_DOCDIR=${${XBUILD}_DOCDIR}")
-    message(STATUS "${XBUILD}_LIBDIR=${${XBUILD}_LIBDIR}")
-    message(STATUS "${XBUILD}_SHADIR=${${XBUILD}_SHADIR}")
-    message(STATUS "${XBUILD}_PLGDIR=${${XBUILD}_PLGDIR}")
-    message(STATUS "${XBUILD}_INCDIR=${${XBUILD}_INCDIR}")
+if(false) # xmake debug message
+    message(STATUS "${XMAKE}_BINDIR=${${XMAKE}_BINDIR}")
+    message(STATUS "${XMAKE}_ETCDIR=${${XMAKE}_ETCDIR}")
+    message(STATUS "${XMAKE}_DOCDIR=${${XMAKE}_DOCDIR}")
+    message(STATUS "${XMAKE}_LIBDIR=${${XMAKE}_LIBDIR}")
+    message(STATUS "${XMAKE}_SHADIR=${${XMAKE}_SHADIR}")
+    message(STATUS "${XMAKE}_PLGDIR=${${XMAKE}_PLGDIR}")
+    message(STATUS "${XMAKE}_INCDIR=${${XMAKE}_INCDIR}")
 endif()
 
 # This will create any directories that need to be created in the destination
@@ -126,17 +126,17 @@ function(InstallHelper)
 
     if(install_helper_TARGETS)
         # The default domain for targets is empty
-        set(DomainPrefix ${${XBUILD}_PREFIX})
-        set(DomainBin ${${XBUILD}_BINDIR})
-        set(DomainLib ${${XBUILD}_LIBDIR})
-        set(DomainShare ${${XBUILD}_SHADIR})
-        set(DomainInclude ${${XBUILD}_INCDIR})
+        set(DomainPrefix ${${XMAKE}_PREFIX})
+        set(DomainBin ${${XMAKE}_BINDIR})
+        set(DomainLib ${${XMAKE}_LIBDIR})
+        set(DomainShare ${${XMAKE}_SHADIR})
+        set(DomainInclude ${${XMAKE}_INCDIR})
         if(install_helper_DOMAIN)
-            set(DomainPrefix ${${XBUILD}_PREFIX}/${install_helper_DOMAIN})
-            set(DomainBin ${${XBUILD}_BINDIR}/${install_helper_DOMAIN})
-            set(DomainLib ${${XBUILD}_LIBDIR}/${install_helper_DOMAIN})
-            set(DomainShare ${${XBUILD}_SHADIR}/${install_helper_DOMAIN})
-            set(DomainInclude ${${XBUILD}_INCDIR}/${install_helper_DOMAIN})
+            set(DomainPrefix ${${XMAKE}_PREFIX}/${install_helper_DOMAIN})
+            set(DomainBin ${${XMAKE}_BINDIR}/${install_helper_DOMAIN})
+            set(DomainLib ${${XMAKE}_LIBDIR}/${install_helper_DOMAIN})
+            set(DomainShare ${${XMAKE}_SHADIR}/${install_helper_DOMAIN})
+            set(DomainInclude ${${XMAKE}_INCDIR}/${install_helper_DOMAIN})
         endif()
 
         # Create directory with the correct permissions.
@@ -152,7 +152,7 @@ function(InstallHelper)
 
             set(install_resources)
             if(target_resources)
-                if(XBUILD_VERBOSE_MESSAGE)
+                if(XMAKE_VERBOSE_MESSAGE)
                     message(STATUS "${target} resources")
                     string(REGEX REPLACE " +" ";" items "${target_resources}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
@@ -176,7 +176,7 @@ function(InstallHelper)
                         RUNTIME  DESTINATION ${DomainBin})
                 endif()
 
-                if(XBUILD_VERBOSE_MESSAGE)
+                if(XMAKE_VERBOSE_MESSAGE)
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
                         domain_directory "${DomainBin}")
                     message(STATUS "${target} Executable => ${domain_directory}")
@@ -195,7 +195,7 @@ function(InstallHelper)
                 set(lib_type "Interface Library")
             endif()
 
-            if(XBUILD_VERBOSE_MESSAGE)
+            if(XMAKE_VERBOSE_MESSAGE)
                 string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
                     domain_directory "${DomainLib}")
                 message(STATUS "${target} ${lib_type} => ${domain_directory}")
@@ -206,7 +206,7 @@ function(InstallHelper)
 
             set(install_public_headers)
             if(public_headers)
-                if(XBUILD_VERBOSE_MESSAGE)
+                if(XMAKE_VERBOSE_MESSAGE)
                     message(STATUS "${target} Library Public Headers")
                     string(REGEX REPLACE " +" ";" items "${public_headers}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
@@ -222,7 +222,7 @@ function(InstallHelper)
 
             set(install_private_headers)
             if(private_headers)
-                if(XBUILD_VERBOSE_MESSAGE)
+                if(XMAKE_VERBOSE_MESSAGE)
                     message(STATUS "${target} Library Private Headers")
                     string(REGEX REPLACE " +" ";" items "${private_headers}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
