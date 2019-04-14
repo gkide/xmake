@@ -4,6 +4,8 @@ cmake & make template for quick project creation!
 
 - `XMAKE` variable will auto set to `${PROJECT_NAME}` of uppercase
 - `XMAKE_ENABLE_GCOV` enable gcov or not, default is **OFF**
+- `XMAKE_ENABLE_ASSERTION` enable assertion or not, default is **OFF**
+- `XMAKE_ENABLE_TRAVIS_CI` enable travis CI build or not, default is **OFF**
 - `XMAKE_VERBOSE_MESSAGE` show verbose xmake message or not, default is **OFF**
 - `XMAKE_SKIP_RPATH_ORIGIN`
   * if **OFF**(default), **RPATH** will be set to `$ORIGIN/../lib`

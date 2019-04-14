@@ -49,10 +49,41 @@ endif()
 
 if(XMAKE_ENABLE_GCOV)
     message(STATUS "Enable gcov")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --coverage")
+    set(CMAKE_C_FLAGS_${buildType}
+        "${CMAKE_C_FLAGS_${buildType}} --coverage")
+    set(CMAKE_CXX_FLAGS_${buildType}
+        "${CMAKE_CXX_FLAGS_${buildType}} --coverage")
+    set(CMAKE_EXE_LINKER_FLAGS_${buildType}
+        "${CMAKE_EXE_LINKER_FLAGS_${buildType}} --coverage")
+    set(CMAKE_SHARED_LINKER_FLAGS_${buildType}
+        "${CMAKE_SHARED_LINKER_FLAGS_${buildType}} --coverage")
+endif()
+
+if(XMAKE_ENABLE_ASSERTION)
+    message(STATUS "Enable assertion")
+    if(CMAKE_C_FLAGS_${buildType} MATCHES DNDEBUG)
+        string(REPLACE "-DNDEBUG" "" CMAKE_C_FLAGS_${buildType}
+            "${CMAKE_C_FLAGS_${buildType}}")
+    endif()
+    if(CMAKE_CXX_FLAGS_${buildType} MATCHES DNDEBUG)
+        string(REPLACE "-DNDEBUG" "" CMAKE_CXX_FLAGS_${buildType}
+            "${CMAKE_CXX_FLAGS_${buildType}}")
+    endif()
+else()
+    message(STATUS "Disable assertion")
+    if(NOT CMAKE_C_FLAGS_${buildType} MATCHES DNDEBUG)
+        set(CMAKE_C_FLAGS_${buildType}
+            "-DNDEBUG ${CMAKE_C_FLAGS_${buildType}}")
+    endif()
+    if(NOT CMAKE_CXX_FLAGS_${buildType} MATCHES DNDEBUG)
+        set(CMAKE_CXX_FLAGS_${buildType}
+            "-DNDEBUG ${CMAKE_CXX_FLAGS_${buildType}}")
+    endif()
+endif()
+
+if(XMAKE_ENABLE_TRAVIS_CI)
+    add_compile_options("-Werror")
+    message(STATUS "Enable Travis CI, add -Werror flag.")
 endif()
 
 # Cmake modules

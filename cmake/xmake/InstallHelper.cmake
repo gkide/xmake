@@ -1,11 +1,20 @@
-set(${XMAKE}_PREFIX ${CMAKE_INSTALL_PREFIX}) # install root
-set(${XMAKE}_BINDIR ${CMAKE_INSTALL_PREFIX}/bin) # executable
-set(${XMAKE}_ETCDIR ${CMAKE_INSTALL_PREFIX}/etc) # configuration
-set(${XMAKE}_DOCDIR ${CMAKE_INSTALL_PREFIX}/doc) # documentation
-set(${XMAKE}_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib) # C/C++ library
-set(${XMAKE}_SHADIR ${CMAKE_INSTALL_PREFIX}/share) # share data
-set(${XMAKE}_PLGDIR ${CMAKE_INSTALL_PREFIX}/plugin) # plugin data
-set(${XMAKE}_INCDIR ${CMAKE_INSTALL_PREFIX}/include) # C/C++ header
+# Provide user-settable values in 'CMakeCache.txt'
+set(${XMAKE}_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE PATH
+    "The install root prefix path")
+set(${XMAKE}_BINDIR ${CMAKE_INSTALL_PREFIX}/bin CACHE PATH
+    "The executable install path")
+set(${XMAKE}_ETCDIR ${CMAKE_INSTALL_PREFIX}/etc CACHE PATH
+    "The configurations install path")
+set(${XMAKE}_DOCDIR ${CMAKE_INSTALL_PREFIX}/doc CACHE PATH
+    "The documentations install path")
+set(${XMAKE}_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib CACHE PATH
+    "The C/C++ library install path")
+set(${XMAKE}_SHADIR ${CMAKE_INSTALL_PREFIX}/share CACHE PATH
+    "The share data install path")
+set(${XMAKE}_PLGDIR ${CMAKE_INSTALL_PREFIX}/plugin CACHE PATH
+    "The plugins install path")
+set(${XMAKE}_INCDIR ${CMAKE_INSTALL_PREFIX}/include CACHE PATH
+    "The C/C++ header install path")
 
 # If installed targets' default RPATH is NOT system implicit link
 # directories, then reset it to the cmake install library directory
