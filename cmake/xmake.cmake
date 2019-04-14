@@ -10,9 +10,21 @@ if(${XMAKE}_VERSION_TWEAK)
     string(APPEND ${XMAKE}_RELEASE_VERSION "-${${XMAKE}_VERSION_TWEAK}")
 endif()
 
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug")
+# The available build type values
+if(NOT CMAKE_CONFIGURATION_TYPES)
+    list(APPEND CMAKE_CONFIGURATION_TYPES "Dev")
+    list(APPEND CMAKE_CONFIGURATION_TYPES "Debug")
+    list(APPEND CMAKE_CONFIGURATION_TYPES "Release")
+    list(APPEND CMAKE_CONFIGURATION_TYPES "MinSizeRel")
+    list(APPEND CMAKE_CONFIGURATION_TYPES "RelWithDebInfo")
 endif()
+
+# In case of not set, set default build type to 'Debug'
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose build type ..." FORCE)
+endif()
+
+string(TOUPPER ${CMAKE_BUILD_TYPE} buildType)
 
 # Enable verbose output from Makefile builds.
 option(CMAKE_VERBOSE_MAKEFILE OFF)
@@ -23,11 +35,11 @@ option(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-foreach(CFGNAME ${CMAKE_CONFIGURATION_TYPES})
-    string(TOUPPER ${CFGNAME} CFGNAME)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CFGNAME} ${CMAKE_BINARY_DIR}/bin)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CFGNAME} ${CMAKE_BINARY_DIR}/lib)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CFGNAME} ${CMAKE_BINARY_DIR}/lib)
+foreach(type ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER ${type} TYPE)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/bin)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/lib)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/lib)
 endforeach()
 
 # Change the default cmake value without overriding the user-provided one

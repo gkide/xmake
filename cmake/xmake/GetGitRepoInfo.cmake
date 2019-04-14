@@ -48,10 +48,10 @@ if(false)
     message(STATUS "${PROJECT_NAME} Repo Commit Time: ${${XMAKE}_MODIFY_STAMP}")
 endif()
 
-if(XMAKE_VERBOSE_MESSAGE)
+#if(XMAKE_VERBOSE_MESSAGE)
     message(STATUS "${PROJECT_NAME} Build Type: ${CMAKE_BUILD_TYPE}")
     message(STATUS "${PROJECT_NAME} Release Version: ${${XMAKE}_RELEASE_VERSION}")
     message(STATUS "${PROJECT_NAME} Install Perfix: ${CMAKE_INSTALL_PREFIX}")
-endif()
+#endif()
 
 mark_as_advanced(FORCE FOUND_GIT_REPO GIT_REPO_DIR)

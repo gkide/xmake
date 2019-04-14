@@ -244,6 +244,9 @@ xmake-help:
 # - BUILD_TYPE          Debug, ...
 # - BUILD_DIR           $(SOURCE_DIR)/build
 #
+# The available values for DEPS_BUILD_TYPE/BUILD_TYPE
+# - Dev, Debug, Release, MinSizeRel, RelWithDebInfo
+#
 # ------------------
 # cmake, make, ninja, git
 # ------------------
