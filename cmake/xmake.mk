@@ -82,7 +82,7 @@ endif
 
 XMAKE := $(Q)$(BUILD_CMD)
 
-# The deps root directory
+# The deps download/build/install root directory
 DEPS_ROOT_DIR ?= $(SOURCE_DIR)/.deps
 ifeq ($(call hasSpaces,$(DEPS_ROOT_DIR)),1)
     $(error Deps root path can NOT contain spaces: "$(DEPS_ROOT_DIR)")
@@ -148,10 +148,18 @@ CMAKE_ARGS += -DDEPS_BUILD_TYPE=$(DEPS_BUILD_TYPE)
 
 ifneq ($(GIT_PROG),)
     CMAKE_ARGS += -DGIT_PROG=$(GIT_PROG)
+else
+    ifneq ($(strip $(shell (command -v git))),)
+        CMAKE_ARGS += -DGIT_PROG=$(shell (command -v git))
+    endif
 endif
 
 ifneq ($(MAKE_PROG),)
     CMAKE_ARGS += -DMAKE_PROG=$(MAKE_PROG)
+else
+    ifneq ($(strip $(shell (command -v make))),)
+        CMAKE_ARGS += -DMAKE_PROG=$(shell (command -v make))
+    endif
 endif
 
 ifneq ($(EXTRA_CMAKE_ARGS),)
@@ -213,3 +221,91 @@ xmake-help:
 	@echo "For much more details: https://gitlab.com/gkide/xmake"
 	@echo "-------------------------------------------------------------------------"
 #	@echo "See 'docs/local.mk' for much more setting details."
+
+#######################################################
+# Import Common Utils
+#######################################################
+# isTrue, isFalse, hasSpaces, hasColons
+
+#######################################################
+# Auto Set Read-only Variables
+#######################################################
+#
+# - XMAKE           make or ninja with flags
+# - SOURCE_DIR      project source directory
+
+#######################################################
+# User Configurable Variables
+#######################################################
+#
+# - DEPS_BUILD_TYPE     Release, ...
+# - DEPS_ROOT_DIR       $(SOURCE_DIR)/.deps
+#
+# - BUILD_TYPE          Debug, ...
+# - BUILD_DIR           $(SOURCE_DIR)/build
+#
+# ------------------
+# cmake, make, ninja, git
+# ------------------
+# - BUILD_CMD     auto detected if not set
+# - CMAKE_PROG    auto detected if not set
+# - GENERATOR     'Ninja' or 'Unix Makefiles'
+# - CMAKE_ARGS    can be set with extra args
+#
+# - GIT_PROG      full path of git programme
+# - MAKE_PROG     full path of make programme
+
+#######################################################
+# Auto Detect System Common Development Tools
+#######################################################
+
+##########################
+# Removed debug sections #
+##########################
+ifeq ($(STRIP_PROG),)
+    STRIP_ARGS ?= --strip-all # auto detect
+    ifneq ($(strip $(shell (command -v strip))),)
+    # usage $(STRIP_PROG) $(STRIP_ARGS) ... ELF
+        STRIP_PROG := $(Q)$(shell (command -v strip))
+    endif
+endif
+
+#########################################
+# Save Removed debug sections into FILE #
+#########################################
+ifeq ($(EUSTRIP_PROG),)
+    EUSTRIP_ARGS ?= # auto detect
+    ifneq ($(strip $(shell (command -v eu-strip))),)
+    # usage $(EUSTRIP_PROG) $(EUSTRIP_ARGS) ... ELF -f FILE
+        EUSTRIP_PROG := $(Q)$(shell (command -v eu-strip))
+    endif
+endif
+
+###################################
+# Static C/C++ code analysis tool #
+###################################
+ifeq ($(CPPCHECK_PROG),)
+    CPPCHECK_ARGS ?= # auto detect
+    ifneq ($(strip $(shell (command -v cppcheck))),)
+        CPPCHECK_PROG := $(Q)$(shell (command -v cppcheck))
+        # cppcheck-v1.8x has --project=..., cppcheck-v1.7x does not
+        ifeq (1.8, $(shell cppcheck --version 2>/dev/null | cut -b 10-12))
+        # usage $(CPPCHECK18_PROG) $(CPPCHECK_ARGS) --project=build/compile_commands.json
+            CPPCHECK18_PROG := $(CPPCHECK_PROG)
+        endif
+        ifeq (1.7, $(shell cppcheck --version 2>/dev/null | cut -b 10-12))
+        # usage $(CPPCHECK17_PROG) $(CPPCHECK_ARGS) source
+            CPPCHECK17_PROG := $(CPPCHECK_PROG)
+        endif
+    endif
+endif
+
+##########################################
+# Standard Documentation Generating Tool #
+##########################################
+ifeq ($(DOXYGEN_PROG),)
+    DOXYGEN_ARGS ?= # auto detect
+    ifneq ($(strip $(shell (command -v doxygen))),)
+        DOXYGEN_PROG := $(Q)$(shell (command -v doxygen))
+    endif
+endif

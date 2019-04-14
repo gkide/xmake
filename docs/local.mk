@@ -1,7 +1,3 @@
-# xmake auto set read-only variables
-# - XMAKE           make or ninja with flags
-# - SOURCE_DIR      project source tree directory
-
 #BUILD_TYPE ?= Debug
 #BUILD_TYPE ?= Release
 
@@ -23,3 +19,9 @@
 
 #GIT_PROG :=
 #MAKE_PROG :=
+
+# STRIP_PROG, STRIP_ARGS
+# EUSTRIP_PROG, EUSTRIP_ARGS
+# DOXYGEN_PROG, DOXYGEN_ARGS
+# CPPCHECK_PROG, CPPCHECK_ARGS
+# => CPPCHECK17_PROG, CPPCHECK18_PROG

@@ -1,5 +1,9 @@
 # Local make configuration
 -include local.mk
+
+# Do cmake config if needed
+# CMAKE_ARGS += ...
+
 # The xmake user-friendly template
 include cmake/xmake.mk
 
@@ -31,5 +35,20 @@ distclean: xmake-distclean
 PHONY += help
 help: xmake-help
 	@echo "The real project helps ..."
+
+auto:
+	@echo "STRIP_PROG=$(STRIP_PROG)"
+	@echo "STRIP_ARGS=$(STRIP_ARGS)"
+	@echo ""
+	@echo "EUSTRIP_PROG=$(EUSTRIP_PROG)"
+	@echo "EUSTRIP_ARGS=$(EUSTRIP_ARGS)"
+	@echo ""
+	@echo "DOXYGEN_PROG=$(DOXYGEN_PROG)"
+	@echo "DOXYGEN_ARGS=$(DOXYGEN_ARGS)"
+	@echo ""
+	@echo "CPPCHECK_PROG=$(CPPCHECK_PROG)"
+	@echo "CPPCHECK_ARGS=$(CPPCHECK_ARGS)"
+	@echo "CPPCHECK17_PROG=$(CPPCHECK17_PROG)"
+	@echo "CPPCHECK18_PROG=$(CPPCHECK18_PROG)"
 
 .PHONY: $(PHONY)
