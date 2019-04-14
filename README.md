@@ -3,18 +3,17 @@
 cmake & make template for quick project creation!
 
 - `XMAKE` variable will auto set to `${PROJECT_NAME}` of uppercase
-
-- `XMAKE_SKIP_RPATH_ORIGIN` if **ON**, **RPATH** will be set to
-  `$ORIGIN/../lib`; if **OFF**(default), **RPATH** will be set to empty
-
-- `XMAKE_VERBOSE_MESSAGE` if **ON**, do not show verbose cmake message;
-  if **OFF**(default), show verbose xmake cmake message
+- `XMAKE_ENABLE_GCOV` enable gcov or not, default is **OFF**
+- `XMAKE_VERBOSE_MESSAGE` show verbose xmake message or not, default is **OFF**
+- `XMAKE_SKIP_RPATH_ORIGIN`
+  * if **OFF**(default), **RPATH** will be set to `$ORIGIN/../lib`
+  * if **ON**, executables & shared libraries rpath will be set to empty
 
 # Host Support Status for project `xmake`
 
-- Use cmake `configure_file()` command to get following configurations
-- `XMAKE_EXPORT_AS_COMPILER_ARGS` if **ON**, also export as CC cmd args;
-  if **OFF**(default), do not export to CC
+- `XMAKE_EXPORT_AS_COMPILER_ARGS`
+  * if **ON**, export the variables as CC command line arguments
+  * if **OFF**(default), do not export to CC, use cmake `configure_file()`
 
 ## MacOS
 

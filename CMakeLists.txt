@@ -6,6 +6,7 @@ set(XMAKE_VERSION_MINOR 0)
 set(XMAKE_VERSION_PATCH 0)
 set(XMAKE_VERSION_TWEAK "release")
 
+option(XMAKE_ENABLE_GCOV "Enable Coverage" ON)
 option(XMAKE_VERBOSE_MESSAGE "Show verbose xmake message" OFF)
 option(XMAKE_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" OFF)
 option(XMAKE_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" OFF)
