@@ -9,10 +9,16 @@ set(XMAKE_VERSION_TWEAK "release")
 option(XMAKE_ENABLE_GCOV "Enable Coverage" ON)
 option(XMAKE_ENABLE_ASSERTION "Enable assertion." ON)
 option(XMAKE_ENABLE_TRAVIS_CI "Enable Travis CI build." ON)
+option(XMAKE_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 
 option(XMAKE_VERBOSE_MESSAGE "Show verbose xmake message" OFF)
 option(XMAKE_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" OFF)
 option(XMAKE_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" OFF)
+
+# Enable static/shared Qt5 support
+option(XMAKE_QT5_SUPPORT "Enable Qt5 support" ON)
+set(XMAKE_QT5_STATIC_PREFIX "")
+set(XMAKE_QT5_SHARED_PREFIX "")
 
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -21,6 +27,10 @@ include(xmake)
 add_compile_options(-Wall)
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_BINARY_DIR})
+
+if(XMAKE_QT5_SUPPORT OR XMAKE_QT5_STATIC_PREFIX OR XMAKE_QT5_SHARED_PREFIX)
+    add_subdirectory(source/qt5)
+endif()
 
 # Install Static Library Example 1
 ########################################

@@ -109,7 +109,15 @@ include(PreventInTreeBuilds)
 include(CheckHostSystem)
 include(GetGitRepoInfo)
 include(InstallHelper)
-include(Dependencies)
+
+if(XMAKE_ENABLE_DEPENDENCY)
+    include(Dependencies)
+endif()
+
+if(XMAKE_QT5_STATIC_PREFIX OR XMAKE_QT5_SHARED_PREFIX OR XMAKE_QT5_SUPPORT)
+    include(Qt5Helper)
+endif()
+
 #include(PrintCmake)
 
 if(XMAKE_EXPORT_AS_COMPILER_ARGS)

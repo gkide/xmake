@@ -138,6 +138,16 @@ cmake & make template for quick project creation!
 - **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release
 - **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:40:14 +0800
 
+# Qt5 Support
+
+- `XMAKE_QT5_SUPPORT`
+  * if set `XMAKE_QT5_STATIC_PREFIX`, support static Qt5
+  * if set `XMAKE_QT5_SHARED_PREFIX`, support shared Qt5
+  * if both not set, try to find Qt5 from the system wide
+
+- `XMAKE_QT5_STATIC_PREFIX` static build of Qt5 install path
+- `XMAKE_QT5_SHARED_PREFIX` shared build of Qt5 install path
+
 # `InstallHelper` is cmake install helper for convenience
 
 * `${XMAKE}_PREFIX` => `${CMAKE_INSTALL_PREFIX}`, install root
@@ -163,7 +173,9 @@ cmake & make template for quick project creation!
 - install `PROGRAMS` into `DESTINATION` with optional `FILE_PERMISSIONS`
   * if not set, the default value is **rwxr-xr-x**, rename if set `RENAME`
 
-# Support External Project Build & Install
+# External Project Download, Build and Install
+
+- `XMAKE_ENABLE_DEPENDENCY` enable external deps support or not, default is **OFF**
 
 ## The following values can be set by user if need
 

@@ -3,6 +3,7 @@
 
 # Do cmake config if needed
 # CMAKE_ARGS += ...
+# EXTRA_CMAKE_ARGS += ...
 
 # The xmake user-friendly template
 include cmake/xmake.mk
