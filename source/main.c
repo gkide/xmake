@@ -65,13 +65,13 @@ int main(int argc, char **argv)
     printf("HOST_SYSTEM_VERSION     : %s\n", HOST_SYSTEM_VERSION);
     printf("HOST_OS_DIST_NAME       : %s\n", HOST_OS_DIST_NAME);
     printf("HOST_OS_DIST_VERSION    : %s\n", HOST_OS_DIST_VERSION);
-    printf("XMAKE_VERSION_MAJOR    : %d\n", XMAKE_VERSION_MAJOR);
-    printf("XMAKE_VERSION_MINOR    : %d\n", XMAKE_VERSION_MINOR);
-    printf("XMAKE_VERSION_PATCH    : %d\n", XMAKE_VERSION_PATCH);
-    printf("XMAKE_VERSION_TWEAK    : %s\n", XMAKE_VERSION_TWEAK);
-    printf("XMAKE_RELEASE_TYPE     : %s\n", XMAKE_RELEASE_TYPE);
-    printf("XMAKE_RELEASE_VERSION  : %s\n", XMAKE_RELEASE_VERSION);
-    printf("XMAKE_RELEASE_TIMESTAMP: %s\n", XMAKE_RELEASE_TIMESTAMP);
+    printf("XMAKE_VERSION_MAJOR     : %d\n", XMAKE_VERSION_MAJOR);
+    printf("XMAKE_VERSION_MINOR     : %d\n", XMAKE_VERSION_MINOR);
+    printf("XMAKE_VERSION_PATCH     : %d\n", XMAKE_VERSION_PATCH);
+    printf("XMAKE_VERSION_TWEAK     : %s\n", XMAKE_VERSION_TWEAK);
+    printf("XMAKE_RELEASE_TYPE      : %s\n", XMAKE_RELEASE_TYPE);
+    printf("XMAKE_RELEASE_VERSION   : %s\n", XMAKE_RELEASE_VERSION);
+    printf("XMAKE_RELEASE_TIMESTAMP : %s\n", XMAKE_RELEASE_TIMESTAMP);
 
     return 0;
 }

@@ -20,14 +20,14 @@ cmake & make template for quick project creation!
 
 - HOST_LINUX
 - HOST_MACOS
-- HOST_ARCH_64		      : little endian
-- HOST_NAME               : charlie
-- HOST_USER               : BlackMacOS.local
-- HOST_ARCH               : x86_64
-- HOST_SYSTEM_NAME        : macos
-- HOST_SYSTEM_VERSION     : 15.0.0
-- HOST_OS_DIST_NAME       : Mac OS X
-- HOST_OS_DIST_VERSION    : 10.11.1-15B42
+- HOST_ARCH_64		            : little endian
+- HOST_NAME                     : charlie
+- HOST_USER                     : BlackMacOS.local
+- HOST_ARCH                     : x86_64
+- HOST_SYSTEM_NAME              : macos
+- HOST_SYSTEM_VERSION           : 15.0.0
+- HOST_OS_DIST_NAME             : Mac OS X
+- HOST_OS_DIST_VERSION          : 10.11.1-15B42
 - **${XMAKE}**_VERSION_MAJOR    : 1
 - **${XMAKE}**_VERSION_MINOR    : 0
 - **${XMAKE}**_VERSION_PATCH    : 0
@@ -39,14 +39,14 @@ cmake & make template for quick project creation!
 ## Linux & Likes
 
 - HOST_LINUX
-- HOST_ARCH_64            : little endian
-- HOST_NAME               : charlie
-- HOST_USER               : ThinkPad
-- HOST_ARCH               : x86_64
-- HOST_SYSTEM_NAME        : linux
-- HOST_SYSTEM_VERSION     : 3.16.0-30-generic
-- HOST_OS_DIST_NAME       : Ubuntu
-- HOST_OS_DIST_VERSION    : 14.04
+- HOST_ARCH_64                  : little endian
+- HOST_NAME                     : charlie
+- HOST_USER                     : ThinkPad
+- HOST_ARCH                     : x86_64
+- HOST_SYSTEM_NAME              : linux
+- HOST_SYSTEM_VERSION           : 3.16.0-30-generic
+- HOST_OS_DIST_NAME             : Ubuntu
+- HOST_OS_DIST_VERSION          : 14.04
 - **${XMAKE}**_VERSION_MAJOR    : 1
 - **${XMAKE}**_VERSION_MINOR    : 0
 - **${XMAKE}**_VERSION_PATCH    : 0
@@ -60,14 +60,14 @@ cmake & make template for quick project creation!
 - HOST_LINUX
 - HOST_WINDOWS
 - HOST_WINDOWS_MSYS
-- HOST_ARCH_64            : little endian
-- HOST_NAME               : 书生
-- HOST_USER               : ThinkPad
-- HOST_ARCH               : x86_64
-- HOST_SYSTEM_NAME        : windows/msys
-- HOST_SYSTEM_VERSION     : 2.8.2(0.313/5/3)
-- HOST_OS_DIST_NAME       : Windows 7
-- HOST_OS_DIST_VERSION    : 6.1.7601
+- HOST_ARCH_64                  : little endian
+- HOST_NAME                     : 书生
+- HOST_USER                     : ThinkPad
+- HOST_ARCH                     : x86_64
+- HOST_SYSTEM_NAME              : windows/msys
+- HOST_SYSTEM_VERSION           : 2.8.2(0.313/5/3)
+- HOST_OS_DIST_NAME             : Windows 7
+- HOST_OS_DIST_VERSION          : 6.1.7601
 - **${XMAKE}**_VERSION_MAJOR    : 1
 - **${XMAKE}**_VERSION_MINOR    : 0
 - **${XMAKE}**_VERSION_PATCH    : 0
@@ -80,14 +80,14 @@ cmake & make template for quick project creation!
 
 - HOST_WINDOWS
 - HOST_WINDOWS_MINGW
-- HOST_ARCH_32            : little endian
-- HOST_NAME               : 书生
-- HOST_USER               : ThinkPad
-- HOST_ARCH               : x86
-- HOST_SYSTEM_NAME        : windows/mingw
-- HOST_SYSTEM_VERSION     : 6.1.7601
-- HOST_OS_DIST_NAME       : Windows 7
-- HOST_OS_DIST_VERSION    : 6.1.7601
+- HOST_ARCH_32                  : little endian
+- HOST_NAME                     : 书生
+- HOST_USER                     : ThinkPad
+- HOST_ARCH                     : x86
+- HOST_SYSTEM_NAME              : windows/mingw
+- HOST_SYSTEM_VERSION           : 6.1.7601
+- HOST_OS_DIST_NAME             : Windows 7
+- HOST_OS_DIST_VERSION          : 6.1.7601
 - **${XMAKE}**_VERSION_MAJOR    : 1
 - **${XMAKE}**_VERSION_MINOR    : 0
 - **${XMAKE}**_VERSION_PATCH    : 0
@@ -100,14 +100,14 @@ cmake & make template for quick project creation!
 
 - HOST_WINDOWS
 - HOST_WINDOWS_MINGW
-- HOST_ARCH_64            : little endian
-- HOST_NAME               : 书生
-- HOST_USER               : ThinkPad
-- HOST_ARCH               : x86_64
-- HOST_SYSTEM_NAME        : windows/mingw
-- HOST_SYSTEM_VERSION     : 6.1.7601
-- HOST_OS_DIST_NAME       : Windows 7
-- HOST_OS_DIST_VERSION    : 6.1.7601
+- HOST_ARCH_64                  : little endian
+- HOST_NAME                     : 书生
+- HOST_USER                     : ThinkPad
+- HOST_ARCH                     : x86_64
+- HOST_SYSTEM_NAME              : windows/mingw
+- HOST_SYSTEM_VERSION           : 6.1.7601
+- HOST_OS_DIST_NAME             : Windows 7
+- HOST_OS_DIST_VERSION          : 6.1.7601
 - **${XMAKE}**_VERSION_MAJOR    : 1
 - **${XMAKE}**_VERSION_MINOR    : 0
 - **${XMAKE}**_VERSION_PATCH    : 0
@@ -121,14 +121,14 @@ cmake & make template for quick project creation!
 - HOST_LINUX
 - HOST_WINDOWS
 - HOST_WINDOWS_CYGWIN
-- HOST_ARCH_64            : little endian
-- HOST_NAME               : 书生
-- HOST_USER               : ThinkPad
-- HOST_ARCH               : x86_64
-- HOST_SYSTEM_NAME        : windows/cygwin
-- HOST_SYSTEM_VERSION     : 3.0.6(0.338/5/3)
-- HOST_OS_DIST_NAME       : Windows 7
-- HOST_OS_DIST_VERSION    : 6.1.7601
+- HOST_ARCH_64                  : little endian
+- HOST_NAME                     : 书生
+- HOST_USER                     : ThinkPad
+- HOST_ARCH                     : x86_64
+- HOST_SYSTEM_NAME              : windows/cygwin
+- HOST_SYSTEM_VERSION           : 3.0.6(0.338/5/3)
+- HOST_OS_DIST_NAME             : Windows 7
+- HOST_OS_DIST_VERSION          : 6.1.7601
 - **${XMAKE}**_VERSION_MAJOR    : 1
 - **${XMAKE}**_VERSION_MINOR    : 0
 - **${XMAKE}**_VERSION_PATCH    : 0
@@ -169,12 +169,10 @@ cmake & make template for quick project creation!
 - `DEPS_ROOT_DIR`, Download & build directory, default is **.deps/**
 - `DEPS_BUILD_TYPE`, External project build type, default is **Release**
 
-- `MAKE_PROGRAM`, The GNU make progame used for external project building.
-  * If NOT set, then it will auto detected by cmake from **PATH**,
-    can not missing! Set `GNU_MAKE` if found for user to be used!
-- `GIT_PROGRAM`, The git programe used for clone external project.
-  * If NOT set then it will auto detected by cmake from **PATH**,
-    can missing! Set `GIT_PROG` if found for user to be used!
+- `MAKE_PROG`, The GNU make progame used for external project building.
+  * If NOT set, it will auto detected by cmake from **PATH**, can not missing!
+- `GIT_PROG`, The git programe used for clone external project.
+  * If NOT set, it will auto detected by cmake from **PATH**, can missing!
 
 ## The following values do not recommend to change
 

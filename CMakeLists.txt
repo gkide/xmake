@@ -151,17 +151,8 @@ endif()
 
 # Install Executable Example 1
 ########################################
-add_executable(check ${SOURCES} source/library.c)
-InstallHelper(TARGETS check)
-
-# Download & Build External Project
-########################################
-include(BuildLibok)
-add_dependencies(check libok)
-
-# Download & Prebuild Binary
-########################################
-include(PreInstall)
+add_executable(xtest ${SOURCES} source/library.c)
+InstallHelper(TARGETS xtest)
 
 # Install Executable Example 2
 ########################################
@@ -179,17 +170,17 @@ set_target_properties(another PROPERTIES
     # Shared library search path overwrite the default value
     INSTALL_RPATH $ANY/lib/anywhere
 )
-InstallHelper(TARGETS check another)
+InstallHelper(TARGETS xtest another)
 
 # Install Executable Example 4
 ########################################
-add_executable(xtest ${SOURCES})
-target_link_libraries(xtest ylc)
-set_target_properties(xtest PROPERTIES
+add_executable(check ${SOURCES})
+target_link_libraries(check ylc)
+set_target_properties(check PROPERTIES
     # make shared linked test programes only work in the build directory
     INSTALL_RPATH ""
 )
-InstallHelper(TARGETS xtest)
+InstallHelper(TARGETS check)
 
 # Install Executable Example 5
 ########################################
@@ -202,6 +193,15 @@ set_target_properties(bundle PROPERTIES
 #   MACOSX_BUNDLE TRUE
     RESOURCE "${BUNDLE_RESOURCE}")
 InstallHelper(TARGETS bundle)
+
+# Download & Build External Project
+########################################
+include(BuildLibok)
+add_dependencies(bundle libok)
+
+# Download & Prebuild Binary
+########################################
+include(PreInstall)
 
 # Install Executable of NOT Target
 ########################################
