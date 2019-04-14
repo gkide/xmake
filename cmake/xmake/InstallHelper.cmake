@@ -271,7 +271,7 @@ function(InstallHelper)
     endif()
 
     if(install_helper_RENAME)
-        set(RENAME RENAME ${install_helper_RENAME})
+        set(install_rename RENAME ${install_helper_RENAME})
     endif()
 
     if(install_helper_FILES)
@@ -279,7 +279,7 @@ function(InstallHelper)
             FILES ${install_helper_FILES}
             DESTINATION ${install_helper_DESTINATION}
             PERMISSIONS ${install_helper_FILE_PERMISSIONS}
-            ${RENAME})
+            ${install_rename})
     endif()
 
     if(install_helper_PROGRAMS)
@@ -287,6 +287,6 @@ function(InstallHelper)
             PROGRAMS ${install_helper_PROGRAMS}
             DESTINATION ${install_helper_DESTINATION}
             PERMISSIONS ${install_helper_PROGRAM_PERMISSIONS}
-            ${RENAME})
+            ${install_rename})
     endif()
 endfunction()

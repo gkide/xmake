@@ -1,5 +1,6 @@
+# xmake git repo is https://gitlab.com/gkide/xmake
 cmake_minimum_required(VERSION 2.8.12)
-string(TOUPPER ${PROJECT_NAME} XMAKE) # upper project name
+string(TOUPPER ${PROJECT_NAME} XMAKE) # The Uppercase of Project Name
 
 string(APPEND ${XMAKE}_RELEASE_VERSION "v${${XMAKE}_VERSION_MAJOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_MINOR}")

@@ -1,69 +1,69 @@
 include(CMakeParseArguments)
 
 function(BuildDepsRepo name)
-    string(TOUPPER ${name} BDTB)
-    cmake_parse_arguments(${BDTB} # prefix
+    cmake_parse_arguments(repo # prefix
         "" # options
         "REPO_URL" # one value keywords
         "PATCH_CMD;CONFIG_CMD;BUILD_CMD;INSTALL_CMD" # multi value keywords
         ${ARGN})
 
-    if(NOT ${BDTB}_REPO_URL)
+    if(NOT repo_REPO_URL)
         message(FATAL_ERROR "Must set REPO_URL for ${name}.")
     endif()
 
-    if(NOT ${BDTB}_CONFIG_CMD AND
-       NOT ${BDTB}_BUILD_CMD AND
-       NOT ${BDTB}_INSTALL_CMD)
+    if(NOT repo_CONFIG_CMD AND
+       NOT repo_BUILD_CMD AND
+       NOT repo_INSTALL_CMD)
         message(FATAL_ERROR
             "Must set one of CONFIG_CMD, BUILD_CMD, INSTALL_CMD for ${name}.")
     endif()
 
-    if(NOT ${BDTB}_PATCH_CMD)
-        set(${BDTB}_PATCH_CMD "")
+    if(NOT repo_PATCH_CMD)
+        set(repo_PATCH_CMD "")
     endif()
 
-    if(NOT ${BDTB}_CONFIG_CMD)
-        set(${BDTB}_CONFIG_CMD "")
+    if(NOT repo_CONFIG_CMD)
+        set(repo_CONFIG_CMD "")
     endif()
 
-    if(NOT ${BDTB}_BUILD_CMD)
-        set(${BDTB}_BUILD_CMD "")
+    if(NOT repo_BUILD_CMD)
+        set(repo_BUILD_CMD "")
     endif()
 
-    if(NOT ${BDTB}_INSTALL_CMD)
-        set(${BDTB}_INSTALL_CMD "")
+    if(NOT repo_INSTALL_CMD)
+        set(repo_INSTALL_CMD "")
     endif()
 
-    set(REPO_DIR ${DEPS_DOWNLOAD_DIR}/${name})
-    set(BUILD_DIR ${DEPS_BUILD_DIR}/${name})
+    set(BuildDir ${DEPS_BUILD_DIR}/${name})
+    set(RepoDir ${DEPS_DOWNLOAD_DIR}/${name})
 
     ExternalProject_Add(   ${name}
         # General
         PREFIX             ${DEPS_BUILD_DIR}
-        STAMP_DIR          ${BUILD_DIR}-stamp
+        STAMP_DIR          ${BuildDir}-stamp
         # Download
         DOWNLOAD_DIR       ${DEPS_DOWNLOAD_DIR}
         DOWNLOAD_COMMAND   ${CMAKE_COMMAND}
-            -E copy_directory ${REPO_DIR} ${BUILD_DIR}
+            -E copy_directory ${RepoDir} ${BuildDir}
         # Patch
-        PATCH_COMMAND       "${${BDTB}_PATCH_CMD}"
+        PATCH_COMMAND      "${repo_PATCH_CMD}"
         # Configure
-        SOURCE_DIR         ${BUILD_DIR}
-        CONFIGURE_COMMAND  "${${BDTB}_CONFIG_CMD}"
+        SOURCE_DIR         "${BuildDir}"
+        CONFIGURE_COMMAND  "${repo_CONFIG_CMD}"
         # Build
-        BINARY_DIR         ${BUILD_DIR}
-        BUILD_COMMAND      "${${BDTB}_BUILD_CMD}"
+        BINARY_DIR         "${BuildDir}"
+        BUILD_COMMAND      "${repo_BUILD_CMD}"
         # Install
-        INSTALL_DIR        ${DEPS_INSTALL_DIR}
-        INSTALL_COMMAND    "${${BDTB}_INSTALL_CMD}")
+        INSTALL_DIR        "${DEPS_INSTALL_DIR}"
+        INSTALL_COMMAND    "${repo_INSTALL_CMD}"
+    )
 
-    if(NOT (EXISTS ${REPO_DIR} AND IS_DIRECTORY ${REPO_DIR}
-            AND EXISTS ${REPO_DIR}/.git AND IS_DIRECTORY ${REPO_DIR}/.git))
+    if(NOT (EXISTS ${RepoDir} AND IS_DIRECTORY ${RepoDir}
+            AND EXISTS ${RepoDir}/.git AND IS_DIRECTORY ${RepoDir}/.git))
         ExternalProject_Add_Step(${name} ${name}-repo-clone
-            COMMENT "git clone ${${BDTB}_REPO_URL} ${name}"
+            COMMENT "git clone ${repo_REPO_URL} ${name}"
                 WORKING_DIRECTORY ${DEPS_DOWNLOAD_DIR}
-            COMMAND ${GIT_PROG} clone ${${BDTB}_REPO_URL} ${name})
-
+            COMMAND ${GIT_PROG} clone ${repo_REPO_URL} ${name}
+        )
     endif()
 endfunction()

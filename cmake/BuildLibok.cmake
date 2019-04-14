@@ -1,11 +1,12 @@
-if(true)
+if(false)
     # Download git repo & build
     BuildDepsRepo(libok
         REPO_URL    https://github.com/gkide/ok.git
         BUILD_CMD   ${GNU_MAKE}
             BUILD_TYPE=${DEPS_BUILD_TYPE}
             INSTALL_PERFIX=${DEPS_INSTALL_DIR}
-        INSTALL_CMD ${GNU_MAKE} install)
+        INSTALL_CMD ${GNU_MAKE} install
+    )
 else()
     # Download tarball & build
     BuildDepsTarball(libok
@@ -15,7 +16,8 @@ else()
         BUILD_CMD   ${GNU_MAKE}
             BUILD_TYPE=${DEPS_BUILD_TYPE}
             INSTALL_PERFIX=${DEPS_INSTALL_DIR}
-        INSTALL_CMD ${GNU_MAKE} install)
+        INSTALL_CMD ${GNU_MAKE} install
+    )
 endif()
 
 set(LIBOK_LIBRARY ${DEPS_INSTALL_DIR}/lib/libok.a)

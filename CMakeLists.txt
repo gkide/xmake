@@ -159,6 +159,10 @@ InstallHelper(TARGETS check)
 include(BuildLibok)
 add_dependencies(check libok)
 
+# Download & Prebuild Binary
+########################################
+include(PreInstall)
+
 # Install Executable Example 2
 ########################################
 add_executable(prog ${SOURCES})

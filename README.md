@@ -2,22 +2,19 @@
 
 cmake & make template for quick project creation!
 
-- `XMAKE`
-  `XMAKE` variable will auto set to `${PROJECT_NAME}` of uppercase
+- `XMAKE` variable will auto set to `${PROJECT_NAME}` of uppercase
 
-- `XMAKE_SKIP_RPATH_ORIGIN`
-  If **ON**, **RPATH** will be set to `$ORIGIN/../lib`,
-  if **OFF**(default), **RPATH** will be set to empty
+- `XMAKE_SKIP_RPATH_ORIGIN` if **ON**, **RPATH** will be set to
+  `$ORIGIN/../lib`; if **OFF**(default), **RPATH** will be set to empty
 
-- `XMAKE_VERBOSE_MESSAGE`
-  If **ON**, do not show verbose xmake cmake message,
+- `XMAKE_VERBOSE_MESSAGE` if **ON**, do not show verbose cmake message;
   if **OFF**(default), show verbose xmake cmake message
 
 # Host Support Status for project `xmake`
 
-- use cmake `configure_file()` command to get following configurations
-- `XMAKE_EXPORT_AS_COMPILER_ARGS` if **ON**, also export as CC cmd args
-- `XMAKE_EXPORT_AS_COMPILER_ARGS` if **OFF**(default), do not export to CC
+- Use cmake `configure_file()` command to get following configurations
+- `XMAKE_EXPORT_AS_COMPILER_ARGS` if **ON**, also export as CC cmd args;
+  if **OFF**(default), do not export to CC
 
 ## MacOS
 
@@ -151,8 +148,8 @@ cmake & make template for quick project creation!
 * `${XMAKE}_PLGDIR` => `${CMAKE_INSTALL_PREFIX}/plugin`, plugin data
 * `${XMAKE}_INCDIR` => `${CMAKE_INSTALL_PREFIX}/include`, C/C++ header
 
-- `TARGETS` of cmake **executables**, **static**/**shared**/**module**
-  /**import** libraries will be installed into `${${XMAKE}_BINDIR}` or `${${XMAKE}_LIBDIR}`
+- `TARGETS` of cmake will be installed into `${${XMAKE}_BINDIR}` or `${${XMAKE}_LIBDIR}`
+  * cmake targets: **executables**, **static**/**shared**/**module**/**import** libraries
   * The executable resources will be installed into `${${XMAKE}_SHADIR}/resource` if NOT **MacOS**
 
 - installs contents of `DIRECTORY` into `DESTINATION` with optional permissions
@@ -165,7 +162,7 @@ cmake & make template for quick project creation!
 - install `PROGRAMS` into `DESTINATION` with optional `FILE_PERMISSIONS`
   * if not set, the default value is **rwxr-xr-x**, rename if set `RENAME`
 
-# Support External Project Build
+# Support External Project Build & Install
 
 ## The following values can be set by user if need
 
@@ -210,3 +207,18 @@ cmake & make template for quick project creation!
 - `CONFIG_CMD`, The project config command, can be missing
 - `BUILD_CMD`, The project build command, can be missing
 - `INSTALL_CMD`, The project install command, can be missing
+
+## `PrebuildInstall(NAME ...)` Prebuild Binary Download & Install
+
+- `NAME` The prebuild binary name, will be cmake top target, can not missing
+
+- `SKIP`, Skip prebuild binary download & install if true
+- `REPO`,  Download prebuild binary repo, patch and install
+- `TARBALL`, Download prebuild binary tarball, extract, patch and install
+
+- `URL`, The prebuild binary tarball or repo URL to download, can NOT missing
+- `PATCH_CMD`, The prebuild binary patch command, can be missing
+- `INSTALL_CMD`, The prebuild binary install command, can NOT missing
+
+- `VERSION`, The prebuild binary version, can not missing
+- `SHA256`, The prebuild binary SHA256 for tarball checking, can not missing
