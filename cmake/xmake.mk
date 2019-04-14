@@ -132,8 +132,8 @@ OUTPUT := $(shell mkdir -p $(INSTALL_PREFIX) && cd $(INSTALL_PREFIX) && pwd)
 $(if $(OUTPUT),, $(error Failed to create directory: "$(INSTALL_PREFIX)"))
 CMAKE_ARGS += -DCMAKE_INSTALL_PREFIX=$(OUTPUT)
 
-# Do not show cmake warnings for none 'Debug' build
-ifneq ($(BUILD_TYPE), Debug)
+# Do not show cmake warnings for none 'Dev/Debug' build
+ifeq ($(filter Dev Debug,$(BUILD_TYPE)),)
     CMAKE_ARGS += -Wno-dev
 endif
 

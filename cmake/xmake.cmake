@@ -6,7 +6,24 @@ string(APPEND ${XMAKE}_RELEASE_VERSION "v${${XMAKE}_VERSION_MAJOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_MINOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_PATCH}")
 
+# pre -> alpha -> beta -> rc -> release
+# https://github.com/gkide/repo-hooks/blob/master/scripts/sync-release
 if(${XMAKE}_VERSION_TWEAK)
+    set(tweak "${${XMAKE}_VERSION_TWEAK}")
+    set(normalized_tweaks pre alpha beta rc release)
+
+    foreach(item IN ITEMS ${normalized_tweaks})
+        if(tweak MATCHES "(${item}[.-]*)[0-9]*")
+            set(is_normalized_tweak true)
+            break()
+        endif()
+    endforeach()
+
+    if(NOT is_normalized_tweak)
+        string(REPLACE ";" " -> " normalized "${normalized_tweaks}")
+        message(AUTHOR_WARNING "Consider the normalized tweaks: ${normalized}")
+    endif()
+
     string(APPEND ${XMAKE}_RELEASE_VERSION "-${${XMAKE}_VERSION_TWEAK}")
 endif()
 
