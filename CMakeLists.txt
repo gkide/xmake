@@ -16,9 +16,10 @@ option(XMAKE_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" OFF)
 option(XMAKE_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" OFF)
 
 # Enable static/shared Qt5 support
-option(XMAKE_QT5_SUPPORT "Enable Qt5 support" ON)
-set(XMAKE_QT5_STATIC_PREFIX "")
-set(XMAKE_QT5_SHARED_PREFIX "")
+#option(XMAKE_QT5_SUPPORT "Enable Qt5 support" ON)
+set(XMAKE_QT5_STATIC_PREFIX "/opt/qt-5.9.1")
+#set(XMAKE_QT5_SHARED_PREFIX "/opt/Qt5.5.1/5.5/gcc_64")
+#set(XMAKE_QT5_SHARED_PREFIX "/usr/lib/gcc/x86_64-linux-gnu")
 
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")

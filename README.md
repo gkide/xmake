@@ -11,6 +11,13 @@ cmake & make template for quick project creation!
   * if **OFF**(default), **RPATH** will be set to `$ORIGIN/../lib`
   * if **ON**, executables & shared libraries rpath will be set to empty
 
+- `XMAKE_AUTO_SOURCES`, xmake auto generated source file if need.
+- `XMAKE_AUTO_LIBRARIES`, xmake auto collection libraries to link against.
+
+- `XMAKE_STANDLONE_MSYS`, build static link executables for windows **Msys**
+- `XMAKE_STANDLONE_MINGW`, build static link executables for windows **MinGW**
+- `XMAKE_STANDLONE_CYGWIN`, build static link executables for windows **Cygwin**
+
 # Host Support Status for project `xdemo`, result in **XMAKE** set to `XDEMO`
 
 - `XMAKE_EXPORT_AS_COMPILER_ARGS`

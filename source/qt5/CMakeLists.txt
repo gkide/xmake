@@ -1,16 +1,25 @@
-# Find Qt5 QtWidgets library
+# Find Qt5 library
+find_package(Qt5Gui CONFIG REQUIRED)
 find_package(Qt5Widgets CONFIG REQUIRED)
+find_package(Qt5Network CONFIG REQUIRED)
 
 # Populate a CMake variable with the sources
-set(hello_qt5_SRCS
+set(qt5app_SRCS
     main.cpp
     mainwindow.ui
     mainwindow.cpp
 )
 
-add_executable(hello-qt5 WIN32 ${hello_qt5_SRCS})
+add_executable(qt5app WIN32
+    ${qt5app_SRCS}
+    ${XMAKE_AUTO_SOURCES}
+)
 
 # Use the Widgets module from Qt5
-target_link_libraries(hello-qt5 Qt5::Widgets)
+target_link_libraries(qt5app
+    Qt5::Widgets
+    Qt5::Network
+    ${XMAKE_AUTO_LIBRARIES}
+)
 
-InstallHelper(TARGETS hello-qt5)
+InstallHelper(TARGETS qt5app)

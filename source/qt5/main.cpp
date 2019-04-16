@@ -1,3 +1,8 @@
+#include <QUdpSocket>
+#include <QTcpSocket>
+#include <QTcpServer>
+#include <QNetworkDatagram>
+
 #include <QApplication>
 
 #include "mainwindow.h"
