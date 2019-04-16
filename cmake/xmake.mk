@@ -183,7 +183,7 @@ PHONY += xmake-test
 xmake-test:
 ifeq ($(BUILD_TYPE), Debug)
 	$(XMAKE) -C $(BUILD_DIR) xtest
-	$(Q)$(BUILD_DIR)/bin/xtest
+	$(Q)$(BUILD_DIR)/$(BUILD_TYPE)/bin/xtest
 endif
 
 PHONY += xmake-install

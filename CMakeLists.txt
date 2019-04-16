@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8.12)
-project(xmake)
+project(xdemo)
 
-set(XMAKE_VERSION_MAJOR 1)
-set(XMAKE_VERSION_MINOR 0)
-set(XMAKE_VERSION_PATCH 0)
-set(XMAKE_VERSION_TWEAK "release")
+set(XDEMO_VERSION_MAJOR 1)
+set(XDEMO_VERSION_MINOR 0)
+set(XDEMO_VERSION_PATCH 0)
+set(XDEMO_VERSION_TWEAK "release")
 
 option(XMAKE_ENABLE_GCOV "Enable Coverage" ON)
 option(XMAKE_ENABLE_ASSERTION "Enable assertion." ON)
@@ -89,7 +89,7 @@ InstallHelper(TARGETS xlc
 )
 # include/anywhere/xlc.h
 InstallHelper(FILES source/xlc.h
-    DESTINATION ${${XMAKE}_PREFIX}/anywhere
+    DESTINATION ${XDEMO_PREFIX}/anywhere
 )
 
 # Install Shared Library Example 1
@@ -149,7 +149,7 @@ InstallHelper(TARGETS ylc
 )
 # include/anywhere/ylc.h
 InstallHelper(FILES source/ylc.h
-    DESTINATION ${${XMAKE}_PREFIX}/anywhere
+    DESTINATION ${XDEMO_PREFIX}/anywhere
 )
 
 file(GLOB SOURCES source/main.c)
@@ -220,18 +220,18 @@ include(PreInstall)
 # Install Executable of NOT Target
 ########################################
 InstallHelper(PROGRAMS scripts/release
-    DESTINATION ${XMAKE_PLGDIR})
+    DESTINATION ${XDEMO_PLGDIR})
 InstallHelper(PROGRAMS scripts/release
-    DESTINATION ${XMAKE_PLGDIR}/scripts)
+    DESTINATION ${XDEMO_PLGDIR}/scripts)
 
 # Install Normal Files
 ########################################
 InstallHelper(FILES LICENSE
-    DESTINATION ${XMAKE_PREFIX})
+    DESTINATION ${XDEMO_PREFIX})
 InstallHelper(FILES docs/local.mk
-    DESTINATION ${XMAKE_DOCDIR})
+    DESTINATION ${XDEMO_DOCDIR})
 
 # Install Directory
 ########################################
 InstallHelper(DIRECTORY cmake
-    DESTINATION ${XMAKE_SHADIR})
+    DESTINATION ${XDEMO_SHADIR})

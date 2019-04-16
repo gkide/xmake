@@ -11,7 +11,7 @@ cmake & make template for quick project creation!
   * if **OFF**(default), **RPATH** will be set to `$ORIGIN/../lib`
   * if **ON**, executables & shared libraries rpath will be set to empty
 
-# Host Support Status for project `xmake`
+# Host Support Status for project `xdemo`, result in **XMAKE** set to `XDEMO`
 
 - `XMAKE_EXPORT_AS_COMPILER_ARGS`
   * if **ON**, export the variables as CC command line arguments
@@ -21,122 +21,122 @@ cmake & make template for quick project creation!
 
 - HOST_LINUX
 - HOST_MACOS
-- HOST_ARCH_64		            : little endian
-- HOST_NAME                     : charlie
-- HOST_USER                     : BlackMacOS.local
-- HOST_ARCH                     : x86_64
-- HOST_SYSTEM_NAME              : macos
-- HOST_SYSTEM_VERSION           : 15.0.0
-- HOST_OS_DIST_NAME             : Mac OS X
-- HOST_OS_DIST_VERSION          : 10.11.1-15B42
-- **${XMAKE}**_VERSION_MAJOR    : 1
-- **${XMAKE}**_VERSION_MINOR    : 0
-- **${XMAKE}**_VERSION_PATCH    : 0
-- **${XMAKE}**_VERSION_TWEAK    : release
-- **${XMAKE}**_RELEASE_TYPE     : Debug
-- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release~20190411@c13ea86
-- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:26:52 +0800
+- HOST_ARCH_64		         : little endian
+- HOST_NAME                  : charlie
+- HOST_USER                  : BlackMacOS.local
+- HOST_ARCH                  : x86_64
+- HOST_SYSTEM_NAME           : macos
+- HOST_SYSTEM_VERSION        : 15.0.0
+- HOST_OS_DIST_NAME          : Mac OS X
+- HOST_OS_DIST_VERSION       : 10.11.1-15B42
+- **XDEMO**_VERSION_MAJOR    : 1
+- **XDEMO**_VERSION_MINOR    : 0
+- **XDEMO**_VERSION_PATCH    : 0
+- **XDEMO**_VERSION_TWEAK    : release
+- **XDEMO**_RELEASE_TYPE     : Debug
+- **XDEMO**_RELEASE_VERSION  : v1.0.0-release~20190411@c13ea86
+- **XDEMO**_RELEASE_TIMESTAMP: 2019-04-10 21:26:52 +0800
 
 ## Linux & Likes
 
 - HOST_LINUX
-- HOST_ARCH_64                  : little endian
-- HOST_NAME                     : charlie
-- HOST_USER                     : ThinkPad
-- HOST_ARCH                     : x86_64
-- HOST_SYSTEM_NAME              : linux
-- HOST_SYSTEM_VERSION           : 3.16.0-30-generic
-- HOST_OS_DIST_NAME             : Ubuntu
-- HOST_OS_DIST_VERSION          : 14.04
-- **${XMAKE}**_VERSION_MAJOR    : 1
-- **${XMAKE}**_VERSION_MINOR    : 0
-- **${XMAKE}**_VERSION_PATCH    : 0
-- **${XMAKE}**_VERSION_TWEAK    : release
-- **${XMAKE}**_RELEASE_TYPE     : Debug
-- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release~20190411@a419980
-- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:50:38 +0800
+- HOST_ARCH_64               : little endian
+- HOST_NAME                  : charlie
+- HOST_USER                  : ThinkPad
+- HOST_ARCH                  : x86_64
+- HOST_SYSTEM_NAME           : linux
+- HOST_SYSTEM_VERSION        : 3.16.0-30-generic
+- HOST_OS_DIST_NAME          : Ubuntu
+- HOST_OS_DIST_VERSION       : 14.04
+- **XDEMO**_VERSION_MAJOR    : 1
+- **XDEMO**_VERSION_MINOR    : 0
+- **XDEMO**_VERSION_PATCH    : 0
+- **XDEMO**_VERSION_TWEAK    : release
+- **XDEMO**_RELEASE_TYPE     : Debug
+- **XDEMO**_RELEASE_VERSION  : v1.0.0-release~20190411@a419980
+- **XDEMO**_RELEASE_TIMESTAMP: 2019-04-10 21:50:38 +0800
 
 ## Windows/Msys
 
 - HOST_LINUX
 - HOST_WINDOWS
 - HOST_WINDOWS_MSYS
-- HOST_ARCH_64                  : little endian
-- HOST_NAME                     : 书生
-- HOST_USER                     : ThinkPad
-- HOST_ARCH                     : x86_64
-- HOST_SYSTEM_NAME              : windows/msys
-- HOST_SYSTEM_VERSION           : 2.8.2(0.313/5/3)
-- HOST_OS_DIST_NAME             : Windows 7
-- HOST_OS_DIST_VERSION          : 6.1.7601
-- **${XMAKE}**_VERSION_MAJOR    : 1
-- **${XMAKE}**_VERSION_MINOR    : 0
-- **${XMAKE}**_VERSION_PATCH    : 0
-- **${XMAKE}**_VERSION_TWEAK    : release
-- **${XMAKE}**_RELEASE_TYPE     : Debug
-- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
-- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:26:52 +0800
+- HOST_ARCH_64               : little endian
+- HOST_NAME                  : 书生
+- HOST_USER                  : ThinkPad
+- HOST_ARCH                  : x86_64
+- HOST_SYSTEM_NAME           : windows/msys
+- HOST_SYSTEM_VERSION        : 2.8.2(0.313/5/3)
+- HOST_OS_DIST_NAME          : Windows 7
+- HOST_OS_DIST_VERSION       : 6.1.7601
+- **XDEMO**_VERSION_MAJOR    : 1
+- **XDEMO**_VERSION_MINOR    : 0
+- **XDEMO**_VERSION_PATCH    : 0
+- **XDEMO**_VERSION_TWEAK    : release
+- **XDEMO**_RELEASE_TYPE     : Debug
+- **XDEMO**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
+- **XDEMO**_RELEASE_TIMESTAMP: 2019-04-10 21:26:52 +0800
 
 ## Windows/MinGW32
 
 - HOST_WINDOWS
 - HOST_WINDOWS_MINGW
-- HOST_ARCH_32                  : little endian
-- HOST_NAME                     : 书生
-- HOST_USER                     : ThinkPad
-- HOST_ARCH                     : x86
-- HOST_SYSTEM_NAME              : windows/mingw
-- HOST_SYSTEM_VERSION           : 6.1.7601
-- HOST_OS_DIST_NAME             : Windows 7
-- HOST_OS_DIST_VERSION          : 6.1.7601
-- **${XMAKE}**_VERSION_MAJOR    : 1
-- **${XMAKE}**_VERSION_MINOR    : 0
-- **${XMAKE}**_VERSION_PATCH    : 0
-- **${XMAKE}**_VERSION_TWEAK    : release
-- **${XMAKE}**_RELEASE_TYPE     : Debug
-- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
-- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:57:53
+- HOST_ARCH_32               : little endian
+- HOST_NAME                  : 书生
+- HOST_USER                  : ThinkPad
+- HOST_ARCH                  : x86
+- HOST_SYSTEM_NAME           : windows/mingw
+- HOST_SYSTEM_VERSION        : 6.1.7601
+- HOST_OS_DIST_NAME          : Windows 7
+- HOST_OS_DIST_VERSION       : 6.1.7601
+- **XDEMO**_VERSION_MAJOR    : 1
+- **XDEMO**_VERSION_MINOR    : 0
+- **XDEMO**_VERSION_PATCH    : 0
+- **XDEMO**_VERSION_TWEAK    : release
+- **XDEMO**_RELEASE_TYPE     : Debug
+- **XDEMO**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
+- **XDEMO**_RELEASE_TIMESTAMP: 2019-04-10 21:57:53
 
 ## Windows/MinGW64
 
 - HOST_WINDOWS
 - HOST_WINDOWS_MINGW
-- HOST_ARCH_64                  : little endian
-- HOST_NAME                     : 书生
-- HOST_USER                     : ThinkPad
-- HOST_ARCH                     : x86_64
-- HOST_SYSTEM_NAME              : windows/mingw
-- HOST_SYSTEM_VERSION           : 6.1.7601
-- HOST_OS_DIST_NAME             : Windows 7
-- HOST_OS_DIST_VERSION          : 6.1.7601
-- **${XMAKE}**_VERSION_MAJOR    : 1
-- **${XMAKE}**_VERSION_MINOR    : 0
-- **${XMAKE}**_VERSION_PATCH    : 0
-- **${XMAKE}**_VERSION_TWEAK    : release
-- **${XMAKE}**_RELEASE_TYPE     : Debug
-- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
-- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:02:43
+- HOST_ARCH_64               : little endian
+- HOST_NAME                  : 书生
+- HOST_USER                  : ThinkPad
+- HOST_ARCH                  : x86_64
+- HOST_SYSTEM_NAME           : windows/mingw
+- HOST_SYSTEM_VERSION        : 6.1.7601
+- HOST_OS_DIST_NAME          : Windows 7
+- HOST_OS_DIST_VERSION       : 6.1.7601
+- **XDEMO**_VERSION_MAJOR    : 1
+- **XDEMO**_VERSION_MINOR    : 0
+- **XDEMO**_VERSION_PATCH    : 0
+- **XDEMO**_VERSION_TWEAK    : release
+- **XDEMO**_RELEASE_TYPE     : Debug
+- **XDEMO**_RELEASE_VERSION  : v1.0.0-release~20190411@bf3c447
+- **XDEMO**_RELEASE_TIMESTAMP: 2019-04-10 21:02:43
 
 ## Windows/Cygwin
 
 - HOST_LINUX
 - HOST_WINDOWS
 - HOST_WINDOWS_CYGWIN
-- HOST_ARCH_64                  : little endian
-- HOST_NAME                     : 书生
-- HOST_USER                     : ThinkPad
-- HOST_ARCH                     : x86_64
-- HOST_SYSTEM_NAME              : windows/cygwin
-- HOST_SYSTEM_VERSION           : 3.0.6(0.338/5/3)
-- HOST_OS_DIST_NAME             : Windows 7
-- HOST_OS_DIST_VERSION          : 6.1.7601
-- **${XMAKE}**_VERSION_MAJOR    : 1
-- **${XMAKE}**_VERSION_MINOR    : 0
-- **${XMAKE}**_VERSION_PATCH    : 0
-- **${XMAKE}**_VERSION_TWEAK    : release
-- **${XMAKE}**_RELEASE_TYPE     : Debug
-- **${XMAKE}**_RELEASE_VERSION  : v1.0.0-release
-- **${XMAKE}**_RELEASE_TIMESTAMP: 2019-04-10 21:40:14 +0800
+- HOST_ARCH_64               : little endian
+- HOST_NAME                  : 书生
+- HOST_USER                  : ThinkPad
+- HOST_ARCH                  : x86_64
+- HOST_SYSTEM_NAME           : windows/cygwin
+- HOST_SYSTEM_VERSION        : 3.0.6(0.338/5/3)
+- HOST_OS_DIST_NAME          : Windows 7
+- HOST_OS_DIST_VERSION       : 6.1.7601
+- **XDEMO**_VERSION_MAJOR    : 1
+- **XDEMO**_VERSION_MINOR    : 0
+- **XDEMO**_VERSION_PATCH    : 0
+- **XDEMO**_VERSION_TWEAK    : release
+- **XDEMO**_RELEASE_TYPE     : Debug
+- **XDEMO**_RELEASE_VERSION  : v1.0.0-release
+- **XDEMO**_RELEASE_TIMESTAMP: 2019-04-10 21:40:14 +0800
 
 # Qt5 Support
 
