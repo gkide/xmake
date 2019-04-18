@@ -55,6 +55,10 @@ function(DownloadExtract)
 
     # If tarball exists, if not force then do nothing
     if(EXISTS "${SRC_TARBALL}")
+        if(EXISTS ${SOURCE_DIR} AND IS_DIRECTORY ${SOURCE_DIR})
+            return()
+        endif()
+
         message(STATUS "Downloading ... skip")
         message(STATUS "Exists ${SRC_TARBALL}")
     else()
