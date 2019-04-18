@@ -17,7 +17,7 @@ option(XMAKE_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" OFF)
 
 # Enable static/shared Qt5 support
 #option(XMAKE_QT5_SUPPORT "Enable Qt5 support" ON)
-set(XMAKE_QT5_STATIC_PREFIX "/opt/qt-5.9.1")
+#set(XMAKE_QT5_STATIC_PREFIX "/opt/qt-5.9.1")
 #set(XMAKE_QT5_SHARED_PREFIX "/opt/Qt5.5.1/5.5/gcc_64")
 #set(XMAKE_QT5_SHARED_PREFIX "/usr/lib/gcc/x86_64-linux-gnu")
 
@@ -167,6 +167,7 @@ endif()
 # Install Executable Example 1
 ########################################
 add_executable(xtest ${SOURCES} source/library.c)
+add_executable(xtest-cxx source/main.cpp source/library.c)
 InstallHelper(TARGETS xtest)
 
 # Install Executable Example 2
