@@ -196,13 +196,6 @@ if(HOST_WINDOWS_MSYS OR HOST_WINDOWS_MINGW OR HOST_WINDOWS_CYGWIN)
             /usr/bin/${CMAKE_SHARED_LIBRARY_PREFIX}win1${CMAKE_SHARED_LIBRARY_SUFFIX}
             DESTINATION ${${XMAKE}_PREFIX}/bin)
     endif()
-else()
-    InstallHelper(FILES
-        /usr/bin/${CMAKE_SHARED_LIBRARY_PREFIX}gcc_s-seh-1${CMAKE_SHARED_LIBRARY_SUFFIX}
-        DESTINATION ${${XMAKE}_PREFIX}/bin)
-    InstallHelper(FILES
-        /usr/bin/${CMAKE_SHARED_LIBRARY_PREFIX}stdc++-6${CMAKE_SHARED_LIBRARY_SUFFIX}
-        DESTINATION ${${XMAKE}_PREFIX}/bin)
 endif()
 
 mark_as_advanced(FORCE XMAKE)
