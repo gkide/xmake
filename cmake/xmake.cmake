@@ -77,7 +77,7 @@ if(XMAKE_ENABLE_GCOV)
 endif()
 
 if(XMAKE_ENABLE_ASSERTION)
-    message(STATUS "Enable assertion")
+    message(STATUS "Enable assert")
     if(CMAKE_C_FLAGS_${buildType} MATCHES DNDEBUG)
         string(REPLACE "-DNDEBUG" "" CMAKE_C_FLAGS_${buildType}
             "${CMAKE_C_FLAGS_${buildType}}")
@@ -87,7 +87,7 @@ if(XMAKE_ENABLE_ASSERTION)
             "${CMAKE_CXX_FLAGS_${buildType}}")
     endif()
 else()
-    message(STATUS "Disable assertion")
+    message(STATUS "Disable assert")
     if(NOT CMAKE_C_FLAGS_${buildType} MATCHES DNDEBUG)
         set(CMAKE_C_FLAGS_${buildType}
             "-DNDEBUG ${CMAKE_C_FLAGS_${buildType}}")
@@ -98,9 +98,20 @@ else()
     endif()
 endif()
 
+# Enale ccache by default
+if(NOT HOST_WINDOWS AND NOT XMAKE_DISABLE_CCACHE)
+    find_program(CCACHE_PROG ccache)
+    if(CCACHE_PROG)
+        message(STATUS "Enable ccache")
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE_PROG})
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE_PROG})
+    endif()
+endif()
+
+# Disable Travis CI by default
 if(XMAKE_ENABLE_TRAVIS_CI)
     add_compile_options("-Werror")
-    message(STATUS "Enable Travis CI, add -Werror flag.")
+    message(STATUS "Enable travis-ci")
 endif()
 
 # Cmake modules

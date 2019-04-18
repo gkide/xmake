@@ -11,6 +11,8 @@ option(XMAKE_ENABLE_ASSERTION "Enable assertion." ON)
 option(XMAKE_ENABLE_TRAVIS_CI "Enable Travis CI build." ON)
 option(XMAKE_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 
+#option(XMAKE_DISABLE_CCACHE "Enale ccache by default for linux" ON)
+
 option(XMAKE_VERBOSE_MESSAGE "Show verbose xmake message" OFF)
 option(XMAKE_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" OFF)
 option(XMAKE_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" OFF)

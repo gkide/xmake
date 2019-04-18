@@ -10,6 +10,7 @@ cmake & make template for quick project creation!
 - `XMAKE_SKIP_RPATH_ORIGIN`
   * if **OFF**(default), **RPATH** will be set to `$ORIGIN/../lib`
   * if **ON**, executables & shared libraries rpath will be set to empty
+- `XMAKE_DISABLE_CCACHE` enable **ccache** for linux by default
 
 - `XMAKE_AUTO_SOURCES`, xmake auto generated source file if need.
 - `XMAKE_AUTO_LIBRARIES`, xmake auto collection libraries to link against.
