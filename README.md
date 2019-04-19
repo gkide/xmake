@@ -2,8 +2,20 @@
 
 cmake & make template for quick project creation!
 
+- [Host Info Auto Detect Support](#host-status-for-project-xdemo)
+  * [MacOS](#macos)
+  * [Linux](#linux-likes)
+  * Windows: [Msys](#windowsmsys), [MinGW32](#windowsmingw32),
+    [MinGW64](#windowsmingw64), [Cygwin](#windowscygwin)
+- [Qt5 Static/Shared Link Support](#qt5-support)
+- [Cmake Install Helper for Convenience](#installhelper)
+- [External Deps Download/Build/Install](#external-project-download-build-and-install)
+  * [BuildDepsRepo](#builddepsreponame)
+  * [BuildDepsTarBall](#builddepstarballname)
+  * [PrebuildInstall](#prebuildinstallname)
+- [Code Coverage Support](#code-coverage-support)
+
 - `XMAKE` variable will auto set to `${PROJECT_NAME}` of uppercase
-- `XMAKE_ENABLE_GCOV` enable gcov or not, default is **OFF**
 - `XMAKE_ENABLE_ASSERTION` enable assertion or not, default is **OFF**
 - `XMAKE_ENABLE_TRAVIS_CI` enable travis CI build or not, default is **OFF**
 - `XMAKE_VERBOSE_MESSAGE` show verbose xmake message or not, default is **OFF**
@@ -15,8 +27,9 @@ cmake & make template for quick project creation!
 - `XMAKE_AUTO_SOURCES`, xmake auto generated source file if need.
 - `XMAKE_AUTO_LIBRARIES`, xmake auto collection libraries to link against.
 
-# Host Support Status for project `xdemo`, result in **XMAKE** set to `XDEMO`
+# Host Status for project `xdemo`
 
+- The demo project **xdemo** result in **XMAKE** set to `XDEMO`
 - `XMAKE_EXPORT_AS_COMPILER_ARGS`
   * if **ON**, export the variables as CC command line arguments
   * if **OFF**(default), do not export to CC, use cmake `configure_file()`
@@ -152,7 +165,13 @@ cmake & make template for quick project creation!
 - `XMAKE_QT5_STATIC_PREFIX` static build of Qt5 install path
 - `XMAKE_QT5_SHARED_PREFIX` shared build of Qt5 install path
 
-# `InstallHelper` is cmake install helper for convenience
+- NOTE: static Qt5 need those two auto defined variables
+  * `XMAKE_AUTO_SOURCES`, xmake auto generated source file if need.
+  * `XMAKE_AUTO_LIBRARIES`, xmake auto collection libraries to link against.
+
+# `InstallHelper`
+
+- `InstallHelper` is cmake install helper for convenience
 
 * `${XMAKE}_PREFIX` => `${CMAKE_INSTALL_PREFIX}`, install root
 * `${XMAKE}_BINDIR` => `${CMAKE_INSTALL_PREFIX}/bin`, executable
@@ -201,7 +220,9 @@ cmake & make template for quick project creation!
 - `DEPS_LIB_DIR`, External project library install directory, default is **.deps/usr/lib**
 - `DEPS_INCLUDE_DIR`, External project header install directory, default is **.deps/usr/include**
 
-## `BuildDepsRepo(NAME ...)`, building external repo project(git clone & build)
+## `BuildDepsRepo(NAME ...)`
+
+which is used for building external repo project(git clone & build)
 
 - `NAME` The external project name, will be cmake top target, can not missing
 
@@ -211,7 +232,9 @@ cmake & make template for quick project creation!
 - `BUILD_CMD`, The project build command, can be missing
 - `INSTALL_CMD`, The project install command, can be missing
 
-## `BuildDepsTarBall(NAME ...)`, building external project(download tarball & build)
+## `BuildDepsTarBall(NAME ...)`
+
+which is used for building external project(download tarball & build)
 
 - `NAME` The external project name, will be cmake top target, can not missing
 
@@ -223,7 +246,9 @@ cmake & make template for quick project creation!
 - `BUILD_CMD`, The project build command, can be missing
 - `INSTALL_CMD`, The project install command, can be missing
 
-## `PrebuildInstall(NAME ...)` Prebuild Binary Download & Install
+## `PrebuildInstall(NAME ...)`
+
+which is used for prebuild binary download & install
 
 - `NAME` The prebuild binary name, will be cmake top target, can not missing
 
@@ -237,3 +262,7 @@ cmake & make template for quick project creation!
 
 - `VERSION`, The prebuild binary version, can not missing
 - `SHA256`, The prebuild binary SHA256 for tarball checking, can not missing
+
+# Code Coverage Support
+
+- `XMAKE_ENABLE_GCOV` enable gcov or not, default is **OFF**
