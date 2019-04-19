@@ -31,6 +31,8 @@ endif()
 if(NOT CMAKE_CONFIGURATION_TYPES)
     list(APPEND CMAKE_CONFIGURATION_TYPES "Dev")
     list(APPEND CMAKE_CONFIGURATION_TYPES "Debug")
+    list(APPEND CMAKE_CONFIGURATION_TYPES "Coverage")
+
     list(APPEND CMAKE_CONFIGURATION_TYPES "Release")
     list(APPEND CMAKE_CONFIGURATION_TYPES "MinSizeRel")
     list(APPEND CMAKE_CONFIGURATION_TYPES "RelWithDebInfo")
@@ -64,17 +66,11 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/usr" CACHE PATH "" FORCE)
 endif()
 
-if(XMAKE_ENABLE_GCOV)
-    message(STATUS "Enable gcov")
-    set(CMAKE_C_FLAGS_${buildType}
-        "${CMAKE_C_FLAGS_${buildType}} --coverage")
-    set(CMAKE_CXX_FLAGS_${buildType}
-        "${CMAKE_CXX_FLAGS_${buildType}} --coverage")
-    set(CMAKE_EXE_LINKER_FLAGS_${buildType}
-        "${CMAKE_EXE_LINKER_FLAGS_${buildType}} --coverage")
-    set(CMAKE_SHARED_LINKER_FLAGS_${buildType}
-        "${CMAKE_SHARED_LINKER_FLAGS_${buildType}} --coverage")
-endif()
+# Cmake modules
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")
+include(PreventInTreeBuilds)
+include(CheckHostSystem)
+include(InstallHelper)
 
 if(XMAKE_ENABLE_ASSERTION)
     message(STATUS "Enable assert")
@@ -114,19 +110,16 @@ if(XMAKE_ENABLE_TRAVIS_CI)
     message(STATUS "Enable travis-ci")
 endif()
 
-# Cmake modules
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")
-include(PreventInTreeBuilds)
-include(CheckHostSystem)
-include(GetGitRepoInfo)
-include(InstallHelper)
-
-if(XMAKE_ENABLE_DEPENDENCY)
-    include(Dependencies)
+if(XMAKE_ENABLE_GCOV)
+    include(CodeCoverage)
 endif()
 
 if(XMAKE_QT5_STATIC_PREFIX OR XMAKE_QT5_SHARED_PREFIX OR XMAKE_QT5_SUPPORT)
     include(Qt5Helper)
+endif()
+
+if(XMAKE_ENABLE_DEPENDENCY)
+    include(Dependencies)
 endif()
 
 #include(PrintCmake)
@@ -208,5 +201,7 @@ if(HOST_WINDOWS_MSYS OR HOST_WINDOWS_MINGW OR HOST_WINDOWS_CYGWIN)
             DESTINATION ${${XMAKE}_PREFIX}/bin)
     endif()
 endif()
+
+include(GetGitRepoInfo)
 
 mark_as_advanced(FORCE XMAKE)

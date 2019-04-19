@@ -266,3 +266,19 @@ which is used for prebuild binary download & install
 # Code Coverage Support
 
 - `XMAKE_ENABLE_GCOV` enable gcov or not, default is **OFF**
+
+## `CodeCoverageLcovHtml(...)`
+
+Defines a target for running and collection code coverage information
+Builds dependencies, runs the given executable and outputs reports.
+
+NOTE! The executable should always have a ZERO as exit code otherwise
+the coverage generation will not complete.
+
+- `TARGET`, Target name, if not set auto set to `code.coverage-*`
+- `EXECUTABLE`, Executable to run, can not missing
+- `EXECUTABLE_ARGS`, Executable arguments, can be missing
+- `DEPENDENCIES`, Dependencies to build first, can be missing
+- `LCOV_ARGS`, Extra arguments for lcov, can be missing
+- `GENHTML_ARGS`, Extra arguments for genhtml, can be missing
+- `LCOV_EXCLUDES`, Report exclude patterns, can be missing, auto remove system ones
