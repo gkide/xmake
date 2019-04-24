@@ -133,7 +133,7 @@ $(if $(OUTPUT),, $(error Failed to create directory: "$(INSTALL_PREFIX)"))
 CMAKE_ARGS += -DCMAKE_INSTALL_PREFIX=$(OUTPUT)
 
 # Do not show cmake warnings for none 'Dev/Debug' build
-ifeq ($(filter Dev Debug,$(BUILD_TYPE)),)
+ifeq ($(filter Dev Debug Coverage,$(BUILD_TYPE)),)
     CMAKE_ARGS += -Wno-dev
 endif
 
@@ -181,7 +181,7 @@ xmake-ran-top-cmake:
 
 PHONY += xmake-test
 xmake-test:
-ifeq ($(BUILD_TYPE), Debug)
+ifeq ($(filter-out Dev Debug Coverage,$(BUILD_TYPE)),)
 	$(XMAKE) -C $(BUILD_DIR) xtest
 	$(Q)$(BUILD_DIR)/$(BUILD_TYPE)/bin/xtest
 endif

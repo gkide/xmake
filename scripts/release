@@ -16,4 +16,4 @@ if ! $IS_REPO_HOOKS; then
 fi
 
 REPO_DIR=$(git rev-parse --show-toplevel);
-${SYNC_RELEASE} CONFIG=${REPO_DIR}/scripts/.sync-repo-info.sh;
+${SYNC_RELEASE} CONFIG=${REPO_DIR}/scripts/.sync-release.sh;

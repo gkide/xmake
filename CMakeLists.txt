@@ -4,7 +4,8 @@ project(xdemo)
 set(XDEMO_VERSION_MAJOR 1)
 set(XDEMO_VERSION_MINOR 0)
 set(XDEMO_VERSION_PATCH 0)
-set(XDEMO_VERSION_TWEAK "release")
+# The date & HASH will auto update at build time
+set(XDEMO_VERSION_TWEAK "dev.20190420")
 
 option(XMAKE_ENABLE_GCOV "Enable Coverage" ON)
 option(XMAKE_ENABLE_ASSERTION "Enable assertion." ON)

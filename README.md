@@ -7,38 +7,63 @@ cmake & make template for quick project creation!
   * [Linux](#linux-likes)
   * Windows: [Msys](#windowsmsys), [MinGW32](#windowsmingw32),
     [MinGW64](#windowsmingw64), [Cygwin](#windowscygwin)
+
 - [Qt5 Static/Shared Link Support](#qt5-support)
 - [Cmake Install Helper for Convenience](#installhelper)
 - [External Deps Download/Build/Install](#external-project-download-build-and-install)
   * [BuildDepsRepo](#builddepsreponame)
   * [BuildDepsTarBall](#builddepstarballname)
   * [PrebuildInstall](#prebuildinstallname)
+
 - [Code Coverage Support](#code-coverage-support)
 
 - `XMAKE` variable will auto set to `${PROJECT_NAME}` of uppercase
 - `XMAKE_ENABLE_ASSERTION` enable assertion or not, default is **OFF**
 - `XMAKE_ENABLE_TRAVIS_CI` enable travis CI build or not, default is **OFF**
 - `XMAKE_VERBOSE_MESSAGE` show verbose xmake message or not, default is **OFF**
+
 - `XMAKE_SKIP_RPATH_ORIGIN`
   * if **OFF**(default), **RPATH** will be set to `$ORIGIN/../lib`
   * if **ON**, executables & shared libraries rpath will be set to empty
-- `XMAKE_DISABLE_CCACHE` enable **ccache** for linux by default
 
+- `XMAKE_DISABLE_CCACHE` enable **ccache** for linux by default
 - `XMAKE_AUTO_SOURCES`, xmake auto generated source file if need.
 - `XMAKE_AUTO_LIBRARIES`, xmake auto collection libraries to link against.
 
 # Host Status for project `xdemo`
 
 - The demo project **xdemo** result in **XMAKE** set to `XDEMO`
+
 - `XMAKE_EXPORT_AS_COMPILER_ARGS`
   * if **ON**, export the variables as CC command line arguments
   * if **OFF**(default), do not export to CC, use cmake `configure_file()`
+
+## Semantic Version Support for `XDEMO` Project
+
+- **XDEMO**`_VERSION_MAJOR` the project major version, must be consist of `[0-9]`
+- **XDEMO**`_VERSION_MINOR` the project minor version, must be consist of `[0-9]`
+- **XDEMO**`_VERSION_PATCH` the project patch version, must be consist of `[0-9]`
+- **XDEMO**`_VERSION_TWEAK` which is build time auto update tweak-version string
+
+**NOTE**: by doing this, the final version string is like:
+
+`v1.0.0-dev.20190425+4ad12f8dfb`
+
+- compatible with [semver spec 2.0](https://semver.org/spec/v2.0.0.html) & [npm-semver](https://docs.npmjs.com/misc/semver)
+- a unique ID for each build with repo-hash, build date, etc.
+
+- `v1.0.0` is the basic part, major/minor/patch
+- `dev` is the text part, which set to one of those make sense:
+  * `dev`, `pre`, `nightly`, `alpha`, `beta`, `rc`, `lts`, `stable`, `release`, `eol`
+  * The auto stuff [repo-hooks](https://github.com/gkide/repo-hooks/blob/master/scripts/sync-release)
+- `20190425` is **YYYYMMDD** which will auto update to the build time
+- `4ad12f8dfb` is the repo SHA1 numbers auto update to the build commit's value
 
 ## MacOS
 
 - HOST_LINUX
 - HOST_MACOS
-- HOST_ARCH_64		         : little endian
+- HOST_ARCH_64               : little endian
 - HOST_NAME                  : charlie
 - HOST_USER                  : BlackMacOS.local
 - HOST_ARCH                  : x86_64
@@ -207,6 +232,7 @@ cmake & make template for quick project creation!
 
 - `MAKE_PROG`, The GNU make progame used for external project building.
   * If NOT set, it will auto detected by cmake from **PATH**, can not missing!
+
 - `GIT_PROG`, The git programe used for clone external project.
   * If NOT set, it will auto detected by cmake from **PATH**, can missing!
 
@@ -215,7 +241,6 @@ cmake & make template for quick project creation!
 - `DEPS_DOWNLOAD_DIR`, Download root directory, default is **.deps/downloads**
 - `DEPS_BUILD_DIR`, External project build directory, default is **.deps/build**
 - `DEPS_INSTALL_DIR`, External project install perfix, default is **.deps/usr**
-
 - `DEPS_BIN_DIR`, External project binary install directory, default is **.deps/usr/bin**
 - `DEPS_LIB_DIR`, External project library install directory, default is **.deps/usr/lib**
 - `DEPS_INCLUDE_DIR`, External project header install directory, default is **.deps/usr/include**
@@ -225,7 +250,6 @@ cmake & make template for quick project creation!
 which is used for building external repo project(git clone & build)
 
 - `NAME` The external project name, will be cmake top target, can not missing
-
 - `REPO_URL`, The git project repo URL to clone, can not missing
 - `PATCH_CMD`, The project patch command, can be missing
 - `CONFIG_CMD`, The project config command, can be missing
@@ -237,7 +261,6 @@ which is used for building external repo project(git clone & build)
 which is used for building external project(download tarball & build)
 
 - `NAME` The external project name, will be cmake top target, can not missing
-
 - `VERSION`, The project version, can not missing
 - `URL`, The project tarball URL to download, can not missing
 - `SHA256`, The tarball SHA256 for tarball checking, can not missing
@@ -251,15 +274,12 @@ which is used for building external project(download tarball & build)
 which is used for prebuild binary download & install
 
 - `NAME` The prebuild binary name, will be cmake top target, can not missing
-
 - `SKIP`, Skip prebuild binary download & install if true
 - `REPO`,  Download prebuild binary repo, patch and install
 - `TARBALL`, Download prebuild binary tarball, extract, patch and install
-
 - `URL`, The prebuild binary tarball or repo URL to download, can NOT missing
 - `PATCH_CMD`, The prebuild binary patch command, can be missing
 - `INSTALL_CMD`, The prebuild binary install command, can NOT missing
-
 - `VERSION`, The prebuild binary version, can not missing
 - `SHA256`, The prebuild binary SHA256 for tarball checking, can not missing
 

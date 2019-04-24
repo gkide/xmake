@@ -6,27 +6,6 @@ string(APPEND ${XMAKE}_RELEASE_VERSION "v${${XMAKE}_VERSION_MAJOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_MINOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_PATCH}")
 
-# pre -> alpha -> beta -> rc -> release
-# https://github.com/gkide/repo-hooks/blob/master/scripts/sync-release
-if(${XMAKE}_VERSION_TWEAK)
-    set(tweak "${${XMAKE}_VERSION_TWEAK}")
-    set(normalized_tweaks pre alpha beta rc release)
-
-    foreach(item IN ITEMS ${normalized_tweaks})
-        if(tweak MATCHES "(${item}[.-]*)[0-9]*")
-            set(is_normalized_tweak true)
-            break()
-        endif()
-    endforeach()
-
-    if(NOT is_normalized_tweak)
-        string(REPLACE ";" " -> " normalized "${normalized_tweaks}")
-        message(AUTHOR_WARNING "Consider the normalized tweaks: ${normalized}")
-    endif()
-
-    string(APPEND ${XMAKE}_RELEASE_VERSION "-${${XMAKE}_VERSION_TWEAK}")
-endif()
-
 # The available build type values
 if(NOT CMAKE_CONFIGURATION_TYPES)
     list(APPEND CMAKE_CONFIGURATION_TYPES "Dev")
@@ -72,6 +51,60 @@ include(PreventInTreeBuilds)
 include(CheckHostSystem)
 include(InstallHelper)
 
+#######################################################################
+# dev/pre/nightly => alpha => beta => rc => lts/stable/release => eol #
+# https://github.com/gkide/repo-hooks/blob/master/scripts/sync-release#
+#######################################################################
+if(${XMAKE}_VERSION_TWEAK)
+    set(tweak_devs dev pre nightly)
+    set(tweak_pres alpha beta rc)
+    set(tweak_rels lts stable release eol)
+    set(tweak "${${XMAKE}_VERSION_TWEAK}")
+
+    foreach(item IN ITEMS ${tweak_devs} ${tweak_pres} ${tweak_rels})
+        if(tweak MATCHES "^(${item})?(\\.?([0-9]+))?(\\+?([a-f0-9]+))?$")
+            set(is_normalized_tweak true)
+            string(REGEX MATCH "^(${item})?(\\.?([0-9]+))?(\\+?([a-f0-9]+))?$"
+               match_result "${tweak}")
+            set(tweak_text "${CMAKE_MATCH_1}") # Software Release Cycle
+            set(tweak_nums "${CMAKE_MATCH_3}") # YYYYMMDD or numbers
+            set(tweak_hash "${CMAKE_MATCH_5}") # repo HASH
+            break()
+        endif()
+    endforeach()
+
+    if(NOT is_normalized_tweak)
+        string(REPLACE ";" "/" tweak_devs "${tweak_devs}")
+        string(REPLACE ";" " -> " tweak_pres "${tweak_pres}")
+        string(REPLACE ";" "/" tweak_rels "${tweak_rels}")
+        set(normalized "${tweak_devs} -> ${tweak_pres} -> ${tweak_rels}")
+        message(AUTHOR_WARNING "Consider the normalized tweaks:\n${normalized}\n")
+    endif()
+
+    set(xauto_semver_tweak "")
+    if(tweak_text)
+        set(xauto_semver_tweak "${tweak_text}")
+        string(APPEND ${XMAKE}_RELEASE_VERSION "-${tweak_text}")
+    endif()
+
+    string(LENGTH "${tweak_nums}" tweak_nums_len) # YYYYMMDD...
+    if(tweak_nums_len GREATER 7) # get current timestamp of YYYYMMDD
+        set(yyyymmdd "${${XMAKE}_RELEASE_TIMESTAMP}")
+        string(REPLACE "\"" "" yyyymmdd "${yyyymmdd}")
+        string(REPLACE "\\" "" yyyymmdd "${yyyymmdd}")
+        string(SUBSTRING "${yyyymmdd}" 00 10 yyyymmdd)
+        string(REPLACE "-" "" yyyymmdd ${yyyymmdd})
+        string(APPEND ${XMAKE}_RELEASE_VERSION ".${yyyymmdd}")
+        set(tweak_nums "${yyyymmdd}")
+    endif()
+
+    if(xauto_semver_tweak)
+        set(xauto_semver_tweak "${xauto_semver_tweak}.${tweak_nums}")
+    else()
+        set(xauto_semver_tweak "${tweak_nums}")
+    endif()
+endif()
+
 if(XMAKE_ENABLE_ASSERTION)
     message(STATUS "Enable assert")
     if(CMAKE_C_FLAGS_${buildType} MATCHES DNDEBUG)
@@ -94,20 +127,22 @@ else()
     endif()
 endif()
 
-# Enale ccache by default
-if(NOT HOST_WINDOWS AND NOT XMAKE_DISABLE_CCACHE)
-    find_program(CCACHE_PROG ccache)
-    if(CCACHE_PROG)
-        message(STATUS "Enable ccache")
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE_PROG})
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE_PROG})
-    endif()
-endif()
-
 # Disable Travis CI by default
 if(XMAKE_ENABLE_TRAVIS_CI)
     add_compile_options("-Werror")
     message(STATUS "Enable travis-ci")
+endif()
+
+# Enale ccache for linux & likes by default
+if(NOT HOST_WINDOWS AND NOT XMAKE_DISABLE_CCACHE)
+    find_program(CCACHE_PROG ccache)
+    if(CCACHE_PROG)
+        message(STATUS "Enable ccache for speeds up recompilation")
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE_PROG})
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE_PROG})
+    else()
+        message(AUTHOR_WARNING "NOT found ccache for speeds up recompilation")
+    endif()
 endif()
 
 if(XMAKE_ENABLE_GCOV)
