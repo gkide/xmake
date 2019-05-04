@@ -29,6 +29,10 @@ cmake & make template for quick project creation!
 - **${XMAKE}**`_AUTO_SOURCES`, xmake auto generated source files if any.
 - **${XMAKE}**`_AUTO_LIBRARIES`, xmake auto collection libraries for linking.
 
+- **${XMAKE}**`_DEBUG_BUILD`, which depends on `CMAKE_BUILD_TYPE`:
+  * if one of `Dev`, `Debug`, `Coverage`, then it will be true.
+  * otherwise, it will be set to false.
+
 - **${XMAKE}**`_SKIP_RPATH_ORIGIN`
   * if **OFF**(default), **RPATH** will be set to `$ORIGIN/../lib`
   * if **ON**, executables & shared libraries rpath will be set to empty.

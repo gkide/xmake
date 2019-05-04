@@ -27,7 +27,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Dev"
    OR CMAKE_BUILD_TYPE MATCHES "Coverage")
     add_compile_options(-g)
     add_compile_options(-O0)
-    set(XMAKE_DEBUG_BUILD ON)
+    set(${XMAKE}_DEBUG_BUILD ON)
     if(NOT ${XMAKE}_LOG_TYPE OR NOT ${XMAKE}_LOG_LEVEL)
         set(${XMAKE}_LOG_LEVEL 0) # DEV
     endif()

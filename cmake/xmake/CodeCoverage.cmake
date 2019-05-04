@@ -16,7 +16,7 @@ elseif(NOT CMAKE_COMPILER_IS_GNUCXX)
     return()
 endif()
 
-if(NOT XMAKE_DEBUG_BUILD)
+if(NOT ${XMAKE}_DEBUG_BUILD)
     message(WARNING "Code coverage results of optimised build may be misleading!")
 endif()
 

@@ -59,7 +59,7 @@ if(QT5_STATIC_PREFIX)
     endif()
 endif()
 
-if(NOT XMAKE_DEBUG_BUILD)
+if(NOT ${XMAKE}_DEBUG_BUILD)
     # Q_ASSERT(cond)                => QT_NO_DEBUG
     # Q_ASSERT_X(cond, where, what) => QT_NO_DEBUG
     # Q_CHECK_PTR(ptr)              => QT_NO_DEBUG & QT_NO_EXCEPTIONS
