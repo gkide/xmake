@@ -2,20 +2,10 @@ include(CMakeParseArguments)
 
 # Check prereqs
 find_program(GCOV_PROG gcov)
+find_program(GCOVR_PROG gcovr)
+find_program(PYTHON_PROG python)
 find_program(LCOV_PROG NAMES lcov lcov.bat lcov.exe lcov.perl)
 find_program(GENHTML_PROG NAMES genhtml genhtml.perl genhtml.bat)
-
-find_program(GCOVR_PROG gcovr)
-if(NOT GCOVR_PROG)
-    message(WARNING "NOT found gcovr, code coverage skip ...")
-    return()
-endif()
-
-find_program(PYTHON_PROG python)
-if(NOT PYTHON_PROG)
-    message(WARNING "NOT found python, code coverage skip ...")
-    return()
-endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang"
    AND "${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS 3)
@@ -36,21 +26,14 @@ endif()
 set(CODE_COVERAGE_FLAGS "-g -O0 --coverage -fprofile-arcs -ftest-coverage"
     CACHE INTERNAL "")
 
-set(CMAKE_C_FLAGS_COVERAGE ${CODE_COVERAGE_FLAGS}
-    CACHE STRING "The C compiler flags for coverage builds." FORCE)
-set(CMAKE_CXX_FLAGS_COVERAGE ${CODE_COVERAGE_FLAGS}
-    CACHE STRING "The C++ compiler flags for coverage builds." FORCE)
-set(CMAKE_EXE_LINKER_FLAGS_COVERAGE ""
-    CACHE STRING "The binaries linking flags for coverage builds." FORCE)
-set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE ""
-    CACHE STRING "The shared libraries linking flags for coverage builds." FORCE)
-
-mark_as_advanced(
-    CMAKE_C_FLAGS_COVERAGE
-    CMAKE_CXX_FLAGS_COVERAGE
-    CMAKE_EXE_LINKER_FLAGS_COVERAGE
-    CMAKE_SHARED_LINKER_FLAGS_COVERAGE
-)
+set(CMAKE_C_FLAGS_${buildType} ${CODE_COVERAGE_FLAGS}
+    CACHE STRING "The C compiler flags for code coverage." FORCE)
+set(CMAKE_CXX_FLAGS_${buildType} ${CODE_COVERAGE_FLAGS}
+    CACHE STRING "The C++ compiler flags for code coverage." FORCE)
+set(CMAKE_EXE_LINKER_FLAGS_${buildType} ""
+    CACHE STRING "The binaries linking flags for code coverage." FORCE)
+set(CMAKE_SHARED_LINKER_FLAGS_${buildType} ""
+    CACHE STRING "The shared libraries linking flags for code coverage." FORCE)
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     link_libraries(gcov) # For all targets
@@ -58,13 +41,16 @@ else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 endif()
 
+# code coverage report root directory
+set(ccrd ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/code.coverage)
+
 # Defines a target for running and collection code coverage information.
 # Builds dependencies first, runs the given executable and outputs reports.
 #
 # NOTE! The executable should always have a ZERO as exit code otherwise
 # the coverage generation will not complete.
 #
-# - TARGET              Target name, if not set auto set to *.code.coverage
+# - TARGET              Target name, if not set auto set to code.coverage-*
 # - EXECUTABLE          Executable to run
 # - EXECUTABLE_ARGS     Executable arguments
 # - DEPENDENCIES        Dependencies to build first
@@ -105,27 +91,21 @@ function(CodeCoverageLcovHtml)
     endif()
 
     get_filename_component(runner ${cct_EXECUTABLE} NAME)
-    set(output_directory ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
-
     if(NOT cct_TARGET)
         set(cct_TARGET code.coverage-${runner})
     endif()
 
-    set(based_traceinfo ${output_directory}/${runner}-trace.info.based)
-    set(build_traceinfo ${output_directory}/${runner}-trace.info.build)
-    set(total_traceinfo ${output_directory}/${runner}-trace.info.total)
-    set(clean_traceinfo ${output_directory}/${runner}-trace.info.clean)
+    # code coverage INFO/HTML report directory
+    set(report_dir ${ccrd}/${runner})
+    file(MAKE_DIRECTORY ${report_dir})
 
-    # Generating the INFO/HTML report
-    set(html_report ${cct_TARGET}/index.html)
-    set(info_report ${CMAKE_BUILD_TYPE}/${runner}-trace.info.build)
+    set(based_traceinfo ${report_dir}/${runner}-trace.info.based)
+    set(build_traceinfo ${report_dir}/${runner}-trace.info.build)
+    set(total_traceinfo ${report_dir}/${runner}-trace.info.total)
+    set(clean_traceinfo ${report_dir}/${runner}-trace.info.clean)
 
     # Setup target
     add_custom_target(${cct_TARGET}
-        DEPENDS ${cct_DEPENDENCIES}
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-        COMMENT "Processing code coverage counters and generating report."
-
         # Cleanup lcov
         COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
             --directory . --zerocounters
@@ -146,6 +126,9 @@ function(CodeCoverageLcovHtml)
         COMMAND ${CMAKE_COMMAND} -E copy ${total_traceinfo} ${clean_traceinfo}
         # cleanup
         COMMAND ${CMAKE_COMMAND} -E remove ${based_traceinfo}
+        DEPENDS ${cct_DEPENDENCIES}
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        COMMENT "Processing code coverage counters and generating report."
     )
 
     # Exclude the system ones by default
@@ -170,16 +153,20 @@ function(CodeCoverageLcovHtml)
         )
     endforeach()
 
-    # Show where to find the lcov info report
+    string(REPLACE "${CMAKE_BINARY_DIR}/" "" rccrd "${ccrd}")
+    set(html_report ${rccrd}/${runner}/index.html)
+    set(info_report ${rccrd}/${runner}/${runner}-trace.info.build)
+
+    # Show where to find the lcov INFO report
     add_custom_command(TARGET ${cct_TARGET}
         POST_BUILD COMMAND ;
-        COMMENT "Lcov code coverage INFO report: ${info_report}"
+        COMMENT "Lcov INFO code coverage report: ${info_report}"
     )
-    # Show info where to find the report
+    # Show info where to find the HTML report
     add_custom_command(TARGET ${cct_TARGET}
-        COMMENT "Lcov code coverage HTML report: ${html_report}"
+        COMMENT "Lcov HTML code coverage report: ${html_report}"
         POST_BUILD COMMAND ${GENHTML_PROG} ${cct_GENHTML_ARGS}
-            -o ${cct_TARGET} ${clean_traceinfo}
+            --output-directory ${report_dir} ${clean_traceinfo}
     )
 endfunction()
 
@@ -189,167 +176,274 @@ endfunction()
 # NOTE! The executable should always have a ZERO as exit code otherwise
 # the coverage generation will not complete.
 #
-# - TARGET              Target name, if not set auto set to *.code.coverage
+# - TARGET              Target name, if not set auto set to code.coverage-*
 # - EXECUTABLE          Executable to run
 # - EXECUTABLE_ARGS     Executable arguments
 # - DEPENDENCIES        Dependencies to build first
 #
-# - LCOV_ARGS           Extra arguments for lcov
-# - GENHTML_ARGS        Extra arguments for genhtml
-# - LCOV_EXCLUDES       Exclude patterns from the report
+# - GCOVR_ARGS          Extra arguments for gcovr
+# - GCOVR_EXCLUDES      Extra arguments for gcovr
 #
 # CodeCoverageGcovrXml(
-#     TARGET ctest_coverage
-#     EXECUTABLE ctest -j ${PROCESSOR_COUNT} # Executable in PROJECT_BINARY_DIR
-#     DEPENDENCIES executable_target         # Dependencies to build first
+#     TARGET runner_coverage
+#     EXECUTABLE runner -j ${PROCESSOR_COUNT}
+#     DEPENDENCIES runner-deps
 # )
 function(CodeCoverageGcovrXml)
     cmake_parse_arguments(cct
         ""
         "TARGET"
-        "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;GCOVR_EXCLUDES"
+        "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;GCOVR_ARGS;GCOVR_EXCLUDES"
         ${ARGN}
     )
+
+    if(NOT GCOVR_PROG)
+        message(WARNING "NOT found gcovr, code coverage skip ...")
+        return()
+    endif()
+
+    if(NOT PYTHON_PROG)
+        message(WARNING "NOT found python, code coverage skip ...")
+        return()
+    endif()
 
     if(NOT cct_EXECUTABLE)
         message(FATAL_ERROR "Must set EXECUTABLE for code coverage.")
     endif()
 
     get_filename_component(runner ${cct_EXECUTABLE} NAME)
-    set(output_directory ${PROJECT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
 
     if(NOT cct_TARGET)
         set(cct_TARGET code.coverage-${runner})
     endif()
 
+    # Generating the XML report
+    set(report_dir ${ccrd}/${runner})
+    set(xml_report ${report_dir}/${runner}.xml)
+
     # Combine excludes to several -e arguments
     set(gcovr_excludes "")
+    list(APPEND SKIP_ITEMS ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
+    list(APPEND SKIP_ITEMS ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
+    list(APPEND SKIP_ITEMS ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
+    foreach(item ${SKIP_ITEMS})
+        list(APPEND gcovr_excludes "--exclude" "${item}")
+        message(STATUS "Remove System Counters from HTML report: ${item}")
+    endforeach()
+    # Exclude the user given patterns
     foreach(item ${cct_GCOVR_EXCLUDES})
-        list(APPEND gcovr_excludes "-e" "${item}")
+        list(APPEND gcovr_excludes "--exclude" "${item}")
+        message(STATUS "Ignore User Counters from HTML report: ${item}")
     endforeach()
 
     add_custom_target(${cct_TARGET}
         # Clean old coverage data
-        COMMAND find ${PROJECT_BINARY_DIR} -type f -iname '*.gcno' -delete
-
-        # Run tests
-        COMMAND ${Coverage_EXECUTABLE} ${Coverage_EXECUTABLE_ARGS}
-
+        COMMAND find ${PROJECT_BINARY_DIR} -type f -iname '*.gcda' -delete
+        # Run test executable
+        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
+        # Create XML output folder
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Running gcovr
-        COMMAND ${GCOVR_PROG} --xml
-            -r ${PROJECT_SOURCE_DIR} ${GCOVR_EXCLUDES}
+        COMMAND ${GCOVR_PROG} --xml --xml-pretty ${cct_GCOVR_ARGS}
+            --root ${PROJECT_SOURCE_DIR} ${gcovr_excludes}
             --object-directory=${PROJECT_BINARY_DIR}
-            -o ${cct_TARGET}.xml
+            --output ${xml_report}
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-        DEPENDS ${Coverage_DEPENDENCIES}
-        COMMENT "Running gcovr to produce Cobertura code coverage report."
+        DEPENDS ${cct_DEPENDENCIES}
+        COMMENT "Running gcovr to produce XML code coverage report."
     )
 
+    string(REPLACE "${CMAKE_BINARY_DIR}/" "" xml_report "${xml_report}")
     # Show info where to find the report
     add_custom_command(TARGET ${cct_TARGET} POST_BUILD
         COMMAND ;
-        COMMENT "Cobertura code coverage report saved in ${cct_TARGET}.xml."
+        COMMENT "Gcovr XML code coverage report: ${xml_report}"
     )
 endfunction()
 
-# Defines a target for running and collection code coverage information
-# Builds dependencies, runs the given executable and outputs reports.
+# Defines a target for running and collection code coverage information.
+# Builds dependencies first, runs the given executable and outputs reports.
+#
 # NOTE! The executable should always have a ZERO as exit code otherwise
 # the coverage generation will not complete.
 #
-# SETUP_TARGET_FOR_COVERAGE_GCOVR_HTML(
-#     NAME ctest_coverage                    # New target name
-#     EXECUTABLE ctest -j ${PROCESSOR_COUNT} # Executable in PROJECT_BINARY_DIR
-#     DEPENDENCIES executable_target         # Dependencies to build first
+# - TARGET              Target name, if not set auto set to code.coverage-*
+# - EXECUTABLE          Executable to run
+# - EXECUTABLE_ARGS     Executable arguments
+# - DEPENDENCIES        Dependencies to build first
+#
+# - GCOVR_ARGS          Extra arguments for gcovr
+# - GCOVR_EXCLUDES      Extra arguments for gcovr
+#
+# CodeCoverageGcovrHtml(
+#     TARGET runner_coverage
+#     EXECUTABLE runner -j ${PROCESSOR_COUNT}
+#     DEPENDENCIES runner-deps
 # )
-function(SETUP_TARGET_FOR_COVERAGE_GCOVR_HTML)
+function(CodeCoverageGcovrHtml)
+    cmake_parse_arguments(cct
+        ""
+        "TARGET"
+        "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;GCOVR_ARGS;GCOVR_EXCLUDES"
+        ${ARGN}
+    )
 
-    set(options NONE)
-    set(oneValueArgs NAME)
-    set(multiValueArgs EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES)
-    cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    if(NOT GCOVR_PROG)
+        message(WARNING "NOT found gcovr, code coverage skip ...")
+        return()
+    endif()
+
+    if(NOT PYTHON_PROG)
+        message(WARNING "NOT found python, code coverage skip ...")
+        return()
+    endif()
+
+    if(NOT cct_EXECUTABLE)
+        message(FATAL_ERROR "Must set EXECUTABLE for code coverage.")
+    endif()
+
+    get_filename_component(runner ${cct_EXECUTABLE} NAME)
+
+    if(NOT cct_TARGET)
+        set(cct_TARGET code.coverage-${runner})
+    endif()
+
+    # Generating the XML report
+    set(report_dir ${ccrd}/${runner})
 
     # Combine excludes to several -e arguments
-    set(GCOVR_EXCLUDES "")
-    foreach(EXCLUDE ${COVERAGE_GCOVR_EXCLUDES})
-        list(APPEND GCOVR_EXCLUDES "-e")
-        list(APPEND GCOVR_EXCLUDES "${EXCLUDE}")
+    set(gcovr_excludes "")
+    list(APPEND SKIP_ITEMS ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
+    list(APPEND SKIP_ITEMS ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
+    list(APPEND SKIP_ITEMS ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
+    foreach(item ${SKIP_ITEMS})
+        list(APPEND gcovr_excludes "--exclude" "${item}")
+        message(STATUS "Remove System Counters from HTML report: ${item}")
+    endforeach()
+    # Exclude the user given patterns
+    foreach(item ${cct_GCOVR_EXCLUDES})
+        list(APPEND gcovr_excludes "--exclude" "${item}")
+        message(STATUS "Ignore User Counters from HTML report: ${item}")
     endforeach()
 
-    add_custom_target(${Coverage_NAME}
+    add_custom_target(${cct_TARGET}
         # Clean old coverage data
-        COMMAND find ${PROJECT_BINARY_DIR} -type f -iname '*.gcno' -delete
-
-        # Run tests
-        COMMAND ${Coverage_EXECUTABLE} ${Coverage_EXECUTABLE_ARGS}
-
-        # Create folder
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/${Coverage_NAME}
-
+        COMMAND find ${PROJECT_BINARY_DIR} -type f -iname '*.gcda' -delete
+        # Run tests runner
+        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
+        # Create HTML output folder
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Running gcovr
-        COMMAND ${GCOVR_PROG} --html --html-details
-            -r ${PROJECT_SOURCE_DIR} ${GCOVR_EXCLUDES}
+        COMMAND ${GCOVR_PROG} --html --html-details ${cct_GCOVR_ARGS}
+            --root ${PROJECT_SOURCE_DIR} ${gcovr_excludes}
             --object-directory=${PROJECT_BINARY_DIR}
-            -o ${Coverage_NAME}/index.html
+            -o ${report_dir}/index.html
+        DEPENDS ${cct_DEPENDENCIES}
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-        DEPENDS ${Coverage_DEPENDENCIES}
         COMMENT "Running gcovr to produce HTML code coverage report."
     )
 
-    # Show info where to find the report
-    add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
+    string(REPLACE "${CMAKE_BINARY_DIR}/" "" report_dir "${report_dir}")
+    # Show info where to find the HTML report
+    add_custom_command(TARGET ${cct_TARGET} POST_BUILD
         COMMAND ;
-        COMMENT "Open ./${Coverage_NAME}/index.html in your browser to view the coverage report."
+        COMMENT "Gcovr HTML code coverage report: ${report_dir}/index.html"
     )
-
 endfunction()
 
-# Defines a target for running and collection code coverage information
-# Builds dependencies, runs the given executable and outputs reports.
+# Defines a target for running and collection code coverage information.
+# Builds dependencies first, runs the given executable and outputs reports.
+#
 # NOTE! The executable should always have a ZERO as exit code otherwise
 # the coverage generation will not complete.
 #
-# SETUP_TARGET_FOR_COVERAGE_GCOVR_TEXT(
-#     NAME ctest_coverage                    # New target name
-#     EXECUTABLE ctest -j ${PROCESSOR_COUNT} # Executable in PROJECT_BINARY_DIR
-#     DEPENDENCIES executable_target         # Dependencies to build first
+# - TARGET              Target name, if not set auto set to code.coverage-*
+# - EXECUTABLE          Executable to run
+# - EXECUTABLE_ARGS     Executable arguments
+# - DEPENDENCIES        Dependencies to build first
+#
+# - GCOVR_ARGS          Extra arguments for gcovr
+# - GCOVR_EXCLUDES      Extra arguments for gcovr
+#
+# CodeCoverageGcovrHtml(
+#     TARGET runner_coverage
+#     EXECUTABLE runner -j ${PROCESSOR_COUNT}
+#     DEPENDENCIES runner-deps
 # )
-function(SETUP_TARGET_FOR_COVERAGE_GCOVR_TEXT)
-
-    set(options NONE)
-    set(oneValueArgs NAME)
-    set(multiValueArgs EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES)
-    cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-    # Combine excludes to several -e arguments
-    set(GCOVR_EXCLUDES "")
-    foreach(EXCLUDE ${COVERAGE_GCOVR_EXCLUDES})
-        list(APPEND GCOVR_EXCLUDES "-e")
-        list(APPEND GCOVR_EXCLUDES "${EXCLUDE}")
-    endforeach()
-
-    add_custom_target(${Coverage_NAME}
-        # Clean old coverage data
-        COMMAND find ${PROJECT_BINARY_DIR} -type f -iname '*.gcno' -delete
-
-        # Run tests
-        COMMAND ${Coverage_EXECUTABLE} ${Coverage_EXECUTABLE_ARGS}
-
-        # Create folder
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECT_BINARY_DIR}/${Coverage_NAME}
-
-        # Running gcovr
-        COMMAND ${GCOVR_PROG}
-            -r ${PROJECT_SOURCE_DIR} ${GCOVR_EXCLUDES}
-            --object-directory=${PROJECT_BINARY_DIR}
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-        DEPENDS ${Coverage_DEPENDENCIES}
-        COMMENT "Running gcovr to produce HTML code coverage report."
+function(CodeCoverageGcovrText)
+    cmake_parse_arguments(cct
+        ""
+        "TARGET"
+        "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;GCOVR_ARGS;GCOVR_EXCLUDES"
+        ${ARGN}
     )
 
+    if(NOT GCOVR_PROG)
+        message(WARNING "NOT found gcovr, code coverage skip ...")
+        return()
+    endif()
+
+    if(NOT PYTHON_PROG)
+        message(WARNING "NOT found python, code coverage skip ...")
+        return()
+    endif()
+
+    if(NOT cct_EXECUTABLE)
+        message(FATAL_ERROR "Must set EXECUTABLE for code coverage.")
+    endif()
+
+    get_filename_component(runner ${cct_EXECUTABLE} NAME)
+
+    if(NOT cct_TARGET)
+        set(cct_TARGET code.coverage-${runner})
+    endif()
+
+    # Generating the XML report
+    set(report_dir ${ccrd}/${runner})
+    set(text_report ${report_dir}/${runner}.text)
+
+    # Combine excludes to several -e arguments
+    set(gcovr_excludes "")
+    list(APPEND SKIP_ITEMS ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
+    list(APPEND SKIP_ITEMS ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
+    list(APPEND SKIP_ITEMS ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
+    foreach(item ${SKIP_ITEMS})
+        list(APPEND gcovr_excludes "--exclude" "${item}")
+        message(STATUS "Remove System Counters from HTML report: ${item}")
+    endforeach()
+    # Exclude the user given patterns
+    foreach(item ${cct_GCOVR_EXCLUDES})
+        list(APPEND gcovr_excludes "--exclude" "${item}")
+        message(STATUS "Ignore User Counters from HTML report: ${item}")
+    endforeach()
+
+    add_custom_target(${cct_TARGET}
+        # Clean old coverage data
+        COMMAND find ${PROJECT_BINARY_DIR} -type f -iname '*.gcda' -delete
+        # Run tests
+        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
+        # Create folder
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
+        # Running gcovr
+        COMMAND ${GCOVR_PROG} ${cct_GCOVR_ARGS}
+            --root ${PROJECT_SOURCE_DIR} ${gcovr_excludes}
+            --object-directory=${PROJECT_BINARY_DIR}
+            -o ${text_report}
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        DEPENDS ${cct_DEPENDENCIES}
+        COMMENT "Running gcovr to produce TEXT code coverage report."
+    )
+
+    string(REPLACE "${CMAKE_BINARY_DIR}/" "" text_report "${text_report}")
+    # Show info where to find the report
+    add_custom_command(TARGET ${cct_TARGET} POST_BUILD
+        COMMAND ;
+        COMMENT "Gcovr TEXT code coverage report: ${text_report}"
+    )
 endfunction()
 
-function(CodeCoverageFlagsAppend)
+# Append C/C++ compiler flags for code coverage
+function(CodeCoverageAppendFlags)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CODE_COVERAGE_FLAGS}" PARENT_SCOPE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CODE_COVERAGE_FLAGS}" PARENT_SCOPE)
     message(STATUS "Code coverage compiler flags: ${CODE_COVERAGE_FLAGS}")

@@ -218,17 +218,6 @@ InstallHelper(TARGETS bundle)
 include(BuildLibok)
 add_dependencies(bundle libok)
 
-# Auto add target: code.coverage-bundle
-CodeCoverageLcovHtml(
-    EXECUTABLE bundle
-    LCOV_EXCLUDES
-        source/qt5
-        source/main.cpp
-        ${XMAKE_AUTO_SOURCES}
-        ${XMAKE_QT5_STATIC_PREFIX}
-        ${XMAKE_QT5_SHARED_PREFIX}
-)
-
 # Download & Prebuild Binary
 ########################################
 include(PreInstall)
@@ -251,3 +240,30 @@ InstallHelper(FILES docs/local.mk
 ########################################
 InstallHelper(DIRECTORY cmake
     DESTINATION ${XDEMO_SHADIR})
+
+# Code Coverage Report
+########################################
+CodeCoverageLcovHtml(
+    EXECUTABLE bundle
+    LCOV_EXCLUDES
+        source/qt5
+        source/main.cpp
+        ${XMAKE_AUTO_SOURCES}
+        ${XMAKE_QT5_STATIC_PREFIX}
+        ${XMAKE_QT5_SHARED_PREFIX}
+    GENHTML_ARGS
+        --title "bundle"
+)
+
+CodeCoverageGcovrXml(
+    EXECUTABLE another
+)
+
+CodeCoverageGcovrHtml(
+    EXECUTABLE check
+    GCOVR_ARGS --html-title "CCR - check"
+)
+
+CodeCoverageGcovrText(
+    EXECUTABLE prog
+)

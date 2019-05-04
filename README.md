@@ -290,15 +290,28 @@ which is used for prebuild binary download & install
 ## `CodeCoverageLcovHtml(...)`
 
 Defines a target for running and collection code coverage information
-Builds dependencies, runs the given executable and outputs reports.
+Builds dependencies if any, runs the given executable and outputs reports.
 
 NOTE! The executable should always have a ZERO as exit code otherwise
 the coverage generation will not complete.
 
-- `TARGET`, Target name, if not set auto set to `code.coverage-*`
+- `TARGET`, Target name, if not set auto set to `code.coverage-`**name**
 - `EXECUTABLE`, Executable to run, can not missing
 - `EXECUTABLE_ARGS`, Executable arguments, can be missing
 - `DEPENDENCIES`, Dependencies to build first, can be missing
 - `LCOV_ARGS`, Extra arguments for lcov, can be missing
+- `LCOV_EXCLUDES`, Report exclude patterns, can be missing, auto remove system
 - `GENHTML_ARGS`, Extra arguments for genhtml, can be missing
-- `LCOV_EXCLUDES`, Report exclude patterns, can be missing, auto remove system ones
+
+## `CodeCoverageGcovrXml(...)`, `CodeCoverageGcovrHtml(...)` and `CodeCoverageGcovrText(...)`
+
+- `TARGET`, Target name, if not set auto set to `code.coverage-`**name**
+- `EXECUTABLE`, Executable to run, can not missing
+- `EXECUTABLE_ARGS`, Executable arguments, can be missing
+- `DEPENDENCIES`, Dependencies to build first, can be missing
+- `GCOVR_ARGS`, Extra arguments for gcovr, can be missing
+- `GCOVR_EXCLUDES`, Extra arguments for gcovr, can be missing, auto remove system
+
+## `CodeCoverageAppendFlags()`
+
+Append C/C++ compiler flags for code coverage.

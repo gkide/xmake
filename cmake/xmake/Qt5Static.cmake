@@ -1,5 +1,6 @@
 # Search Static Qt5 Libraries
 # - Link sequence is much more important
+# - https://doc.qt.io/qt-5/cmake-manual.html
 # - https://doc.qt.io/qt-5/linux-requirements.html
 
 function(Qt5StaticLibFind name qt5_libs_search_path output)
@@ -180,52 +181,50 @@ list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
 Qt5StaticLibFind(qwebp ${Qt5SLSPrefix}/plugins/imageformats Qt5StaticLibrary)
 list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
 
-if(false)
-    # Static Qt5 Library: lib/libQt5Core.a
-    Qt5StaticLibFind(Qt5Core ${Qt5SLSPrefix}/lib Qt5StaticLibrary)
-    list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
+# Static Qt5 Library: lib/libQt5Core.a
+find_package(Qt5Core CONFIG REQUIRED)
+get_target_property(Qt5StaticLibrary Qt5::Core LOCATION)
+list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
 
-    # Static Qt5 Library: lib/libQt5Gui.a
-    Qt5StaticLibFind(Qt5Gui ${Qt5SLSPrefix}/lib Qt5StaticLibrary)
+# Static Qt5 Library: lib/libQt5Gui.a
+find_package(Qt5Gui CONFIG REQUIRED)
+get_target_property(Qt5StaticLibrary Qt5::Gui LOCATION)
+list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
+foreach(plugin ${Qt5Gui_PLUGINS})
+    get_target_property(location ${plugin} LOCATION)
     list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
-    # Static Qt5 Library: lib/libQt5Widgets.a
-    Qt5StaticLibFind(Qt5Widgets ${Qt5SLSPrefix}/lib Qt5StaticLibrary)
-    list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
-    # Static Qt5 Library: lib/libQt5Network.a
-    Qt5StaticLibFind(Qt5Network ${Qt5SLSPrefix}/lib Qt5StaticLibrary)
-    list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
-else()
-    find_package(Qt5Core CONFIG REQUIRED)
-    get_target_property(Qt5StaticLibrary Qt5::Core LOCATION)
-    list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
+    # message("Qt5Gui Plugin: ${plugin} => ${location}")
+endforeach()
 
-    find_package(Qt5Gui CONFIG REQUIRED)
-    get_target_property(Qt5StaticLibrary Qt5::Gui LOCATION)
+# Static Qt5 Library: lib/libQt5Sql.a
+find_package(Qt5Sql CONFIG REQUIRED)
+get_target_property(Qt5StaticLibrary Qt5::Sql LOCATION)
+list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
+foreach(plugin ${Qt5Sql_PLUGINS})
+    get_target_property(location ${plugin} LOCATION)
     list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
-    foreach(plugin ${Qt5Gui_PLUGINS})
-        get_target_property(location ${plugin} LOCATION)
-        list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
-        # message("Qt5Gui Plugin: ${plugin} => ${location}")
-    endforeach()
+    # message("Qt5Sql Plugin: ${plugin} => ${location}")
+endforeach()
 
-    find_package(Qt5Widgets CONFIG REQUIRED)
-    get_target_property(Qt5StaticLibrary Qt5::Widgets LOCATION)
+# Static Qt5 Library: lib/libQt5Widgets.a
+find_package(Qt5Widgets CONFIG REQUIRED)
+get_target_property(Qt5StaticLibrary Qt5::Widgets LOCATION)
+list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
+foreach(plugin ${Qt5Widgets_PLUGINS})
+    get_target_property(location ${plugin} LOCATION)
     list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
-    foreach(plugin ${Qt5Widgets_PLUGINS})
-        get_target_property(location ${plugin} LOCATION)
-        list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
-        # message("Qt5Widgets Plugin: ${plugin} => ${location}")
-    endforeach()
+    # message("Qt5Widgets Plugin: ${plugin} => ${location}")
+endforeach()
 
-    find_package(Qt5Network CONFIG REQUIRED)
-    get_target_property(Qt5StaticLibrary Qt5::Network LOCATION)
+# Static Qt5 Library: lib/libQt5Network.a
+find_package(Qt5Network CONFIG REQUIRED)
+get_target_property(Qt5StaticLibrary Qt5::Network LOCATION)
+list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
+foreach(plugin ${Qt5Network_PLUGINS})
+    get_target_property(location ${plugin} LOCATION)
     list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
-    foreach(plugin ${Qt5Network_PLUGINS})
-        get_target_property(location ${plugin} LOCATION)
-        list(APPEND XMAKE_AUTO_LIBRARIES ${Qt5StaticLibrary})
-        # message("Qt5Network Plugin: ${plugin} => ${location}")
-    endforeach()
-endif()
+    # message("Qt5Network Plugin: ${plugin} => ${location}")
+endforeach()
 
 # System Library: libpng.a, libpng.so
 Qt5SystemLibFind(png Qt5SystemLibrary OFF)
