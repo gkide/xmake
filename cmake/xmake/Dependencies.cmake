@@ -54,6 +54,7 @@ if(NOT GIT_PROG)
 endif()
 
 file(MAKE_DIRECTORY ${DEPS_DOWNLOAD_DIR})
+include_directories(${DEPS_INSTALL_DIR}/include)
 
 include(TarballBuild)
 include(RepoTreeBuild)

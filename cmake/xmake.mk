@@ -207,17 +207,17 @@ xmake-distclean: xmake-clean
 PHONY += xmake-help
 xmake-help:
 	@echo "-------------------------------------------------------------------------"
-	@echo "$$ make V=1 ...       verbose of make & cmake, default is silent."
-	@echo "$$ make O=path ...    build directory abs-path, default is 'build'."
-	@echo "$$ make I=path ...    install directory abs-path, default is 'build/usr'."
+	@echo "$$ make V=1 ...      verbose of make & cmake, default is silent."
+	@echo "$$ make O=path ...   build directory abs-path, default is 'build'."
+	@echo "$$ make I=path ...   install directory abs-path, default is 'build/usr'."
 	@echo "-------------------------------------------------------------------------"
 	@echo "The <target> of the xmake Makefile are as following:"
-	@echo "    xmake-all        build the project."
-	@echo "    xmake-test       run project tests."
-	@echo "    xmake-install    install the project."
-	@echo "    xmake-release    do project release"
-	@echo "    xmake-clean      clean the build directory."
-	@echo "    xmake-distclean  remove all generated files."
+	@echo "    all              build the project."
+	@echo "    test             run project tests."
+	@echo "    install          install the targets."
+	@echo "    release          do project release."
+	@echo "    clean            clean the build directory."
+	@echo "    distclean        remove all generated files."
 	@echo "For much more details: https://gitlab.com/gkide/xmake"
 	@echo "-------------------------------------------------------------------------"
 #	@echo "See 'docs/local.mk' for much more setting details."
@@ -312,3 +312,18 @@ ifeq ($(DOXYGEN_PROG),)
         DOXYGEN_PROG := $(Q)$(shell (command -v doxygen))
     endif
 endif
+
+xmake-auto-progs:
+	@echo "STRIP_PROG=$(STRIP_PROG)"
+	@echo "STRIP_ARGS=$(STRIP_ARGS)"
+	@echo ""
+	@echo "EUSTRIP_PROG=$(EUSTRIP_PROG)"
+	@echo "EUSTRIP_ARGS=$(EUSTRIP_ARGS)"
+	@echo ""
+	@echo "DOXYGEN_PROG=$(DOXYGEN_PROG)"
+	@echo "DOXYGEN_ARGS=$(DOXYGEN_ARGS)"
+	@echo ""
+	@echo "CPPCHECK_PROG=$(CPPCHECK_PROG)"
+	@echo "CPPCHECK_ARGS=$(CPPCHECK_ARGS)"
+	@echo "CPPCHECK17_PROG=$(CPPCHECK17_PROG)"
+	@echo "CPPCHECK18_PROG=$(CPPCHECK18_PROG)"
