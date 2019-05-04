@@ -5,7 +5,7 @@ set(XDEMO_VERSION_MAJOR 1)
 set(XDEMO_VERSION_MINOR 0)
 set(XDEMO_VERSION_PATCH 0)
 # The date & HASH will auto update at build time
-set(XDEMO_VERSION_TWEAK "dev.20190420")
+set(XDEMO_VERSION_TWEAK "dev")
 
 option(XMAKE_ENABLE_GCOV "Enable Coverage" ON)
 option(XMAKE_ENABLE_ASSERTION "Enable assertion." ON)
@@ -25,8 +25,15 @@ option(XMAKE_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" OFF)
 #set(XMAKE_QT5_SHARED_PREFIX "/usr/lib/gcc/x86_64-linux-gnu")
 
 # Cmake modules
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(xmake)
+
+set(XDEMO_DOXYGEN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/doxygen")
+set(XDEMO_BRIEF_DESCRIPTION "cmake & make quick project template!")
+configure_file(
+    "${CMAKE_SOURCE_DIR}/docs/doxygen/Doxyfile.in"
+    "${CMAKE_BINARY_DIR}/doxygen/Doxyfile"
+)
 
 add_compile_options(-Wall)
 include_directories(${CMAKE_SOURCE_DIR})

@@ -42,7 +42,6 @@ if(${XMAKE}_BRANCH_NAME AND ${XMAKE}_COMMIT_SHA1 AND ${XMAKE}_COMMIT_MDTZ)
 
     string(APPEND ${XMAKE}_RELEASE_VERSION "+${${XMAKE}_COMMIT_HASH}")
 
-
     if(xauto_semver_tweak)
         set(xauto_semver_tweak "${xauto_semver_tweak}+${${XMAKE}_COMMIT_HASH}")
     else()

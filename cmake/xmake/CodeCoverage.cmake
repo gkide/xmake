@@ -133,7 +133,7 @@ function(CodeCoverageLcovHtml)
         # cleanup
         COMMAND ${CMAKE_COMMAND} -E remove ${based_traceinfo}
         DEPENDS ${cct_DEPENDENCIES}
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         COMMENT "Processing code coverage counters and generating report."
     )
 
@@ -236,17 +236,17 @@ function(CodeCoverageGcovrXml)
 
     add_custom_target(${cct_TARGET}
         # Clean old coverage data
-        COMMAND find ${PROJECT_BINARY_DIR} -type f -iname '*.gcda' -delete
+        COMMAND find ${CMAKE_BINARY_DIR} -type f -iname '*.gcda' -delete
         # Run test executable
         COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
         # Create XML output folder
         COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Running gcovr
         COMMAND ${GCOVR_PROG} --xml --xml-pretty ${cct_GCOVR_ARGS}
-            --root ${PROJECT_SOURCE_DIR} ${gcovr_excludes}
-            --object-directory=${PROJECT_BINARY_DIR}
+            --root ${CMAKE_SOURCE_DIR} ${gcovr_excludes}
+            --object-directory=${CMAKE_BINARY_DIR}
             --output ${xml_report}
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         DEPENDS ${cct_DEPENDENCIES}
         COMMENT "Running gcovr to produce XML code coverage report."
     )
@@ -336,18 +336,18 @@ function(CodeCoverageGcovrHtml)
 
     add_custom_target(${cct_TARGET}
         # Clean old coverage data
-        COMMAND find ${PROJECT_BINARY_DIR} -type f -iname '*.gcda' -delete
+        COMMAND find ${CMAKE_BINARY_DIR} -type f -iname '*.gcda' -delete
         # Run tests runner
         COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
         # Create HTML output folder
         COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Running gcovr
         COMMAND ${GCOVR_PROG} --html --html-details ${cct_GCOVR_ARGS}
-            --root ${PROJECT_SOURCE_DIR} ${gcovr_excludes}
-            --object-directory=${PROJECT_BINARY_DIR}
+            --root ${CMAKE_SOURCE_DIR} ${gcovr_excludes}
+            --object-directory=${CMAKE_BINARY_DIR}
             -o ${report_dir}/index.html
         DEPENDS ${cct_DEPENDENCIES}
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         COMMENT "Running gcovr to produce HTML code coverage report."
     )
 
@@ -437,17 +437,17 @@ function(CodeCoverageGcovrText)
 
     add_custom_target(${cct_TARGET}
         # Clean old coverage data
-        COMMAND find ${PROJECT_BINARY_DIR} -type f -iname '*.gcda' -delete
+        COMMAND find ${CMAKE_BINARY_DIR} -type f -iname '*.gcda' -delete
         # Run tests
         COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
         # Create TEXT output folder
         COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Running gcovr
         COMMAND ${GCOVR_PROG} ${cct_GCOVR_ARGS}
-            --root ${PROJECT_SOURCE_DIR} ${gcovr_excludes}
-            --object-directory=${PROJECT_BINARY_DIR}
+            --root ${CMAKE_SOURCE_DIR} ${gcovr_excludes}
+            --object-directory=${CMAKE_BINARY_DIR}
             -o ${text_report}
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         DEPENDS ${cct_DEPENDENCIES}
         COMMENT "Running gcovr to produce TEXT code coverage report."
     )

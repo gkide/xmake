@@ -42,7 +42,7 @@ endforeach()
 
 # Change the default cmake value without overriding the user-provided one
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "${PROJECT_BINARY_DIR}/usr" CACHE PATH "" FORCE)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/usr" CACHE PATH "" FORCE)
 endif()
 
 # Cmake modules
@@ -88,7 +88,7 @@ if(${XMAKE}_VERSION_TWEAK)
     endif()
 
     string(LENGTH "${tweak_nums}" tweak_nums_len) # YYYYMMDD...
-    if(tweak_nums_len GREATER 7) # get current timestamp of YYYYMMDD
+    if(tweak_nums_len GREATER 7 OR tweak_nums_len EQUAL 0)
         set(yyyymmdd "${${XMAKE}_RELEASE_TIMESTAMP}")
         string(REPLACE "\"" "" yyyymmdd "${yyyymmdd}")
         string(REPLACE "\\" "" yyyymmdd "${yyyymmdd}")
@@ -98,10 +98,12 @@ if(${XMAKE}_VERSION_TWEAK)
         set(tweak_nums "${yyyymmdd}")
     endif()
 
-    if(xauto_semver_tweak)
-        set(xauto_semver_tweak "${xauto_semver_tweak}.${tweak_nums}")
-    else()
-        set(xauto_semver_tweak "${tweak_nums}")
+    if(tweak_nums)
+        if(tweak_text)
+            set(xauto_semver_tweak "${xauto_semver_tweak}.${tweak_nums}")
+        else()
+            set(xauto_semver_tweak "${tweak_nums}")
+        endif()
     endif()
 endif()
 
