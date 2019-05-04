@@ -19,7 +19,7 @@ set(${XMAKE}_INCDIR ${CMAKE_INSTALL_PREFIX}/include CACHE PATH
 # If installed targets' default RPATH is NOT system implicit link
 # directories, then reset it to the cmake install library directory
 list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_RPATH}" isSysDir)
-if(NOT XMAKE_SKIP_RPATH_ORIGIN AND "${isSysDir}" STREQUAL "-1")
+if(NOT ${XMAKE}_SKIP_RPATH_ORIGIN AND "${isSysDir}" STREQUAL "-1")
     # For installed target's property INSTALL_RPATH
     # https://www.technovelty.org/linux/exploring-origin.html
     list(APPEND CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
@@ -161,7 +161,7 @@ function(InstallHelper)
 
             set(install_resources)
             if(target_resources)
-                if(XMAKE_VERBOSE_MESSAGE)
+                if(${XMAKE}_XMAKE_VERBOSE)
                     message(STATUS "${target} resources")
                     string(REGEX REPLACE " +" ";" items "${target_resources}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
@@ -185,7 +185,7 @@ function(InstallHelper)
                         RUNTIME  DESTINATION ${DomainBin})
                 endif()
 
-                if(XMAKE_VERBOSE_MESSAGE)
+                if(${XMAKE}_XMAKE_VERBOSE)
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
                         domain_directory "${DomainBin}")
                     message(STATUS "${target} Executable => ${domain_directory}")
@@ -204,7 +204,7 @@ function(InstallHelper)
                 set(lib_type "Interface Library")
             endif()
 
-            if(XMAKE_VERBOSE_MESSAGE)
+            if(${XMAKE}_XMAKE_VERBOSE)
                 string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
                     domain_directory "${DomainLib}")
                 message(STATUS "${target} ${lib_type} => ${domain_directory}")
@@ -215,7 +215,7 @@ function(InstallHelper)
 
             set(install_public_headers)
             if(public_headers)
-                if(XMAKE_VERBOSE_MESSAGE)
+                if(${XMAKE}_XMAKE_VERBOSE)
                     message(STATUS "${target} Library Public Headers")
                     string(REGEX REPLACE " +" ";" items "${public_headers}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
@@ -231,7 +231,7 @@ function(InstallHelper)
 
             set(install_private_headers)
             if(private_headers)
-                if(XMAKE_VERBOSE_MESSAGE)
+                if(${XMAKE}_XMAKE_VERBOSE)
                     message(STATUS "${target} Library Private Headers")
                     string(REGEX REPLACE " +" ";" items "${private_headers}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""

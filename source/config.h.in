@@ -35,4 +35,7 @@
 #define XDEMO_COMMIT_HASH           "@XDEMO_COMMIT_HASH@"
 #define XDEMO_COMMIT_MDTZ           "@XDEMO_COMMIT_MDTZ@"
 
+#define XDEMO_LOG_LEVEL              @XDEMO_LOG_LEVEL@
+#define XDEMO_LOG_TYPE              "@XDEMO_LOG_TYPE@"
+
 #endif // XDEMO_SOURCE_CONFIG_H

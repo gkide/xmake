@@ -12,14 +12,14 @@ set(qt5app_SRCS
 
 add_executable(qt5app WIN32
     ${qt5app_SRCS}
-    ${XMAKE_AUTO_SOURCES}
+    ${XDEMO_AUTO_SOURCES}
 )
 
 # Use the Widgets module from Qt5
 target_link_libraries(qt5app
     Qt5::Widgets
     Qt5::Network
-    ${XMAKE_AUTO_LIBRARIES}
+    ${XDEMO_AUTO_LIBRARIES}
 )
 
 InstallHelper(TARGETS qt5app)

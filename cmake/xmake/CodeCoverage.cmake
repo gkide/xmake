@@ -16,19 +16,17 @@ elseif(NOT CMAKE_COMPILER_IS_GNUCXX)
     return()
 endif()
 
-if(NOT CMAKE_BUILD_TYPE STREQUAL "Dev"
-   AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug"
-   AND NOT CMAKE_BUILD_TYPE STREQUAL "Coverage")
-    message(WARNING "Code coverage results of optimised build may be misleading")
+if(NOT XMAKE_DEBUG_BUILD)
+    message(WARNING "Code coverage results of optimised build may be misleading!")
 endif()
 
 message(STATUS "Enable code coverage measurements")
-set(CODE_COVERAGE_FLAGS "-g -O0 --coverage -fprofile-arcs -ftest-coverage"
+set(code_coverage_flags "-g -O0 --coverage -fprofile-arcs -ftest-coverage"
     CACHE INTERNAL "")
 
-set(CMAKE_C_FLAGS_${buildType} ${CODE_COVERAGE_FLAGS}
+set(CMAKE_C_FLAGS_${buildType} ${code_coverage_flags}
     CACHE STRING "The C compiler flags for code coverage." FORCE)
-set(CMAKE_CXX_FLAGS_${buildType} ${CODE_COVERAGE_FLAGS}
+set(CMAKE_CXX_FLAGS_${buildType} ${code_coverage_flags}
     CACHE STRING "The C++ compiler flags for code coverage." FORCE)
 set(CMAKE_EXE_LINKER_FLAGS_${buildType} ""
     CACHE STRING "The binaries linking flags for code coverage." FORCE)
@@ -40,6 +38,13 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
 else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 endif()
+
+# Append C/C++ compiler flags for code coverage
+function(CodeCoverageAppendFlags)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${code_coverage_flags}" PARENT_SCOPE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${code_coverage_flags}" PARENT_SCOPE)
+    message(STATUS "Code coverage compiler flags: ${code_coverage_flags}")
+endfunction()
 
 # code coverage report root directory
 set(ccrd ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/code.coverage)
@@ -473,11 +478,4 @@ function(CodeCoverageGcovrText)
         COMMAND ;
         COMMENT "Gcovr TEXT code coverage report: ${text_report}"
     )
-endfunction()
-
-# Append C/C++ compiler flags for code coverage
-function(CodeCoverageAppendFlags)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CODE_COVERAGE_FLAGS}" PARENT_SCOPE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CODE_COVERAGE_FLAGS}" PARENT_SCOPE)
-    message(STATUS "Code coverage compiler flags: ${CODE_COVERAGE_FLAGS}")
 endfunction()

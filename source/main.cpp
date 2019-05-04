@@ -1,10 +1,11 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#ifdef XMAKE_EXPORT_AS_CONFIG_FILE
+#ifdef XDEMO_EXPORT_AS_CONFIG_FILE
     #include "config.generated.h"
 #endif
 
+#include "macros.h"
 #include "library.h"
 
 static int is_big_endian(void)
@@ -20,6 +21,9 @@ static int is_big_endian(void)
 
 int main(int argc, char **argv)
 {
+    UNUSED_ARG(argc);
+    UNUSED_ARG(argv);
+
     library();
 
 #ifdef HOST_LINUX

@@ -22,6 +22,23 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose build type ..." FORCE)
 endif()
 
+if(CMAKE_BUILD_TYPE MATCHES "Dev"
+   OR CMAKE_BUILD_TYPE MATCHES "Debug"
+   OR CMAKE_BUILD_TYPE MATCHES "Coverage")
+    add_compile_options(-g)
+    add_compile_options(-O0)
+    set(XMAKE_DEBUG_BUILD ON)
+    if(NOT ${XMAKE}_LOG_TYPE OR NOT ${XMAKE}_LOG_LEVEL)
+        set(${XMAKE}_LOG_LEVEL 0) # DEV
+    endif()
+else()
+    add_compile_options(-O3)
+
+    if(NOT ${XMAKE}_LOG_TYPE OR NOT ${XMAKE}_LOG_LEVEL)
+        set(${XMAKE}_LOG_LEVEL 3) # WARN
+    endif()
+endif()
+
 string(TOUPPER ${CMAKE_BUILD_TYPE} buildType)
 
 # Enable verbose output from Makefile builds.
@@ -55,6 +72,14 @@ include(InstallHelper)
 # dev/pre/nightly => alpha => beta => rc => lts/stable/release => eol #
 # https://github.com/gkide/repo-hooks/blob/master/scripts/sync-release#
 #######################################################################
+if(NOT ${XMAKE}_VERSION_TWEAK)
+    if(NOT CMAKE_BUILD_TYPE MATCHES "Release"
+       AND NOT CMAKE_BUILD_TYPE STREQUAL "MinSizeRel"
+       AND NOT CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+        set(${XMAKE}_VERSION_TWEAK "dev")
+    endif()
+endif()
+
 if(${XMAKE}_VERSION_TWEAK)
     set(tweak_devs dev pre nightly)
     set(tweak_pres alpha beta rc)
@@ -107,7 +132,20 @@ if(${XMAKE}_VERSION_TWEAK)
     endif()
 endif()
 
-if(XMAKE_ENABLE_ASSERTION)
+add_compile_options(-Wall)
+add_compile_options(-fPIC)
+add_compile_options(-Wextra)
+add_compile_options(-Wunused)
+add_compile_options(-Winit-self)
+add_compile_options(-Wconversion)
+add_compile_options(-Wfatal-errors)
+add_compile_options(-Wuninitialized)
+add_compile_options(-Wunused-parameter)
+
+include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_BINARY_DIR})
+
+if(${XMAKE}_ENABLE_ASSERTION)
     message(STATUS "Enable assert")
     if(CMAKE_C_FLAGS_${buildType} MATCHES DNDEBUG)
         string(REPLACE "-DNDEBUG" "" CMAKE_C_FLAGS_${buildType}
@@ -130,18 +168,18 @@ else()
 endif()
 
 # Disable Travis CI by default
-if(XMAKE_ENABLE_TRAVIS_CI)
+if(${XMAKE}_ENABLE_TRAVIS_CI)
     add_compile_options("-Werror")
     message(STATUS "Enable travis-ci")
 endif()
 
 # Enable code coverage
-if(XMAKE_ENABLE_GCOV)
+if(${XMAKE}_ENABLE_GCOV)
     include(CodeCoverage)
 endif()
 
 # Enable ccache for linux & likes by default
-if(NOT HOST_WINDOWS AND NOT XMAKE_DISABLE_CCACHE)
+if(NOT HOST_WINDOWS AND NOT ${XMAKE}_DISABLE_CCACHE)
     find_program(CCACHE_PROG ccache)
     if(CCACHE_PROG)
         message(STATUS "Enable recompilation speeds up by ccache")
@@ -152,17 +190,41 @@ if(NOT HOST_WINDOWS AND NOT XMAKE_DISABLE_CCACHE)
     endif()
 endif()
 
-if(XMAKE_QT5_STATIC_PREFIX OR XMAKE_QT5_SHARED_PREFIX OR XMAKE_QT5_SUPPORT)
+# Checking logging level
+# DEV(0), DEBUG(1), INFO(2), WARN(3), ERROR(4), FATAL(5), DISABLE(6)
+if(${XMAKE}_LOG_LEVEL MATCHES "^[0-6]$")
+    if(${XMAKE}_LOG_LEVEL EQUAL 0)
+        set(${XMAKE}_LOG_TYPE "DEV")
+    elseif(${XMAKE}_LOG_LEVEL EQUAL 1)
+        set(${XMAKE}_LOG_TYPE "DEBUG")
+    elseif(${XMAKE}_LOG_LEVEL EQUAL 2)
+        set(${XMAKE}_LOG_TYPE "INFO")
+    elseif(${XMAKE}_LOG_LEVEL EQUAL 3)
+        set(${XMAKE}_LOG_TYPE "WARN")
+    elseif(${XMAKE}_LOG_LEVEL EQUAL 4)
+        set(${XMAKE}_LOG_TYPE "ERROR")
+    elseif(${XMAKE}_LOG_LEVEL EQUAL 5)
+        set(${XMAKE}_LOG_TYPE "FATAL")
+    else()
+        set(${XMAKE}_LOG_TYPE "DISABLE")
+        add_definitions("-D${XMAKE}_LOG_DISABLE")
+    endif()
+    message(STATUS "Min Log Level: ${${XMAKE}_LOG_TYPE}(${${XMAKE}_LOG_LEVEL})")
+else()
+    message(FATAL_ERROR "ERROR: log level is ${${XMAKE}_LOG_TYPE}(${${XMAKE}_LOG_LEVEL})")
+endif()
+
+if(QT5_STATIC_PREFIX OR QT5_SHARED_PREFIX OR QT5_AUTOMATIC)
     include(Qt5Helper)
 endif()
 
-if(XMAKE_ENABLE_DEPENDENCY)
+if(${XMAKE}_ENABLE_DEPENDENCY)
     include(Dependencies)
 endif()
 
 #include(PrintCmake)
 
-if(XMAKE_EXPORT_AS_COMPILER_ARGS)
+if(${XMAKE}_EXPORT_AS_COMPILER_ARGS)
     add_definitions(-DHOST_NAME=\"${HOST_NAME}\")
     add_definitions(-DHOST_USER=\"${HOST_USER}\")
     add_definitions(-DHOST_ARCH=\"${HOST_ARCH}\")

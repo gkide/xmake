@@ -17,24 +17,27 @@ cmake & make template for quick project creation!
 
 - [Code Coverage Support](#code-coverage-support)
 
-- `XMAKE` variable will auto set to `${PROJECT_NAME}` of uppercase
-- `XMAKE_ENABLE_ASSERTION` enable assertion or not, default is **OFF**
-- `XMAKE_ENABLE_TRAVIS_CI` enable travis CI build or not, default is **OFF**
-- `XMAKE_VERBOSE_MESSAGE` show verbose xmake message or not, default is **OFF**
+# Predefined Cmake Variables
 
-- `XMAKE_SKIP_RPATH_ORIGIN`
+**XMAKE** variable will auto set to `${PROJECT_NAME}` of uppercase.
+
+- **${XMAKE}**`_ENABLE_ASSERTION` enable assertion, default is **OFF**
+- **${XMAKE}**`_ENABLE_TRAVIS_CI` enable travis CI build, default is **OFF**
+- **${XMAKE}**`_XMAKE_VERBOSE` show verbose xmake message, default is **OFF**
+- **${XMAKE}**`_DISABLE_CCACHE` enable **ccache** for linux by default.
+
+- **${XMAKE}**`_AUTO_SOURCES`, xmake auto generated source files if any.
+- **${XMAKE}**`_AUTO_LIBRARIES`, xmake auto collection libraries for linking.
+
+- **${XMAKE}**`_SKIP_RPATH_ORIGIN`
   * if **OFF**(default), **RPATH** will be set to `$ORIGIN/../lib`
-  * if **ON**, executables & shared libraries rpath will be set to empty
-
-- `XMAKE_DISABLE_CCACHE` enable **ccache** for linux by default
-- `XMAKE_AUTO_SOURCES`, xmake auto generated source file if need.
-- `XMAKE_AUTO_LIBRARIES`, xmake auto collection libraries to link against.
+  * if **ON**, executables & shared libraries rpath will be set to empty.
 
 # Host Status for project `xdemo`
 
 - The demo project **xdemo** result in **XMAKE** set to `XDEMO`
 
-- `XMAKE_EXPORT_AS_COMPILER_ARGS`
+- **${XMAKE}**`_EXPORT_AS_COMPILER_ARGS`
   * if **ON**, export the variables as CC command line arguments
   * if **OFF**(default), do not export to CC, use cmake `configure_file()`
 
@@ -182,17 +185,17 @@ cmake & make template for quick project creation!
 
 # Qt5 Support
 
-- `XMAKE_QT5_SUPPORT`
-  * if set `XMAKE_QT5_STATIC_PREFIX`, support static Qt5
-  * if set `XMAKE_QT5_SHARED_PREFIX`, support shared Qt5
+- `QT5_AUTOMATIC`
+  * if set `QT5_STATIC_PREFIX`, support static Qt5
+  * if set `QT5_SHARED_PREFIX`, support shared Qt5
   * if both not set, try to find Qt5 from the system wide
 
-- `XMAKE_QT5_STATIC_PREFIX` static build of Qt5 install path
-- `XMAKE_QT5_SHARED_PREFIX` shared build of Qt5 install path
+- `QT5_STATIC_PREFIX` static build of Qt5 install path
+- `QT5_SHARED_PREFIX` shared build of Qt5 install path
 
 - NOTE: static Qt5 need those two auto defined variables
-  * `XMAKE_AUTO_SOURCES`, xmake auto generated source file if need.
-  * `XMAKE_AUTO_LIBRARIES`, xmake auto collection libraries to link against.
+  * **${XMAKE}**`_AUTO_SOURCES`, xmake auto generated source file if need.
+  * **${XMAKE}**`_AUTO_LIBRARIES`, xmake auto collection libraries to link against.
 
 # `InstallHelper`
 
@@ -223,7 +226,7 @@ cmake & make template for quick project creation!
 
 # External Project Download, Build and Install
 
-- `XMAKE_ENABLE_DEPENDENCY` enable external deps support or not, default is **OFF**
+- **${XMAKE}**`_ENABLE_DEPENDENCY` enable external deps support or not, default is **OFF**
 
 ## The following values can be set by user if need
 
@@ -285,7 +288,7 @@ which is used for prebuild binary download & install
 
 # Code Coverage Support
 
-- `XMAKE_ENABLE_GCOV` enable gcov or not, default is **OFF**
+- **${XMAKE}**`_ENABLE_GCOV` enable gcov or not, default is **OFF**
 
 ## `CodeCoverageLcovHtml(...)`
 

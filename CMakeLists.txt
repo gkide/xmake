@@ -4,25 +4,24 @@ project(xdemo)
 set(XDEMO_VERSION_MAJOR 1)
 set(XDEMO_VERSION_MINOR 0)
 set(XDEMO_VERSION_PATCH 0)
-# The date & HASH will auto update at build time
-set(XDEMO_VERSION_TWEAK "dev")
+set(XDEMO_VERSION_TWEAK "dev") # date & HASH auto update at build time
 
-option(XMAKE_ENABLE_GCOV "Enable Coverage" ON)
-option(XMAKE_ENABLE_ASSERTION "Enable assertion." ON)
-option(XMAKE_ENABLE_TRAVIS_CI "Enable Travis CI build." ON)
-option(XMAKE_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
+#option(XDEMO_XMAKE_VERBOSE "Show verbose xmake message" ON)
 
-#option(XMAKE_DISABLE_CCACHE "Enale ccache by default for linux" ON)
+option(XDEMO_ENABLE_GCOV "Enable Coverage" ON)
+option(XDEMO_ENABLE_ASSERTION "Enable assertion." ON)
+option(XDEMO_ENABLE_TRAVIS_CI "Enable Travis CI build." ON)
+option(XDEMO_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 
-option(XMAKE_VERBOSE_MESSAGE "Show verbose xmake message" OFF)
-option(XMAKE_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" OFF)
-option(XMAKE_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" OFF)
+#option(XDEMO_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" ON)
+#option(XDEMO_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" ON)
+#option(XDEMO_DISABLE_CCACHE "Enale ccache by default for linux" ON)
 
 # Enable static/shared Qt5 support
-#option(XMAKE_QT5_SUPPORT "Enable Qt5 support" ON)
-#set(XMAKE_QT5_STATIC_PREFIX "/opt/qt-5.9.1")
-#set(XMAKE_QT5_SHARED_PREFIX "/opt/Qt5.5.1/5.5/gcc_64")
-#set(XMAKE_QT5_SHARED_PREFIX "/usr/lib/gcc/x86_64-linux-gnu")
+#option(QT5_AUTOMATIC "Enable Qt5 support" ON)
+#set(QT5_STATIC_PREFIX "/opt/qt-5.9.1")
+#set(QT5_SHARED_PREFIX "/opt/Qt5.5.1/5.5/gcc_64")
+#set(QT5_SHARED_PREFIX "/usr/lib/gcc/x86_64-linux-gnu")
 
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -35,11 +34,7 @@ configure_file(
     "${CMAKE_BINARY_DIR}/doxygen/Doxyfile"
 )
 
-add_compile_options(-Wall)
-include_directories(${CMAKE_SOURCE_DIR})
-include_directories(${CMAKE_BINARY_DIR})
-
-if(XMAKE_QT5_SUPPORT OR XMAKE_QT5_STATIC_PREFIX OR XMAKE_QT5_SHARED_PREFIX)
+if(QT5_AUTOMATIC OR QT5_STATIC_PREFIX OR QT5_SHARED_PREFIX)
     add_subdirectory(source/qt5)
 endif()
 
@@ -165,13 +160,13 @@ InstallHelper(FILES source/ylc.h
 
 file(GLOB SOURCES source/main.c)
 
-if(NOT XMAKE_EXPORT_AS_COMPILER_ARGS)
+if(NOT XDEMO_EXPORT_AS_COMPILER_ARGS)
     configure_file(
         "${CMAKE_SOURCE_DIR}/source/config.h.in"
         "${CMAKE_BINARY_DIR}/config.generated.h")
     list(APPEND SOURCES
         "${CMAKE_BINARY_DIR}/config.generated.h")
-    add_definitions(-DXMAKE_EXPORT_AS_CONFIG_FILE)
+    add_definitions(-DXDEMO_EXPORT_AS_CONFIG_FILE)
 endif()
 
 # Install Executable Example 1
@@ -272,9 +267,9 @@ CodeCoverageLcovHtml(
     LCOV_EXCLUDES
         source/qt5
         source/main.cpp
-        ${XMAKE_AUTO_SOURCES}
-        ${XMAKE_QT5_STATIC_PREFIX}
-        ${XMAKE_QT5_SHARED_PREFIX}
+        ${XDEMO_AUTO_SOURCES}
+        ${QT5_STATIC_PREFIX}
+        ${QT5_SHARED_PREFIX}
     GENHTML_ARGS
         --title "bundle"
 )
