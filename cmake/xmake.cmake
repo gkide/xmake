@@ -133,20 +133,21 @@ if(XMAKE_ENABLE_TRAVIS_CI)
     message(STATUS "Enable travis-ci")
 endif()
 
-# Enale ccache for linux & likes by default
+# Enable code coverage
+if(XMAKE_ENABLE_GCOV)
+    include(CodeCoverage)
+endif()
+
+# Enable ccache for linux & likes by default
 if(NOT HOST_WINDOWS AND NOT XMAKE_DISABLE_CCACHE)
     find_program(CCACHE_PROG ccache)
     if(CCACHE_PROG)
-        message(STATUS "Enable ccache for speeds up recompilation")
+        message(STATUS "Enable recompilation speeds up by ccache")
         set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE_PROG})
         set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${CCACHE_PROG})
     else()
         message(AUTHOR_WARNING "NOT found ccache for speeds up recompilation")
     endif()
-endif()
-
-if(XMAKE_ENABLE_GCOV)
-    include(CodeCoverage)
 endif()
 
 if(XMAKE_QT5_STATIC_PREFIX OR XMAKE_QT5_SHARED_PREFIX OR XMAKE_QT5_SUPPORT)

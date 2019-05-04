@@ -16,13 +16,13 @@ elseif(NOT CMAKE_COMPILER_IS_GNUCXX)
     return()
 endif()
 
-message(STATUS "Enabling code coverage measurements")
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Dev"
    AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug"
    AND NOT CMAKE_BUILD_TYPE STREQUAL "Coverage")
     message(WARNING "Code coverage results of optimised build may be misleading")
 endif()
 
+message(STATUS "Enable code coverage measurements")
 set(CODE_COVERAGE_FLAGS "-g -O0 --coverage -fprofile-arcs -ftest-coverage"
     CACHE INTERNAL "")
 
@@ -43,6 +43,11 @@ endif()
 
 # code coverage report root directory
 set(ccrd ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/code.coverage)
+
+# Exclude the system wide include headers for code coverage by default
+list(APPEND SYSTEM_EXCLUDES ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
+list(APPEND SYSTEM_EXCLUDES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
+list(APPEND SYSTEM_EXCLUDES ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
 
 # Defines a target for running and collection code coverage information.
 # Builds dependencies first, runs the given executable and outputs reports.
@@ -97,7 +102,6 @@ function(CodeCoverageLcovHtml)
 
     # code coverage INFO/HTML report directory
     set(report_dir ${ccrd}/${runner})
-    file(MAKE_DIRECTORY ${report_dir})
 
     set(based_traceinfo ${report_dir}/${runner}-trace.info.based)
     set(build_traceinfo ${report_dir}/${runner}-trace.info.build)
@@ -109,6 +113,8 @@ function(CodeCoverageLcovHtml)
         # Cleanup lcov
         COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
             --directory . --zerocounters
+        # Create HTML output folder
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Create baseline to make sure untouched files show up in the report
         COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
             --capture --initial --directory . --output-file ${based_traceinfo}
@@ -132,12 +138,9 @@ function(CodeCoverageLcovHtml)
     )
 
     # Exclude the system ones by default
-    list(APPEND SKIP_ITEMS ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
-    list(APPEND SKIP_ITEMS ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
-    list(APPEND SKIP_ITEMS ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
-    foreach(item ${SKIP_ITEMS})
+    foreach(item ${SYSTEM_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET}
-            COMMENT "Remove System Counters from HTML report: ${item}"
+            COMMENT "Ignore SYS Sources for HTML report: ${item}"
             POST_BUILD COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
                 --remove ${clean_traceinfo} '${item}*'
                 --output-file ${clean_traceinfo}
@@ -146,7 +149,7 @@ function(CodeCoverageLcovHtml)
     # Exclude the user given patterns
     foreach(item ${cct_LCOV_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET}
-            COMMENT "Ignore User Counters from HTML report: ${item}"
+            COMMENT "Ignore USR Sources for HTML report: ${item}"
             POST_BUILD COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
                 --remove ${clean_traceinfo} '${item}*'
                 --output-file ${clean_traceinfo}
@@ -223,17 +226,12 @@ function(CodeCoverageGcovrXml)
 
     # Combine excludes to several -e arguments
     set(gcovr_excludes "")
-    list(APPEND SKIP_ITEMS ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
-    list(APPEND SKIP_ITEMS ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
-    list(APPEND SKIP_ITEMS ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
     foreach(item ${SKIP_ITEMS})
         list(APPEND gcovr_excludes "--exclude" "${item}")
-        message(STATUS "Remove System Counters from HTML report: ${item}")
     endforeach()
     # Exclude the user given patterns
     foreach(item ${cct_GCOVR_EXCLUDES})
         list(APPEND gcovr_excludes "--exclude" "${item}")
-        message(STATUS "Ignore User Counters from HTML report: ${item}")
     endforeach()
 
     add_custom_target(${cct_TARGET}
@@ -252,6 +250,21 @@ function(CodeCoverageGcovrXml)
         DEPENDS ${cct_DEPENDENCIES}
         COMMENT "Running gcovr to produce XML code coverage report."
     )
+
+    # Exclude the system ones by default
+    foreach(item ${SYSTEM_EXCLUDES})
+        add_custom_command(TARGET ${cct_TARGET} POST_BUILD
+            COMMAND ;
+            COMMENT "Ignore SYS Sources for XML report: ${item}"
+        )
+    endforeach()
+    # Exclude the user given patterns
+    foreach(item ${cct_GCOVR_EXCLUDES})
+        add_custom_command(TARGET ${cct_TARGET} POST_BUILD
+            COMMAND ;
+            COMMENT "Ignore USR Sources for XML report: ${item}"
+        )
+    endforeach()
 
     string(REPLACE "${CMAKE_BINARY_DIR}/" "" xml_report "${xml_report}")
     # Show info where to find the report
@@ -313,17 +326,12 @@ function(CodeCoverageGcovrHtml)
 
     # Combine excludes to several -e arguments
     set(gcovr_excludes "")
-    list(APPEND SKIP_ITEMS ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
-    list(APPEND SKIP_ITEMS ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
-    list(APPEND SKIP_ITEMS ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
-    foreach(item ${SKIP_ITEMS})
+    foreach(item ${SYSTEM_EXCLUDES})
         list(APPEND gcovr_excludes "--exclude" "${item}")
-        message(STATUS "Remove System Counters from HTML report: ${item}")
     endforeach()
     # Exclude the user given patterns
     foreach(item ${cct_GCOVR_EXCLUDES})
         list(APPEND gcovr_excludes "--exclude" "${item}")
-        message(STATUS "Ignore User Counters from HTML report: ${item}")
     endforeach()
 
     add_custom_target(${cct_TARGET}
@@ -342,6 +350,21 @@ function(CodeCoverageGcovrHtml)
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
         COMMENT "Running gcovr to produce HTML code coverage report."
     )
+
+    # Exclude the system ones by default
+    foreach(item ${SYSTEM_EXCLUDES})
+        add_custom_command(TARGET ${cct_TARGET} POST_BUILD
+            COMMAND ;
+            COMMENT "Ignore SYS Sources for HTML report: ${item}"
+        )
+    endforeach()
+    # Exclude the user given patterns
+    foreach(item ${cct_GCOVR_EXCLUDES})
+        add_custom_command(TARGET ${cct_TARGET} POST_BUILD
+            COMMAND ;
+            COMMENT "Ignore USR Sources for HTML report: ${item}"
+        )
+    endforeach()
 
     string(REPLACE "${CMAKE_BINARY_DIR}/" "" report_dir "${report_dir}")
     # Show info where to find the HTML report
@@ -404,17 +427,12 @@ function(CodeCoverageGcovrText)
 
     # Combine excludes to several -e arguments
     set(gcovr_excludes "")
-    list(APPEND SKIP_ITEMS ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
-    list(APPEND SKIP_ITEMS ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
-    list(APPEND SKIP_ITEMS ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
-    foreach(item ${SKIP_ITEMS})
+    foreach(item ${SYSTEM_EXCLUDES})
         list(APPEND gcovr_excludes "--exclude" "${item}")
-        message(STATUS "Remove System Counters from HTML report: ${item}")
     endforeach()
     # Exclude the user given patterns
     foreach(item ${cct_GCOVR_EXCLUDES})
         list(APPEND gcovr_excludes "--exclude" "${item}")
-        message(STATUS "Ignore User Counters from HTML report: ${item}")
     endforeach()
 
     add_custom_target(${cct_TARGET}
@@ -422,7 +440,7 @@ function(CodeCoverageGcovrText)
         COMMAND find ${PROJECT_BINARY_DIR} -type f -iname '*.gcda' -delete
         # Run tests
         COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
-        # Create folder
+        # Create TEXT output folder
         COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Running gcovr
         COMMAND ${GCOVR_PROG} ${cct_GCOVR_ARGS}
@@ -433,6 +451,21 @@ function(CodeCoverageGcovrText)
         DEPENDS ${cct_DEPENDENCIES}
         COMMENT "Running gcovr to produce TEXT code coverage report."
     )
+
+    # Exclude the system ones by default
+    foreach(item ${SYSTEM_EXCLUDES})
+        add_custom_command(TARGET ${cct_TARGET} POST_BUILD
+            COMMAND ;
+            COMMENT "Ignore SYS Sources for TEXT report: ${item}"
+        )
+    endforeach()
+    # Exclude the user given patterns
+    foreach(item ${cct_GCOVR_EXCLUDES})
+        add_custom_command(TARGET ${cct_TARGET} POST_BUILD
+            COMMAND ;
+            COMMENT "Ignore USR Sources for TEXT report: ${item}"
+        )
+    endforeach()
 
     string(REPLACE "${CMAKE_BINARY_DIR}/" "" text_report "${text_report}")
     # Show info where to find the report

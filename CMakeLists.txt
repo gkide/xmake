@@ -243,7 +243,24 @@ InstallHelper(DIRECTORY cmake
 
 # Code Coverage Report
 ########################################
+CodeCoverageGcovrXml(
+    TARGET gcovr-xml
+    EXECUTABLE another
+)
+
+CodeCoverageGcovrHtml(
+    TARGET gcovr-html
+    EXECUTABLE check
+    GCOVR_ARGS --html-title "CCR - check"
+)
+
+CodeCoverageGcovrText(
+    TARGET gcovr-text
+    EXECUTABLE prog
+)
+
 CodeCoverageLcovHtml(
+    TARGET lcov-html
     EXECUTABLE bundle
     LCOV_EXCLUDES
         source/qt5
@@ -253,17 +270,4 @@ CodeCoverageLcovHtml(
         ${XMAKE_QT5_SHARED_PREFIX}
     GENHTML_ARGS
         --title "bundle"
-)
-
-CodeCoverageGcovrXml(
-    EXECUTABLE another
-)
-
-CodeCoverageGcovrHtml(
-    EXECUTABLE check
-    GCOVR_ARGS --html-title "CCR - check"
-)
-
-CodeCoverageGcovrText(
-    EXECUTABLE prog
 )
