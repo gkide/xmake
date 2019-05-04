@@ -393,7 +393,7 @@ endfunction()
 # - GCOVR_ARGS          Extra arguments for gcovr
 # - GCOVR_EXCLUDES      Extra arguments for gcovr
 #
-# CodeCoverageGcovrHtml(
+# CodeCoverageGcovrText(
 #     TARGET runner_coverage
 #     EXECUTABLE runner -j ${PROCESSOR_COUNT}
 #     DEPENDENCIES runner-deps
