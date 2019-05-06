@@ -21,7 +21,7 @@ if(NOT ${XMAKE}_DEBUG_BUILD)
 endif()
 
 message(STATUS "Enable code coverage measurements")
-set(code_coverage_flags "-g -O0 --coverage -fprofile-arcs -ftest-coverage"
+set(code_coverage_flags "-g -O0 -fprofile-arcs -ftest-coverage --coverage "
     CACHE INTERNAL "")
 
 set(CMAKE_C_FLAGS_${buildType} ${code_coverage_flags}
@@ -113,26 +113,38 @@ function(CodeCoverageLcovHtml)
     set(total_traceinfo ${report_dir}/${runner}-trace.info.total)
     set(clean_traceinfo ${report_dir}/${runner}-trace.info.clean)
 
+    # Enable branch-coverage make it slow and seem useless
+    set(extra_args
+        --rc genhtml_legend=1
+        --rc genhtml_num_spaces=4
+        --rc genhtml_line_field_width=10
+        --rc genhtml_branch_field_width=10
+        #--rc genhtml_branch_coverage=1
+        --rc genhtml_function_coverage=1
+        #--rc lcov_branch_coverage=1
+        --rc lcov_function_coverage=1)
+
     # Setup target
     add_custom_target(${cct_TARGET}
         # Cleanup lcov
-        COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
-            --directory . --zerocounters
+        COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+            --gcov-tool ${GCOV_PROG} --directory . --zerocounters
         # Create HTML output folder
         COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Create baseline to make sure untouched files show up in the report
-        COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
-            --capture --initial --directory . --output-file ${based_traceinfo}
+        COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+            --gcov-tool ${GCOV_PROG} --capture --initial --directory .
+            --output-file ${based_traceinfo}
         # Run coverage tests
         COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
         # Capturing lcov counters for generating report
-        COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
-            --directory . --capture --output-file ${build_traceinfo}
+        COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+            --gcov-tool ${GCOV_PROG} --directory . --capture
+            --output-file ${build_traceinfo}
         # Merget baseline & runners
-        COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
-            --add-tracefile ${based_traceinfo}
-            --add-tracefile ${build_traceinfo}
-            --output-file ${total_traceinfo}
+        COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+            --gcov-tool ${GCOV_PROG} --add-tracefile ${based_traceinfo}
+            --add-tracefile ${build_traceinfo} --output-file ${total_traceinfo}
         # Prepare for cleanup
         COMMAND ${CMAKE_COMMAND} -E copy ${total_traceinfo} ${clean_traceinfo}
         # cleanup
@@ -146,8 +158,8 @@ function(CodeCoverageLcovHtml)
     foreach(item ${SYSTEM_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET}
             COMMENT "Ignore SYS Sources for HTML report: ${item}"
-            POST_BUILD COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
-                --remove ${clean_traceinfo} '${item}*'
+            POST_BUILD COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+                --gcov-tool ${GCOV_PROG} --remove ${clean_traceinfo} '${item}*'
                 --output-file ${clean_traceinfo}
         )
     endforeach()
@@ -155,8 +167,8 @@ function(CodeCoverageLcovHtml)
     foreach(item ${cct_LCOV_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET}
             COMMENT "Ignore USR Sources for HTML report: ${item}"
-            POST_BUILD COMMAND ${LCOV_PROG} ${cct_LCOV_ARGS} --gcov-tool ${GCOV_PROG}
-                --remove ${clean_traceinfo} '${item}*'
+            POST_BUILD COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+                --gcov-tool ${GCOV_PROG} --remove ${clean_traceinfo} '${item}*'
                 --output-file ${clean_traceinfo}
         )
     endforeach()
@@ -173,7 +185,7 @@ function(CodeCoverageLcovHtml)
     # Show info where to find the HTML report
     add_custom_command(TARGET ${cct_TARGET}
         COMMENT "Lcov HTML code coverage report: ${html_report}"
-        POST_BUILD COMMAND ${GENHTML_PROG} ${cct_GENHTML_ARGS}
+        POST_BUILD COMMAND ${GENHTML_PROG} ${extra_args} ${cct_GENHTML_ARGS}
             --output-directory ${report_dir} ${clean_traceinfo}
     )
 endfunction()
