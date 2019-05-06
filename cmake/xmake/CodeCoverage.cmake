@@ -70,23 +70,19 @@ set(LCOV_EXTRA_ARGS
 # Builds dependencies first, runs the given executable and outputs reports.
 #
 # NOTE! The executable should always have a ZERO as exit code otherwise
-# the coverage generation will not complete.
+# the coverage generation will not complete, but this can be skipped by
+# given EXECUTABLE_FORCE_SUCCESS
 #
-# - TARGET              Target name, if not set auto set to code.coverage-*
-# - EXECUTABLE          Executable to run
-# - EXECUTABLE_ARGS     Executable arguments
-# - DEPENDENCIES        Dependencies to build first
+# - TARGET                      Target name, if not set, set to code.coverage-*
+# - EXECUTABLE                  Executable to run
+# - EXECUTABLE_ARGS             Executable arguments
+# - DEPENDENCIES                Dependencies to build first
 #
-# - LCOV_ARGS           Extra arguments for lcov
-# - GENHTML_ARGS        Extra arguments for genhtml
-# - LCOV_EXCLUDES       Exclude patterns from the report
+# - LCOV_ARGS                   Extra arguments for lcov
+# - GENHTML_ARGS                Extra arguments for genhtml
+# - LCOV_EXCLUDES               Exclude patterns from the report
 #
-# Example usage:
-# CodeCoverageLcovHtml(
-#     TARGET runner_coverage
-#     EXECUTABLE runner -j ${PROCESSOR_COUNT}
-#     DEPENDENCIES runner-deps
-# )
+# - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
 function(CodeCoverageLcovHtml)
     cmake_parse_arguments(cct
         "EXECUTABLE_FORCE_SUCCESS" # options
@@ -168,6 +164,7 @@ function(CodeCoverageLcovHtml)
                 --output-file ${clean_traceinfo}
         )
     endforeach()
+
     # Exclude the user given patterns
     foreach(item ${cct_LCOV_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET}
@@ -195,6 +192,16 @@ function(CodeCoverageLcovHtml)
     )
 endfunction()
 
+# Defines a target for collection code coverage information of given runner.
+# Builds dependencies first, remove system default file and outputs reports.
+#
+# - TARGET              Target name
+# - EXECUTABLE          Executable to run
+# - DEPENDENCIES        Dependencies to build first
+#
+# - LCOV_ARGS           Extra arguments for lcov
+# - GENHTML_ARGS        Extra arguments for genhtml
+# - LCOV_EXCLUDES       Exclude patterns from the report
 function(CodeCoverageLcovTraceReport)
     cmake_parse_arguments(cct
         "" # options
@@ -263,6 +270,7 @@ function(CodeCoverageLcovTraceReport)
                 --output-file ${total_traceinfo}
         )
     endforeach()
+
     # Exclude the user given patterns
     foreach(item ${cct_LCOV_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET}-prepare
@@ -284,6 +292,22 @@ function(CodeCoverageLcovTraceReport)
     )
 endfunction()
 
+# Defines a target for running and collection code coverage information.
+# Builds dependencies first, runs the given executable and outputs reports.
+#
+# NOTE! The executable should always have a ZERO as exit code otherwise
+# the coverage generation will not complete, but this can be skipped by
+# given EXECUTABLE_FORCE_SUCCESS
+#
+# - TEST_NAME                   The test name
+# - EXECUTABLE                  Executable to run
+# - EXECUTABLE_ARGS             Executable arguments
+# - DEPENDENCIES                Dependencies to build first
+#
+# - LCOV_ARGS                   Extra arguments for lcov
+# - LCOV_EXCLUDES               Exclude patterns from the report
+#
+# - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
 function(CodeCoverageLcovTrace)
     cmake_parse_arguments(cct
         "EXECUTABLE_FORCE_SUCCESS" # options
@@ -351,24 +375,21 @@ endfunction()
 # Builds dependencies first, runs the given executable and outputs reports.
 #
 # NOTE! The executable should always have a ZERO as exit code otherwise
-# the coverage generation will not complete.
+# the coverage generation will not complete, but this can be skipped by
+# given EXECUTABLE_FORCE_SUCCESS
 #
-# - TARGET              Target name, if not set auto set to code.coverage-*
-# - EXECUTABLE          Executable to run
-# - EXECUTABLE_ARGS     Executable arguments
-# - DEPENDENCIES        Dependencies to build first
+# - TARGET                      Target name, if not set, set to code.coverage-*
+# - EXECUTABLE                  Executable to run
+# - EXECUTABLE_ARGS             Executable arguments
+# - DEPENDENCIES                Dependencies to build first
 #
-# - GCOVR_ARGS          Extra arguments for gcovr
-# - GCOVR_EXCLUDES      Extra arguments for gcovr
+# - GCOVR_ARGS                  Extra arguments for gcovr
+# - GCOVR_EXCLUDES              Extra arguments for gcovr
 #
-# CodeCoverageGcovrXml(
-#     TARGET runner_coverage
-#     EXECUTABLE runner -j ${PROCESSOR_COUNT}
-#     DEPENDENCIES runner-deps
-# )
+# - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
 function(CodeCoverageGcovrXml)
     cmake_parse_arguments(cct
-        ""
+        "EXECUTABLE_FORCE_SUCCESS"
         "TARGET"
         "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;GCOVR_ARGS;GCOVR_EXCLUDES"
         ${ARGN}
@@ -394,6 +415,10 @@ function(CodeCoverageGcovrXml)
         set(cct_TARGET code.coverage-${runner})
     endif()
 
+    if(cct_EXECUTABLE_FORCE_SUCCESS)
+        set(force_success || true)
+    endif()
+
     # Generating the XML report
     set(report_dir ${ccrd}/${runner})
     set(xml_report ${report_dir}/${runner}.xml)
@@ -403,6 +428,7 @@ function(CodeCoverageGcovrXml)
     foreach(item ${SKIP_ITEMS})
         list(APPEND gcovr_excludes "--exclude" "${item}")
     endforeach()
+
     # Exclude the user given patterns
     foreach(item ${cct_GCOVR_EXCLUDES})
         list(APPEND gcovr_excludes "--exclude" "${item}")
@@ -412,7 +438,7 @@ function(CodeCoverageGcovrXml)
         # Clean old coverage data
         COMMAND find ${CMAKE_BINARY_DIR} -type f -iname '*.gcda' -delete
         # Run test executable
-        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
+        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS} ${force_success}
         # Create XML output folder
         COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Running gcovr
@@ -432,6 +458,7 @@ function(CodeCoverageGcovrXml)
             COMMENT "Ignore SYS Sources for XML report: ${item}"
         )
     endforeach()
+
     # Exclude the user given patterns
     foreach(item ${cct_GCOVR_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET} POST_BUILD
@@ -452,24 +479,21 @@ endfunction()
 # Builds dependencies first, runs the given executable and outputs reports.
 #
 # NOTE! The executable should always have a ZERO as exit code otherwise
-# the coverage generation will not complete.
+# the coverage generation will not complete, but this can be skipped by
+# given EXECUTABLE_FORCE_SUCCESS
 #
-# - TARGET              Target name, if not set auto set to code.coverage-*
-# - EXECUTABLE          Executable to run
-# - EXECUTABLE_ARGS     Executable arguments
-# - DEPENDENCIES        Dependencies to build first
+# - TARGET                      Target name, if not set, set to code.coverage-*
+# - EXECUTABLE                  Executable to run
+# - EXECUTABLE_ARGS             Executable arguments
+# - DEPENDENCIES                Dependencies to build first
 #
-# - GCOVR_ARGS          Extra arguments for gcovr
-# - GCOVR_EXCLUDES      Extra arguments for gcovr
+# - GCOVR_ARGS                  Extra arguments for gcovr
+# - GCOVR_EXCLUDES              Extra arguments for gcovr
 #
-# CodeCoverageGcovrHtml(
-#     TARGET runner_coverage
-#     EXECUTABLE runner -j ${PROCESSOR_COUNT}
-#     DEPENDENCIES runner-deps
-# )
+# - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
 function(CodeCoverageGcovrHtml)
     cmake_parse_arguments(cct
-        ""
+        "EXECUTABLE_FORCE_SUCCESS"
         "TARGET"
         "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;GCOVR_ARGS;GCOVR_EXCLUDES"
         ${ARGN}
@@ -495,6 +519,10 @@ function(CodeCoverageGcovrHtml)
         set(cct_TARGET code.coverage-${runner})
     endif()
 
+    if(cct_EXECUTABLE_FORCE_SUCCESS)
+        set(force_success || true)
+    endif()
+
     # Generating the XML report
     set(report_dir ${ccrd}/${runner})
 
@@ -503,6 +531,7 @@ function(CodeCoverageGcovrHtml)
     foreach(item ${SYSTEM_EXCLUDES})
         list(APPEND gcovr_excludes "--exclude" "${item}")
     endforeach()
+
     # Exclude the user given patterns
     foreach(item ${cct_GCOVR_EXCLUDES})
         list(APPEND gcovr_excludes "--exclude" "${item}")
@@ -512,7 +541,7 @@ function(CodeCoverageGcovrHtml)
         # Clean old coverage data
         COMMAND find ${CMAKE_BINARY_DIR} -type f -iname '*.gcda' -delete
         # Run tests runner
-        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
+        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS} ${force_success}
         # Create HTML output folder
         COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Running gcovr
@@ -532,6 +561,7 @@ function(CodeCoverageGcovrHtml)
             COMMENT "Ignore SYS Sources for HTML report: ${item}"
         )
     endforeach()
+
     # Exclude the user given patterns
     foreach(item ${cct_GCOVR_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET} POST_BUILD
@@ -552,24 +582,21 @@ endfunction()
 # Builds dependencies first, runs the given executable and outputs reports.
 #
 # NOTE! The executable should always have a ZERO as exit code otherwise
-# the coverage generation will not complete.
+# the coverage generation will not complete, but this can be skipped by
+# given EXECUTABLE_FORCE_SUCCESS
 #
-# - TARGET              Target name, if not set auto set to code.coverage-*
-# - EXECUTABLE          Executable to run
-# - EXECUTABLE_ARGS     Executable arguments
-# - DEPENDENCIES        Dependencies to build first
+# - TARGET                      Target name, if not set, set to code.coverage-*
+# - EXECUTABLE                  Executable to run
+# - EXECUTABLE_ARGS             Executable arguments
+# - DEPENDENCIES                Dependencies to build first
 #
-# - GCOVR_ARGS          Extra arguments for gcovr
-# - GCOVR_EXCLUDES      Extra arguments for gcovr
+# - GCOVR_ARGS                  Extra arguments for gcovr
+# - GCOVR_EXCLUDES              Extra arguments for gcovr
 #
-# CodeCoverageGcovrText(
-#     TARGET runner_coverage
-#     EXECUTABLE runner -j ${PROCESSOR_COUNT}
-#     DEPENDENCIES runner-deps
-# )
+# - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
 function(CodeCoverageGcovrText)
     cmake_parse_arguments(cct
-        ""
+        "EXECUTABLE_FORCE_SUCCESS"
         "TARGET"
         "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;GCOVR_ARGS;GCOVR_EXCLUDES"
         ${ARGN}
@@ -595,6 +622,10 @@ function(CodeCoverageGcovrText)
         set(cct_TARGET code.coverage-${runner})
     endif()
 
+    if(cct_EXECUTABLE_FORCE_SUCCESS)
+        set(force_success || true)
+    endif()
+
     # Generating the XML report
     set(report_dir ${ccrd}/${runner})
     set(text_report ${report_dir}/${runner}.text)
@@ -604,6 +635,7 @@ function(CodeCoverageGcovrText)
     foreach(item ${SYSTEM_EXCLUDES})
         list(APPEND gcovr_excludes "--exclude" "${item}")
     endforeach()
+
     # Exclude the user given patterns
     foreach(item ${cct_GCOVR_EXCLUDES})
         list(APPEND gcovr_excludes "--exclude" "${item}")
@@ -613,7 +645,7 @@ function(CodeCoverageGcovrText)
         # Clean old coverage data
         COMMAND find ${CMAKE_BINARY_DIR} -type f -iname '*.gcda' -delete
         # Run tests
-        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
+        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS} ${force_success}
         # Create TEXT output folder
         COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Running gcovr
@@ -633,6 +665,7 @@ function(CodeCoverageGcovrText)
             COMMENT "Ignore SYS Sources for TEXT report: ${item}"
         )
     endforeach()
+
     # Exclude the user given patterns
     foreach(item ${cct_GCOVR_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET} POST_BUILD

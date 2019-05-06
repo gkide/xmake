@@ -296,11 +296,12 @@ which is used for prebuild binary download & install
 
 ## `CodeCoverageLcovHtml(...)`
 
-Defines a target for running and collection code coverage information
+Defines a target for running and collection code coverage information.
 Builds dependencies if any, runs the given executable and outputs reports.
 
 NOTE! The executable should always have a ZERO as exit code otherwise
-the coverage generation will not complete.
+the coverage generation will not complete, but this can be skipped by
+given `EXECUTABLE_FORCE_SUCCESS`
 
 - `TARGET`, Target name, if not set auto set to `code.coverage-`**name**
 - `EXECUTABLE`, Executable to run, can not missing
@@ -309,6 +310,27 @@ the coverage generation will not complete.
 - `LCOV_ARGS`, Extra arguments for lcov, can be missing
 - `LCOV_EXCLUDES`, Report exclude patterns, can be missing, auto remove system
 - `GENHTML_ARGS`, Extra arguments for genhtml, can be missing
+- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
+
+## `CodeCoverageLcovTrace(...)` and `CodeCoverageLcovTraceReport(...)`
+
+Running executable with different args and collection code coverage information.
+Builds dependencies if any, runs the given executable and outputs reports.
+
+NOTE! The executable should always have a ZERO as exit code otherwise
+the coverage generation will not complete, but this can be skipped by
+given `EXECUTABLE_FORCE_SUCCESS`
+
+- `TARGET`, Target name for `CodeCoverageLcovTraceReport`
+- `TEST_NAME`, Test name for executable to run with given args for `CodeCoverageLcovTrace`
+
+- `EXECUTABLE`, Executable to run, can not missing
+- `EXECUTABLE_ARGS`, Executable arguments, can be missing
+- `DEPENDENCIES`, Dependencies to build first, can be missing
+- `LCOV_ARGS`, Extra arguments for lcov, can be missing
+- `LCOV_EXCLUDES`, Report exclude patterns, can be missing, auto remove system
+- `GENHTML_ARGS`, Extra arguments for genhtml, can be missing
+- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
 
 ## `CodeCoverageGcovrXml(...)`, `CodeCoverageGcovrHtml(...)` and `CodeCoverageGcovrText(...)`
 
@@ -318,6 +340,7 @@ the coverage generation will not complete.
 - `DEPENDENCIES`, Dependencies to build first, can be missing
 - `GCOVR_ARGS`, Extra arguments for gcovr, can be missing
 - `GCOVR_EXCLUDES`, Extra arguments for gcovr, can be missing, auto remove system
+- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
 
 ## `CodeCoverageAppendFlags()`
 
