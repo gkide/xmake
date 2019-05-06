@@ -273,3 +273,5 @@ CodeCoverageLcovHtml(
     GENHTML_ARGS
         --title "bundle"
 )
+
+add_subdirectory(source/ccr)

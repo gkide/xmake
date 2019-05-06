@@ -54,6 +54,18 @@ list(APPEND SYSTEM_EXCLUDES ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
 list(APPEND SYSTEM_EXCLUDES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
 list(APPEND SYSTEM_EXCLUDES ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
 
+# Enable branch-coverage make it slow and seem useless
+set(LCOV_EXTRA_ARGS
+    --rc genhtml_legend=1
+    --rc genhtml_num_spaces=4
+    --rc genhtml_line_field_width=10
+    --rc genhtml_branch_field_width=10
+#   --rc genhtml_branch_coverage=1
+    --rc genhtml_function_coverage=1
+#   --rc lcov_branch_coverage=1
+    --rc lcov_function_coverage=1
+)
+
 # Defines a target for running and collection code coverage information.
 # Builds dependencies first, runs the given executable and outputs reports.
 #
@@ -77,7 +89,7 @@ list(APPEND SYSTEM_EXCLUDES ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
 # )
 function(CodeCoverageLcovHtml)
     cmake_parse_arguments(cct
-        "" # options
+        "EXECUTABLE_FORCE_SUCCESS" # options
         "TARGET" # one value keywords
         # multi value keywords
         "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;LCOV_ARGS;LCOV_EXCLUDES;GENHTML_ARGS"
@@ -105,6 +117,12 @@ function(CodeCoverageLcovHtml)
         set(cct_TARGET code.coverage-${runner})
     endif()
 
+    if(cct_EXECUTABLE_FORCE_SUCCESS)
+        set(force_success || true)
+    endif()
+
+    list(APPEND cct_DEPENDENCIES ${cct_EXECUTABLE})
+
     # code coverage INFO/HTML report directory
     set(report_dir ${ccrd}/${runner})
 
@@ -113,36 +131,25 @@ function(CodeCoverageLcovHtml)
     set(total_traceinfo ${report_dir}/${runner}-trace.info.total)
     set(clean_traceinfo ${report_dir}/${runner}-trace.info.clean)
 
-    # Enable branch-coverage make it slow and seem useless
-    set(extra_args
-        --rc genhtml_legend=1
-        --rc genhtml_num_spaces=4
-        --rc genhtml_line_field_width=10
-        --rc genhtml_branch_field_width=10
-        #--rc genhtml_branch_coverage=1
-        --rc genhtml_function_coverage=1
-        #--rc lcov_branch_coverage=1
-        --rc lcov_function_coverage=1)
-
-    # Setup target
+    # Setup target and generat coverage data
     add_custom_target(${cct_TARGET}
         # Cleanup lcov
-        COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+        COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
             --gcov-tool ${GCOV_PROG} --directory . --zerocounters
         # Create HTML output folder
         COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
         # Create baseline to make sure untouched files show up in the report
-        COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+        COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
             --gcov-tool ${GCOV_PROG} --capture --initial --directory .
             --output-file ${based_traceinfo}
         # Run coverage tests
-        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS}
+        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS} ${force_success}
         # Capturing lcov counters for generating report
-        COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+        COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
             --gcov-tool ${GCOV_PROG} --directory . --capture
             --output-file ${build_traceinfo}
         # Merget baseline & runners
-        COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+        COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
             --gcov-tool ${GCOV_PROG} --add-tracefile ${based_traceinfo}
             --add-tracefile ${build_traceinfo} --output-file ${total_traceinfo}
         # Prepare for cleanup
@@ -158,7 +165,7 @@ function(CodeCoverageLcovHtml)
     foreach(item ${SYSTEM_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET}
             COMMENT "Ignore SYS Sources for HTML report: ${item}"
-            POST_BUILD COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+            POST_BUILD COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
                 --gcov-tool ${GCOV_PROG} --remove ${clean_traceinfo} '${item}*'
                 --output-file ${clean_traceinfo}
         )
@@ -167,7 +174,7 @@ function(CodeCoverageLcovHtml)
     foreach(item ${cct_LCOV_EXCLUDES})
         add_custom_command(TARGET ${cct_TARGET}
             COMMENT "Ignore USR Sources for HTML report: ${item}"
-            POST_BUILD COMMAND ${LCOV_PROG} ${extra_args} ${cct_LCOV_ARGS}
+            POST_BUILD COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
                 --gcov-tool ${GCOV_PROG} --remove ${clean_traceinfo} '${item}*'
                 --output-file ${clean_traceinfo}
         )
@@ -180,14 +187,135 @@ function(CodeCoverageLcovHtml)
     # Show where to find the lcov INFO report
     add_custom_command(TARGET ${cct_TARGET}
         POST_BUILD COMMAND ;
-        COMMENT "Lcov INFO code coverage report: ${info_report}"
+        COMMENT "Lcov code coverage INFO report: ${info_report}"
     )
     # Show info where to find the HTML report
     add_custom_command(TARGET ${cct_TARGET}
-        COMMENT "Lcov HTML code coverage report: ${html_report}"
-        POST_BUILD COMMAND ${GENHTML_PROG} ${extra_args} ${cct_GENHTML_ARGS}
+        COMMENT "Lcov code coverage HTML report: ${html_report}"
+        POST_BUILD COMMAND ${GENHTML_PROG} ${LCOV_EXTRA_ARGS} ${cct_GENHTML_ARGS}
             --output-directory ${report_dir} ${clean_traceinfo}
     )
+endfunction()
+
+function(CodeCoverageLcovTrace)
+    cmake_parse_arguments(cct
+        "HTML_REPORT;EXECUTABLE_FORCE_SUCCESS" # options
+        "TARGET;TESTNAME" # one value keywords
+        # multi value keywords
+        "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;LCOV_ARGS;LCOV_EXCLUDES;GENHTML_ARGS"
+        ${ARGN}
+    )
+
+    if(NOT LCOV_PROG)
+        message(FATAL_ERROR "Code coverage stop, NOT found lcov")
+    endif()
+
+    if(NOT GCOV_PROG)
+        message(FATAL_ERROR "Code coverage stop, NOT found gcov")
+    endif()
+
+    if(NOT GENHTML_PROG)
+        message(FATAL_ERROR "Code coverage stop, NOT found genhtml")
+    endif()
+
+    if(NOT cct_EXECUTABLE)
+        message(FATAL_ERROR "Must set EXECUTABLE for code coverage.")
+    endif()
+
+    if(NOT cct_TARGET AND NOT cct_TESTNAME)
+        message(FATAL_ERROR "Must set TARGET or TESTNAME for code coverage.")
+    endif()
+
+    list(APPEND cct_DEPENDENCIES ${cct_EXECUTABLE})
+    get_filename_component(runner ${cct_EXECUTABLE} NAME)
+
+    # code coverage trace INFO directory
+    set(report_dir ${ccrd}/${runner})
+
+    if(cct_HTML_REPORT)
+        string(STRIP "${CCRTI_${cct_EXECUTABLE}}" trace_data_args)
+        if(NOT trace_data_args)
+            message(WARNING "NO code coverage data found for ${cct_EXECUTABLE}.")
+            return()
+        endif()
+
+        set(total_traceinfo ${report_dir}/trace.info.total)
+        string(REPLACE " " ";" trace_data_deps "${trace_data_args}")
+        string(REPLACE "${CMAKE_BINARY_DIR}/" "" rccrd "${ccrd}")
+        set(html_report ${rccrd}/${runner}/index.html)
+
+        foreach(item ${trace_data_deps})
+            list(APPEND merge_tracefile_args --add-tracefile ${item})
+        endforeach()
+
+        # Merge all the trace info
+        add_custom_target(${cct_TARGET}-prepare
+            COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
+                --gcov-tool ${GCOV_PROG} ${merge_tracefile_args}
+                --output-file ${total_traceinfo}
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            DEPENDS ${cct_DEPENDENCIES} ${trace_data_deps}
+            COMMENT "Clean up code coverage trace info for HTML report."
+        )
+
+        # Exclude the system ones by default
+        foreach(item ${SYSTEM_EXCLUDES})
+            add_custom_command(TARGET ${cct_TARGET}-prepare
+                COMMENT "Ignore SYS Sources for HTML report: ${item}"
+                POST_BUILD COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
+                    --gcov-tool ${GCOV_PROG} --remove ${total_traceinfo} '${item}*'
+                    --output-file ${total_traceinfo}
+            )
+        endforeach()
+        # Exclude the user given patterns
+        foreach(item ${cct_LCOV_EXCLUDES})
+            add_custom_command(TARGET ${cct_TARGET}-prepare
+                COMMENT "Ignore USR Sources for HTML report: ${item}"
+                POST_BUILD COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
+                    --gcov-tool ${GCOV_PROG} --remove ${total_traceinfo} '${item}*'
+                    --output-file ${total_traceinfo}
+            )
+        endforeach()
+
+        # Generating the HTML report
+        add_custom_target(${cct_TARGET}
+            COMMENT "Lcov code coverage HTML report: ${html_report}"
+            COMMAND ${GENHTML_PROG} ${LCOV_EXTRA_ARGS} ${cct_GENHTML_ARGS}
+                ${total_traceinfo} --show-details
+                --output-directory ${report_dir}
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            DEPENDS ${cct_TARGET}-prepare
+        )
+        return()
+    endif()
+
+    if(cct_EXECUTABLE_FORCE_SUCCESS)
+        set(force_success || true)
+    endif()
+
+    set(output_traceinfo ${report_dir}/trace.info.${cct_TESTNAME})
+
+    # Setup target and generat coverage data
+    add_custom_command(OUTPUT ${output_traceinfo}
+        # Cleanup coverage data
+        COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
+            --gcov-tool ${GCOV_PROG} --directory . --zerocounters
+        # Create trace INFO output folder
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${report_dir}
+        # Run coverage tests
+        COMMAND ${cct_EXECUTABLE} ${cct_EXECUTABLE_ARGS} ${force_success}
+        # Capturing lcov coverage data
+        COMMAND ${LCOV_PROG} ${LCOV_EXTRA_ARGS} ${cct_LCOV_ARGS}
+            --gcov-tool ${GCOV_PROG} --directory . --capture
+            --output-file ${output_traceinfo}
+            --test-name "${cct_TESTNAME}"
+        DEPENDS ${cct_DEPENDENCIES}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Processing code coverage test case: ${cct_TESTNAME}"
+    )
+
+    set(CCRTI_${cct_EXECUTABLE}
+        "${CCRTI_${cct_EXECUTABLE}} ${output_traceinfo}" PARENT_SCOPE)
 endfunction()
 
 # Defines a target for running and collection code coverage information.
