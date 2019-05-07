@@ -168,60 +168,6 @@ endif
 
 CMAKE_ARGS += $(SOURCE_DIR)
 
-###########################
-# xmake predefined target #
-###########################
-PHONY += xmake-all
-xmake-all: | xmake-ran-top-cmake
-	$(XMAKE) -C $(BUILD_DIR)
-
-PHONY += xmake-ran-top-cmake
-xmake-ran-top-cmake:
-	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS)
-
-PHONY += xmake-test
-xmake-test:
-ifeq ($(filter-out Dev Debug Coverage,$(BUILD_TYPE)),)
-	$(XMAKE) -C $(BUILD_DIR) xtest
-	$(Q)$(BUILD_DIR)/$(BUILD_TYPE)/bin/xtest
-endif
-
-PHONY += xmake-install
-xmake-install:
-	$(XMAKE) -C $(BUILD_DIR) install
-
-PHONY += xmake-release
-xmake-release:
-ifneq (,$(wildcard scripts/release))
-	@scripts/release
-endif
-
-PHONY += xmake-clean
-xmake-clean:
-	$(Q)rm -rf $(BUILD_DIR)
-
-PHONY += xmake-distclean
-xmake-distclean: xmake-clean
-	$(Q)rm -rf $(DEPS_ROOT_DIR)
-
-PHONY += xmake-help
-xmake-help:
-	@echo "-------------------------------------------------------------------------"
-	@echo "$$ make V=1 ...      verbose of make & cmake, default is silent."
-	@echo "$$ make O=path ...   build directory abs-path, default is 'build'."
-	@echo "$$ make I=path ...   install directory abs-path, default is 'build/usr'."
-	@echo "-------------------------------------------------------------------------"
-	@echo "The <target> of the xmake Makefile are as following:"
-	@echo "    all              build the project."
-	@echo "    test             run project tests."
-	@echo "    install          install the targets."
-	@echo "    release          do project release."
-	@echo "    clean            clean the build directory."
-	@echo "    distclean        remove all generated files."
-	@echo "For much more details: https://gitlab.com/gkide/xmake"
-	@echo "-------------------------------------------------------------------------"
-#	@echo "See 'docs/local.mk' for much more setting details."
-
 #######################################################
 # Import Common Utils
 #######################################################
@@ -265,8 +211,8 @@ xmake-help:
 ##########################
 # Removed debug sections #
 ##########################
+STRIP_ARGS ?= --strip-all
 ifeq ($(STRIP_PROG),)
-    STRIP_ARGS ?= --strip-all # auto detect
     ifneq ($(strip $(shell (command -v strip))),)
     # usage $(STRIP_PROG) $(STRIP_ARGS) ... ELF
         STRIP_PROG := $(Q)$(shell (command -v strip))
@@ -276,8 +222,8 @@ endif
 #########################################
 # Save Removed debug sections into FILE #
 #########################################
+EUSTRIP_ARGS ?=
 ifeq ($(EUSTRIP_PROG),)
-    EUSTRIP_ARGS ?= # auto detect
     ifneq ($(strip $(shell (command -v eu-strip))),)
     # usage $(EUSTRIP_PROG) $(EUSTRIP_ARGS) ... ELF -f FILE
         EUSTRIP_PROG := $(Q)$(shell (command -v eu-strip))
@@ -287,8 +233,8 @@ endif
 ###################################
 # Static C/C++ code analysis tool #
 ###################################
+CPPCHECK_ARGS ?=
 ifeq ($(CPPCHECK_PROG),)
-    CPPCHECK_ARGS ?= # auto detect
     ifneq ($(strip $(shell (command -v cppcheck))),)
         CPPCHECK_PROG := $(Q)$(shell (command -v cppcheck))
         # cppcheck-v1.8x has --project=..., cppcheck-v1.7x does not
@@ -306,13 +252,58 @@ endif
 ##########################################
 # Standard Documentation Generating Tool #
 ##########################################
+DOXYGEN_ARGS ?=
 ifeq ($(DOXYGEN_PROG),)
-    DOXYGEN_ARGS ?= # auto detect
     ifneq ($(strip $(shell (command -v doxygen))),)
         DOXYGEN_PROG := $(Q)$(shell (command -v doxygen))
+        CMAKE_ARGS += -DDOXYGEN_PROG=$(shell (command -v doxygen))
     endif
+else
+    CMAKE_ARGS += -DDOXYGEN_PROG=$(DOXYGEN_PROG)
+    DOXYGEN_PROG := $(Q)$(DOXYGEN_PROG)
 endif
 
+###########################
+# xmake predefined target #
+###########################
+PHONY += xmake-all
+xmake-all: | xmake-ran-top-cmake
+	$(XMAKE) -C $(BUILD_DIR)
+
+PHONY += xmake-ran-top-cmake
+xmake-ran-top-cmake:
+	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS)
+
+PHONY += xmake-test
+xmake-test:
+ifeq ($(filter-out Dev Debug Coverage,$(BUILD_TYPE)),)
+	$(XMAKE) -C $(BUILD_DIR) xtest
+	$(Q)$(BUILD_DIR)/$(BUILD_TYPE)/bin/xtest
+endif
+
+PHONY += xmake-install
+xmake-install:
+	$(XMAKE) -C $(BUILD_DIR) install
+
+PHONY += xmake-doxygen
+xmake-doxygen:
+	$(XMAKE) -C $(BUILD_DIR) doxygen
+
+PHONY += xmake-release
+xmake-release:
+ifneq (,$(wildcard scripts/release))
+	@scripts/release
+endif
+
+PHONY += xmake-clean
+xmake-clean:
+	$(Q)rm -rf $(BUILD_DIR)
+
+PHONY += xmake-distclean
+xmake-distclean: xmake-clean
+	$(Q)rm -rf $(DEPS_ROOT_DIR)
+
+PHONY += xmake-auto-progs
 xmake-auto-progs:
 	@echo "STRIP_PROG=$(STRIP_PROG)"
 	@echo "STRIP_ARGS=$(STRIP_ARGS)"
@@ -327,3 +318,27 @@ xmake-auto-progs:
 	@echo "CPPCHECK_ARGS=$(CPPCHECK_ARGS)"
 	@echo "CPPCHECK17_PROG=$(CPPCHECK17_PROG)"
 	@echo "CPPCHECK18_PROG=$(CPPCHECK18_PROG)"
+
+PHONY += xmake-help
+xmake-help:
+	@echo "-------------------------------------------------------------------------"
+	@echo "$$ make V=1 ...      verbose of make & cmake, default is silent."
+	@echo "$$ make O=path ...   build directory abs-path, default is 'build'."
+	@echo "$$ make I=path ...   install directory abs-path, default is 'build/usr'."
+	@echo "-------------------------------------------------------------------------"
+	@echo "The <target> of the xmake Makefile are as following:"
+	@echo "    all              build the project."
+	@echo "    test             run project tests."
+	@echo "    release          do project release."
+	@echo "    install          install the targets."
+	@echo "    doxygen          generate doxygen mannual."
+	@echo "    clean            clean the build directory."
+	@echo "    distclean        remove all generated files."
+	@echo "-------------------------------------------------------------------------"
+#	@echo "See 'docs/local.mk' for much more setting details."
+#
+#	@echo "*********************************************************"
+#	@echo "* For much more details: https://github.com/gkide/xmake *"
+#	@echo "*********************************************************"
+
+.PHONY: $(PHONY)

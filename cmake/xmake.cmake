@@ -1,4 +1,4 @@
-# xmake git repo is https://gitlab.com/gkide/xmake
+# xmake git repo is https://github.com/gkide/xmake
 cmake_minimum_required(VERSION 2.8.12)
 string(TOUPPER ${PROJECT_NAME} XMAKE) # The Uppercase of Project Name
 

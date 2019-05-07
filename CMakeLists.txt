@@ -27,12 +27,11 @@ option(XDEMO_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(xmake)
 
-set(XDEMO_DOXYGEN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/doxygen")
-set(XDEMO_BRIEF_DESCRIPTION "cmake & make quick project template!")
-configure_file(
-    "${CMAKE_SOURCE_DIR}/docs/doxygen/Doxyfile.in"
-    "${CMAKE_BINARY_DIR}/doxygen/Doxyfile"
-)
+# Generate Doxygen API Manual
+find_package(Doxygen)
+if(DOXYGEN_PROG OR DOXYGEN_FOUND)
+    add_subdirectory(docs/doxygen)
+endif()
 
 if(QT5_AUTOMATIC OR QT5_STATIC_PREFIX OR QT5_SHARED_PREFIX)
     add_subdirectory(source/qt5)
