@@ -6,6 +6,20 @@ string(APPEND ${XMAKE}_RELEASE_VERSION "v${${XMAKE}_VERSION_MAJOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_MINOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_PATCH}")
 
+# Change the default cmake value without overriding the user-provided one
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    # The default install prefix relative to build directory
+    string(TOLOWER ${PROJECT_NAME} pkg_name)
+    set(pkg_version "${${XMAKE}_RELEASE_VERSION}")
+    if(HOST_WINDOWS)
+        set(CMAKE_INSTALL_PREFIX
+            "C:/Program Files/${pkg_name}-${pkg_version}" CACHE PATH "" FORCE)
+    else()
+        set(CMAKE_INSTALL_PREFIX
+            "/opt/${pkg_name}-${pkg_version}" CACHE PATH "" FORCE)
+    endif()
+endif()
+
 # The available build type values
 if(NOT CMAKE_CONFIGURATION_TYPES)
     list(APPEND CMAKE_CONFIGURATION_TYPES "Dev")
@@ -56,11 +70,6 @@ foreach(type ${CMAKE_CONFIGURATION_TYPES})
     set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/lib)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/lib)
 endforeach()
-
-# Change the default cmake value without overriding the user-provided one
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/usr" CACHE PATH "" FORCE)
-endif()
 
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")

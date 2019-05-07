@@ -115,22 +115,24 @@ $(if $(OUTPUT),, $(error Failed to create directory: "$(BUILD_DIR)"))
 BUILD_DIR := $(OUTPUT)
 
 # The install prefix
-INSTALL_PREFIX ?= $(BUILD_DIR)/usr
+# - if not full path, evaluated to the current build directory
+# - if not set, default value is '/opt/${PROJECT_NAME}-v${PROJECT_VERSION}'
+#
+# '$ make DESTDIR=/prefix/ ... ', works for only unix like systems of both.
 ifeq ("$(origin I)", "command line")
     INSTALL_PREFIX := $(I)
-endif
+    ifeq ($(call hasSpaces,$(INSTALL_PREFIX)),1)
+        $(error Install path can NOT contain spaces: "$(INSTALL_PREFIX)")
+    endif
+    ifeq ($(call hasColons,$(INSTALL_PREFIX)),1)
+        $(error Install path can NOT contain colons: "$(INSTALL_PREFIX)")
+    endif
 
-ifeq ($(call hasSpaces,$(INSTALL_PREFIX)),1)
-    $(error Install path can NOT contain spaces: "$(INSTALL_PREFIX)")
+    # Creat it and make sure to get the full path
+    OUTPUT := $(shell mkdir -p $(INSTALL_PREFIX) && cd $(INSTALL_PREFIX) && pwd)
+    $(if $(OUTPUT),, $(error Failed to create directory: "$(INSTALL_PREFIX)"))
+    CMAKE_ARGS += -DCMAKE_INSTALL_PREFIX=$(OUTPUT)
 endif
-ifeq ($(call hasColons,$(INSTALL_PREFIX)),1)
-    $(error Install path can NOT contain colons: "$(INSTALL_PREFIX)")
-endif
-
-# Creat it and make sure to get the full path
-OUTPUT := $(shell mkdir -p $(INSTALL_PREFIX) && cd $(INSTALL_PREFIX) && pwd)
-$(if $(OUTPUT),, $(error Failed to create directory: "$(INSTALL_PREFIX)"))
-CMAKE_ARGS += -DCMAKE_INSTALL_PREFIX=$(OUTPUT)
 
 # Do not show cmake warnings for none 'Dev/Debug' build
 ifeq ($(filter Dev Debug Coverage,$(BUILD_TYPE)),)
@@ -275,18 +277,18 @@ xmake-ran-top-cmake:
 	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS)
 
 PHONY += xmake-test
-xmake-test:
+xmake-test: | xmake-ran-top-cmake
 ifeq ($(filter-out Dev Debug Coverage,$(BUILD_TYPE)),)
 	$(XMAKE) -C $(BUILD_DIR) xtest
 	$(Q)$(BUILD_DIR)/$(BUILD_TYPE)/bin/xtest
 endif
 
 PHONY += xmake-install
-xmake-install:
+xmake-install: | xmake-all
 	$(XMAKE) -C $(BUILD_DIR) install
 
 PHONY += xmake-doxygen
-xmake-doxygen:
+xmake-doxygen: | xmake-ran-top-cmake
 	$(XMAKE) -C $(BUILD_DIR) doxygen
 
 PHONY += xmake-release

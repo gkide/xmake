@@ -63,10 +63,15 @@ function(CreateDestDirWithPerms)
     "
     set(parent_dirs)
     set(dir_perm \"${usr_dir_DIRECTORY_PERMISSIONS}\")
-    set(dest_dir \"\${CMAKE_INSTALL_PREFIX}/${usr_dir_DESTINATION}\")
+    set(dest_dir \"${usr_dir_DESTINATION}\")
+
+    #######################################################################
+    # file(INSTALL ...) implicitly respects DESTDIR, but EXISTS does not. #
+    #######################################################################
 
     set(prev_dir)
-    while(NOT EXISTS \${dest_dir} AND NOT \${prev_dir} STREQUAL \${dest_dir})
+    while(NOT EXISTS \$ENV{DESTDIR}\${dest_dir}
+          AND NOT \${prev_dir} STREQUAL \${dest_dir})
         list(APPEND parent_dirs \${dest_dir})
         set(prev_dir \${dest_dir})
         get_filename_component(dest_dir \${dest_dir} PATH)
@@ -78,8 +83,9 @@ function(CreateDestDirWithPerms)
 
     foreach(dest_dir \${parent_dirs})
         if(NOT IS_DIRECTORY \${dest_dir})
-            file(INSTALL
-                FILES \"\"
+            # NOTE: a relative destination is evaluated
+            # with respect to the current build directory
+            file(INSTALL FILES \"\"
                 TYPE DIRECTORY
                 DESTINATION \${dest_dir}
                 DIR_PERMISSIONS \${dir_perm})
@@ -135,13 +141,11 @@ function(InstallHelper)
 
     if(install_helper_TARGETS)
         # The default domain for targets is empty
-        set(DomainPrefix ${${XMAKE}_PREFIX})
         set(DomainBin ${${XMAKE}_BINDIR})
         set(DomainLib ${${XMAKE}_LIBDIR})
         set(DomainShare ${${XMAKE}_SHADIR})
         set(DomainInclude ${${XMAKE}_INCDIR})
         if(install_helper_DOMAIN)
-            set(DomainPrefix ${${XMAKE}_PREFIX}/${install_helper_DOMAIN})
             set(DomainBin ${${XMAKE}_BINDIR}/${install_helper_DOMAIN})
             set(DomainLib ${${XMAKE}_LIBDIR}/${install_helper_DOMAIN})
             set(DomainShare ${${XMAKE}_SHADIR}/${install_helper_DOMAIN})
@@ -178,7 +182,7 @@ function(InstallHelper)
             if(target_type STREQUAL EXECUTABLE) # Executable
                 if(HOST_MACOS AND macosx_bundle)
                     # install(TARGETS ${target}
-                    #    BUNDLE DESTINATION ${DomainPrefix})
+                    #    BUNDLE DESTINATION )
                     message(FATAL_ERROR "MACOSX: Executable")
                 else()
                     install(TARGETS ${target} ${install_resources}
@@ -187,8 +191,8 @@ function(InstallHelper)
 
                 if(${XMAKE}_XMAKE_VERBOSE)
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
-                        domain_directory "${DomainBin}")
-                    message(STATUS "${target} Executable => ${domain_directory}")
+                        bin_directory "${DomainBin}")
+                    message(STATUS "${target} Executable => ${bin_directory}")
                 endif()
 
                 continue()
@@ -206,8 +210,8 @@ function(InstallHelper)
 
             if(${XMAKE}_XMAKE_VERBOSE)
                 string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
-                    domain_directory "${DomainLib}")
-                message(STATUS "${target} ${lib_type} => ${domain_directory}")
+                    lib_directory "${DomainLib}")
+                message(STATUS "${target} ${lib_type} => ${lib_directory}")
             endif()
 
             get_target_property(public_headers ${target} PUBLIC_HEADER)
@@ -219,9 +223,9 @@ function(InstallHelper)
                     message(STATUS "${target} Library Public Headers")
                     string(REGEX REPLACE " +" ";" items "${public_headers}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
-                        domain_directory "${DomainInclude}")
+                        public_inc_directory "${DomainInclude}")
                     foreach(item ${items}) # pretty output message
-                        message(STATUS "* ${item} => ${domain_directory}")
+                        message(STATUS "* ${item} => ${public_inc_directory}")
                     endforeach()
                 endif()
                 CreateDestDirWithPerms(DESTINATION ${DomainInclude})
@@ -235,9 +239,9 @@ function(InstallHelper)
                     message(STATUS "${target} Library Private Headers")
                     string(REGEX REPLACE " +" ";" items "${private_headers}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
-                        domain_directory "${DomainInclude}/private")
+                        private_inc_directory "${DomainInclude}/private")
                     foreach(item ${items}) # pretty output message
-                        message(STATUS "* ${item} => ${domain_directory}")
+                        message(STATUS "* ${item} => ${private_inc_directory}")
                     endforeach()
                 endif()
                 CreateDestDirWithPerms(DESTINATION ${DomainInclude}/private)
@@ -248,7 +252,7 @@ function(InstallHelper)
             get_target_property(macosx_framework ${target} FRAMEWORK)
             if(HOST_MACOS AND macosx_framework)
                 # install(TARGETS ${target}
-                #    FRAMEWORK DESTINATION ${DomainPrefix})
+                #    FRAMEWORK DESTINATION)
                 message(FATAL_ERROR "MACOSX: framework shared libraries")
             else()
                 install(TARGETS ${target}

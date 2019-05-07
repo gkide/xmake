@@ -206,8 +206,8 @@ InstallHelper(TARGETS check)
 ########################################
 add_executable(bundle ${SOURCES} source/library.c)
 set(BUNDLE_RESOURCE # Extra resources for executable
-    source/resources/gnu.jpeg
-    source/resources/linux.jpeg
+    docs/res/install.ico
+    docs/res/uninstall.ico
 )
 set_target_properties(bundle PROPERTIES
 #   MACOSX_BUNDLE TRUE
@@ -274,3 +274,5 @@ CodeCoverageLcovHtml(
 )
 
 add_subdirectory(source/ccr)
+
+include(XdemoPackage)

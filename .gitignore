@@ -1,5 +1,6 @@
 *.log
 local.mk
+DistRepoInfo
 CMakeLists.txt.user
 
 todo/
