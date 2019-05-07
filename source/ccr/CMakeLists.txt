@@ -1,6 +1,7 @@
 aux_source_directory(. CCR_SRCS)
 aux_source_directory(methods CCR_LIBS)
 
+include_directories(${CMAKE_CURRENT_LIST_DIR})
 add_executable(ccr ${CCR_SRCS} ${CCR_LIBS})
 
 CodeCoverageLcovTrace(
