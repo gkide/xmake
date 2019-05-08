@@ -23,6 +23,7 @@ endif()
 message(STATUS "Enable code coverage measurements")
 set(code_coverage_flags "-g -O0 -fprofile-arcs -ftest-coverage --coverage "
     CACHE INTERNAL "")
+mark_as_advanced(code_coverage_flags)
 
 set(CMAKE_C_FLAGS_${buildType} ${code_coverage_flags}
     CACHE STRING "The C compiler flags for code coverage." FORCE)
@@ -53,6 +54,7 @@ set(ccrd ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/code.coverage)
 list(APPEND SYSTEM_EXCLUDES ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
 list(APPEND SYSTEM_EXCLUDES ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
 list(APPEND SYSTEM_EXCLUDES ${CMAKE_PLATFORM_IMPLICIT_INCLUDE_DIRECTORIES})
+mark_as_advanced(SYSTEM_EXCLUDES)
 
 # Enable branch-coverage make it slow and seem useless
 set(LCOV_EXTRA_ARGS
@@ -65,6 +67,7 @@ set(LCOV_EXTRA_ARGS
 #   --rc lcov_branch_coverage=1
     --rc lcov_function_coverage=1
 )
+mark_as_advanced(LCOV_EXTRA_ARGS)
 
 # Defines a target for running and collection code coverage information.
 # Builds dependencies first, runs the given executable and outputs reports.

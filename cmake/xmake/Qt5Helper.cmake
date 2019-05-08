@@ -74,6 +74,7 @@ find_package(Threads)
 if(QT5_STATIC_PREFIX)
     # Qt5 static qt-plugin
     set(qt5_plugin_moc "${CMAKE_CURRENT_BINARY_DIR}/xmake_qt5_moc.cpp")
+    mark_as_advanced(qt5_plugin_moc)
     file(WRITE ${qt5_plugin_moc} "#include <QtPlugin>\n")
     list(APPEND ${XMAKE}_AUTO_SOURCES ${qt5_plugin_moc})
 

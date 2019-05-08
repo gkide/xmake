@@ -1,6 +1,8 @@
 # xmake
 
-cmake & make template for quick project creation!
+cmake & make template for quick project creation! The `xdemo` is demo pro to
+show how to use xmake cmake & make template for new project, the `xmake` should
+include in the top CMakeLists.txt
 
 - [Host Info Auto Detect Support](#host-status-for-project-xdemo)
   * [MacOS](#macos)
@@ -19,7 +21,8 @@ cmake & make template for quick project creation!
 
 # Predefined Cmake Variables
 
-**XMAKE** variable will auto set to `${PROJECT_NAME}` of uppercase.
+**XMAKE** variable will auto set to `${PROJECT_NAME}` of uppercase, project
+name should consist of [A-Za-z0-9_-], and the min-cmake version is v2.8.12
 
 - **${XMAKE}**`_ENABLE_ASSERTION` enable assertion, default is **OFF**
 - **${XMAKE}**`_ENABLE_TRAVIS_CI` enable travis CI build, default is **OFF**

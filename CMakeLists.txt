@@ -25,7 +25,7 @@ option(XDEMO_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-include(xmake)
+include(xmake) # xmake should include in the top CMakeLists.txt
 
 # Generate Doxygen API Manual
 find_package(Doxygen)
@@ -274,5 +274,3 @@ CodeCoverageLcovHtml(
 )
 
 add_subdirectory(source/ccr)
-
-include(XdemoPackage)

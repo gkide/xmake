@@ -47,29 +47,28 @@ endif()
 set(HOST_SYSTEM_VERSION
     "${CMAKE_HOST_SYSTEM_VERSION}" CACHE INTERNAL "Host OS Name" FORCE)
 
+mark_as_advanced(HOST_OS_SUPPORTED)
 if(NOT HOST_OS_SUPPORTED)
     set(err_msg "Not unsupported system: ${CMAKE_HOST_SYSTEM}")
     message(FATAL_ERROR "${err_msg}")
 endif()
-
-mark_as_advanced(FORCE HOST_OS_SUPPORTED)
 
 # set HOST_ARCH to the normalized name: x86 or x86_64
 # See https://github.com/axr/solar-cmake/blob/master/TargetArch.cmake
 include(CheckSymbolExists)
 
 # x86
-check_symbol_exists("_M_IX86"   ""  T_M_IX86)
 check_symbol_exists("__i386__"  ""  T_I386)
+check_symbol_exists("_M_IX86"   ""  T_M_IX86)
 if(T_M_IX86 OR T_I386)
     set(HOST_ARCH "x86")
     option(HOST_ARCH_32 "Host system is 32-bits." ON)
 endif()
 
 # x86_64
-check_symbol_exists("_M_AMD64"    ""  T_M_AMD64)
-check_symbol_exists("__x86_64__"  ""  T_X86_64)
 check_symbol_exists("__amd64__"   ""  T_AMD64)
+check_symbol_exists("__x86_64__"  ""  T_X86_64)
+check_symbol_exists("_M_AMD64"    ""  T_M_AMD64)
 
 if(T_M_AMD64 OR T_X86_64 OR T_AMD64)
     set(HOST_ARCH "x86_64")

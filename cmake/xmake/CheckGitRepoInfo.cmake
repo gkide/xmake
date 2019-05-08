@@ -16,6 +16,7 @@ if(__CheckGitRepoInfo__)
 endif()
 
 set(__CheckGitRepoInfo__ TRUE)
+mark_as_advanced(__CheckGitRepoInfo__)
 
 # we can use "FindGit.cmake" in CMAKE_MODULE_PATH to find git, then set
 #   GIT_FOUND                True if the Git command-line client was found.
@@ -32,7 +33,7 @@ endif()
 # to find the full path to this file(CheckGitRepoInfo.cmake) rather than
 # the path to a calling list file
 get_filename_component(XMAKE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
-mark_as_advanced(FORCE XMAKE_DIR __CheckGitRepoInfo__)
+mark_as_advanced(XMAKE_DIR __CheckGitRepoInfo__)
 
 function(GetGitRepoDir git_dir)
     if(FORCED_GIT_DIR) # check FORCED_GIT_DIR first

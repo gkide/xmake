@@ -1,24 +1,20 @@
 # xmake git repo is https://github.com/gkide/xmake
 cmake_minimum_required(VERSION 2.8.12)
+
+if(NOT PROJECT_NAME MATCHES "^[A-Za-z0-9_-]+$")
+    message(FATAL_ERROR "PROJECT_NAME should consist of [A-Za-z0-9_-]!")
+endif()
+
 string(TOUPPER ${PROJECT_NAME} XMAKE) # The Uppercase of Project Name
+mark_as_advanced(XMAKE)
 
 string(APPEND ${XMAKE}_RELEASE_VERSION "v${${XMAKE}_VERSION_MAJOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_MINOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_PATCH}")
 
-# Change the default cmake value without overriding the user-provided one
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    # The default install prefix relative to build directory
-    string(TOLOWER ${PROJECT_NAME} pkg_name)
-    set(pkg_version "${${XMAKE}_RELEASE_VERSION}")
-    if(HOST_WINDOWS)
-        set(CMAKE_INSTALL_PREFIX
-            "C:/Program Files/${pkg_name}-${pkg_version}" CACHE PATH "" FORCE)
-    else()
-        set(CMAKE_INSTALL_PREFIX
-            "/opt/${pkg_name}-${pkg_version}" CACHE PATH "" FORCE)
-    endif()
-endif()
+string(TOLOWER ${PROJECT_NAME} PKG_NAME)
+set(PKG_VERSION "${${XMAKE}_RELEASE_VERSION}")
+mark_as_advanced(PKG_NAME PKG_VERSION)
 
 # The available build type values
 if(NOT CMAKE_CONFIGURATION_TYPES)
@@ -53,7 +49,26 @@ else()
     endif()
 endif()
 
+# Change the default cmake value without overriding the user-provided one
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    if(NOT HOST_WINDOWS)
+        set(PKG_INSTALL_DIR "/opt/${PKG_NAME}")
+    else()
+        set(PKG_INSTALL_DIR "C:/Program Files/${PKG_NAME}")
+    endif()
+
+    if(${XMAKE}_DEBUG_BUILD)
+        set(PKG_INSTALL_DIR "${PKG_INSTALL_DIR}-latest")
+    else()
+        set(PKG_INSTALL_DIR "${PKG_INSTALL_DIR}-${PKG_VERSION}")
+    endif()
+
+    mark_as_advanced(PKG_INSTALL_DIR)
+    set(CMAKE_INSTALL_PREFIX "${PKG_INSTALL_DIR}" CACHE PATH "" FORCE)
+endif()
+
 string(TOUPPER ${CMAKE_BUILD_TYPE} buildType)
+mark_as_advanced(buildType)
 
 # Enable verbose output from Makefile builds.
 option(CMAKE_VERBOSE_MAKEFILE OFF)
@@ -76,6 +91,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")
 include(PreventInTreeBuilds)
 include(CheckHostSystem)
 include(InstallHelper)
+include(PkgSrcPackage)
 
 #######################################################################
 # dev/pre/nightly => alpha => beta => rc => lts/stable/release => eol #
@@ -95,6 +111,8 @@ if(${XMAKE}_VERSION_TWEAK)
     set(tweak_rels lts stable release eol)
     set(tweak "${${XMAKE}_VERSION_TWEAK}")
 
+    mark_as_advanced(tweak_devs tweak_pres tweak_rels tweak)
+
     foreach(item IN ITEMS ${tweak_devs} ${tweak_pres} ${tweak_rels})
         if(tweak MATCHES "^(${item})?(\\.?([0-9]+))?(\\+?([a-f0-9]+))?$")
             set(is_normalized_tweak true)
@@ -107,21 +125,27 @@ if(${XMAKE}_VERSION_TWEAK)
         endif()
     endforeach()
 
+    mark_as_advanced(is_normalized_tweak)
+    mark_as_advanced(tweak_text tweak_nums tweak_hash)
+
     if(NOT is_normalized_tweak)
         string(REPLACE ";" "/" tweak_devs "${tweak_devs}")
         string(REPLACE ";" " -> " tweak_pres "${tweak_pres}")
         string(REPLACE ";" "/" tweak_rels "${tweak_rels}")
         set(normalized "${tweak_devs} -> ${tweak_pres} -> ${tweak_rels}")
+        mark_as_advanced(normalized)
         message(AUTHOR_WARNING "Consider the normalized tweaks:\n${normalized}\n")
     endif()
 
     set(xauto_semver_tweak "")
+    mark_as_advanced(xauto_semver_tweak)
     if(tweak_text)
         set(xauto_semver_tweak "${tweak_text}")
         string(APPEND ${XMAKE}_RELEASE_VERSION "-${tweak_text}")
     endif()
 
     string(LENGTH "${tweak_nums}" tweak_nums_len) # YYYYMMDD...
+    mark_as_advanced(tweak_nums_len)
     if(tweak_nums_len GREATER 7 OR tweak_nums_len EQUAL 0)
         set(yyyymmdd "${${XMAKE}_RELEASE_TIMESTAMP}")
         string(REPLACE "\"" "" yyyymmdd "${yyyymmdd}")

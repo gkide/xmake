@@ -9,6 +9,7 @@
 # Check if git repo exist
 set(FOUND_GIT_REPO false)
 file(TO_CMAKE_PATH ${CMAKE_SOURCE_DIR}/.git GIT_REPO_DIR)
+mark_as_advanced(GIT_REPO_DIR FOUND_GIT_REPO)
 
 if(NOT EXISTS "${GIT_REPO_DIR}" OR NOT IS_DIRECTORY "${GIT_REPO_DIR}")
     if(tweak_hash) # append repo HASH if any
@@ -26,6 +27,8 @@ GetGitBranchInfo(${XMAKE}_BRANCH_NAME ${XMAKE}_COMMIT_SHA1)
 
 if(${XMAKE}_BRANCH_NAME AND ${XMAKE}_COMMIT_SHA1 AND ${XMAKE}_COMMIT_MDTZ)
     set(REPO_INFO_FILE ${CMAKE_SOURCE_DIR}/DistRepoInfo)
+    mark_as_advanced(REPO_INFO_FILE)
+
     file(WRITE ${REPO_INFO_FILE}
         "${${XMAKE}_BRANCH_NAME} ${${XMAKE}_COMMIT_SHA1} ${${XMAKE}_COMMIT_MDTZ}")
 
@@ -48,6 +51,7 @@ if(${XMAKE}_BRANCH_NAME AND ${XMAKE}_COMMIT_SHA1 AND ${XMAKE}_COMMIT_MDTZ)
         set(xauto_semver_tweak "${${XMAKE}_COMMIT_HASH}")
     endif()
 
+    mark_as_advanced(xauto_semver_tweak)
     set(${XMAKE}_VERSION_TWEAK ${xauto_semver_tweak})
 endif()
 
@@ -61,5 +65,3 @@ endif()
 message(STATUS "${PROJECT_NAME} Build Type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "${PROJECT_NAME} Release Version: ${${XMAKE}_RELEASE_VERSION}")
 message(STATUS "${PROJECT_NAME} Install Perfix: ${CMAKE_INSTALL_PREFIX}")
-
-mark_as_advanced(FORCE FOUND_GIT_REPO GIT_REPO_DIR)
