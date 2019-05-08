@@ -45,14 +45,14 @@ if(${XMAKE}_BRANCH_NAME AND ${XMAKE}_COMMIT_SHA1 AND ${XMAKE}_COMMIT_MDTZ)
 
     string(APPEND ${XMAKE}_RELEASE_VERSION "+${${XMAKE}_COMMIT_HASH}")
 
-    if(xauto_semver_tweak)
-        set(xauto_semver_tweak "${xauto_semver_tweak}+${${XMAKE}_COMMIT_HASH}")
+    if(pkg_version_tweak)
+        set(pkg_version_tweak "${pkg_version_tweak}+${${XMAKE}_COMMIT_HASH}")
     else()
-        set(xauto_semver_tweak "${${XMAKE}_COMMIT_HASH}")
+        set(pkg_version_tweak "${${XMAKE}_COMMIT_HASH}")
     endif()
 
-    mark_as_advanced(xauto_semver_tweak)
-    set(${XMAKE}_VERSION_TWEAK ${xauto_semver_tweak})
+    mark_as_advanced(pkg_version_tweak)
+    set(${XMAKE}_VERSION_TWEAK ${pkg_version_tweak})
 endif()
 
 if(false)

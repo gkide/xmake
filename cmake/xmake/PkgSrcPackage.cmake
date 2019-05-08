@@ -1,106 +1,118 @@
-# Host Arch: x86 or x86_64
-string(REGEX REPLACE "^([x864_]+).*$" "\\1"
-    ARCH "${CMAKE_C_LIBRARY_ARCHITECTURE}")
-
-# For preparing a package
-set(CPACK_SET_DESTDIR true)
-# The binary package files: stripping all
-set(CPACK_STRIP_FILES true)
-# The source package files: do NOT stripping
-set(CPACK_SOURCE_STRIP_FILES false)
-# The packing working directory
-set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/Release")
-
-if(HOST_WINDOWS)
-    # source package generator
-    set(CPACK_SOURCE_GENERATOR "")
-    # binary package generator: x86 & x86_64
-    set(CPACK_GENERATOR "NSIS;NSIS64")
-else() # Linux & MacOS
-    # source package generator: tar.gz
-    set(CPACK_SOURCE_GENERATOR "TGZ")
-    # binary package generator: tar.gz, .sh
-    set(CPACK_GENERATOR "TGZ;STGZ")
-endif()
-
-# Name of project and vendor
-set(CPACK_PACKAGE_NAME "xdemo")
-set(CPACK_PACKAGE_VENDOR "GKIDE")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY
-    "cmake & make quick project template!")
+# project name, logo, vendor, maintainer, summory
+set(CPACK_PACKAGE_NAME "${PKG_NAME}")
+set(CPACK_PACKAGE_ICON "${PKG_LOGO}")
+set(CPACK_PACKAGE_VENDOR "${PKG_VENDOR}")
+set(CPACK_PACKAGE_CONTACT "${PKG_MAINTAINER_EMAIL}")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PKG_BRIEF_SUMMARY}")
 
 set(CPACK_PACKAGE_VERSION_MAJOR "${XDEMO_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${XDEMO_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${XDEMO_VERSION_PATCH}")
-string(APPEND PKG_VERSION "${XDEMO_VERSION_MAJOR}.")
-string(APPEND PKG_VERSION "${XDEMO_VERSION_MINOR}.")
-string(APPEND PKG_VERSION "${XDEMO_VERSION_PATCH}")
+
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${PKG_MAINTAINER_EMAIL}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PKG_NAME}-${PKG_VERSION}")
+
+# The source package name, not including the extension
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PKG_NAME}-${PKG_VERSION}")
 
 # The binary package name, not including the extension
-set(CPACK_PACKAGE_FILE_NAME
-    "${CPACK_PACKAGE_NAME}-${PKG_VERSION}-${CMAKE_HOST_SYSTEM_NAME}-${ARCH}")
-# The source package name, not including the extension
-set(CPACK_SOURCE_PACKAGE_FILE_NAME
-    "${CPACK_PACKAGE_NAME}-${XDEMO_RELEASE_VERSION}")
+set(CPACK_PACKAGE_FILE_NAME "${PKG_NAME}-${PKG_VERSION}-${HOST_SYSTEM_NAME}-${HOST_ARCH}")
+
+if(EXISTS ${CMAKE_SOURCE_DIR}/LICENSE)
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
+elseif(EXISTS ${CMAKE_SOURCE_DIR}/COPYRIGHT)
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYRIGHT")
+endif()
+
+if(EXISTS ${CMAKE_SOURCE_DIR}/DESCRIPTION)
+    set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/DESCRIPTION")
+elseif(EXISTS ${CMAKE_SOURCE_DIR}/LICENSE)
+    set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/LICENSE")
+endif()
+
+set(CPACK_GENERATOR "TGZ;STGZ")
+set(CPACK_SOURCE_GENERATOR "TGZ")
+
+# Windows Installers
+if(HOST_WINDOWS)
+    set(CPACK_SOURCE_GENERATOR "")
+
+    if(HOST_ARCH_32)
+        set(CPACK_GENERATOR "NSIS")
+    else()
+        set(CPACK_GENERATOR "NSIS64")
+    endif()
+
+    if(HOST_ARCH_32)
+        # Root install directory, displayed to end user at installer-run time
+        set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES")
+        # "NSIS Package Display Name", text used in the installer GUI
+        set(CPACK_NSIS_PACKAGE_NAME "${PKG_NAME} ${PKG_VERSION} WIN64")
+    else()
+        set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
+        set(CPACK_NSIS_PACKAGE_NAME "${PKG_NAME} ${PKG_VERSION} WIN32")
+    endif()
+    # Registry key used to store info about the installation
+    set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CPACK_NSIS_PACKAGE_NAME}")
+endif()
+
+# The source package files do NOT stripping
+set(CPACK_SOURCE_STRIP_FILES false)
+
+# The binary package files to strip
+GetInstalledBinaries(installed_binaries)
+if(installed_binaries)
+    set(CPACK_STRIP_FILES ${installed_binaries})
+endif()
+
+if(false)
+    foreach(item ${installed_binaries})
+        message(STATUS "Install: ${item}")
+    endforeach()
+endif()
+
 # The source package ignored file regex patterns
 set(CPACK_SOURCE_IGNORE_FILES
-    # local config/debug files
-    ${CMAKE_SOURCE_DIR}/*.log
-    ${CMAKE_SOURCE_DIR}/*.txt.user
-    ${CMAKE_SOURCE_DIR}/.gitignore
-    ${CMAKE_SOURCE_DIR}/local.mk
-    # repo & tools directories
-    ${CMAKE_SOURCE_DIR}/.git/
-    ${CMAKE_SOURCE_DIR}/.svn/
-    ${CMAKE_SOURCE_DIR}/.deps/
-    ${CMAKE_SOURCE_DIR}/.github/
-    ${CMAKE_SOURCE_DIR}/.standard-release/
-    # local development directories
-    ${CMAKE_SOURCE_DIR}/*/tmp/*
-    ${CMAKE_SOURCE_DIR}/*/temp/*
-    ${CMAKE_SOURCE_DIR}/*/todo/*
-    ${CMAKE_SOURCE_DIR}/*/build/*
+    # version control files
+    "/\\\\.svn/"
+    "/\\\\.git/"
+    "/\\\\.github/"
+    "/\\\\.gitignore$"
+    "/\\\\.hooks-config$"
+    "/\\\\.gitattributes$"
+
+    # generated temp files
+    "/#"
+    "~$"
+    "\\\\.#"
+    "\\\\.swp$"
+    "\\\\.swap$"
+
+    # local log/config/debug files
+    "\\\\.log$"
+    "^local\\\\.mk$"
+    "^CMakeLists\\\\.txt\\\\.user$"
+    "/\\\\.standard-release/"
+
+    # build and external-deps directory
+    "/build/"
+    "/\\\\.deps/"
+
+    # Extra common regular temporary files
+    "/tmp/"
+    "/temp/"
+    "/todo/"
 )
 
-if(HOST_WINDOWS)
-    # Make sure there is at least one set of four (4) backslashes.
-    # This is a bug in NSIS that does not handle full unix paths properly.
+# Set the options file that needs to be included
+configure_file("${CMAKE_CURRENT_LIST_DIR}/CPackOptions.cmake.in"
+    "${CMAKE_BINARY_DIR}/CPackOptions.cmake" @ONLY)
+set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_BINARY_DIR}/CPackOptions.cmake")
 
-    # The install prefix
-    set(CPACK_PACKAGE_INSTALL_DIRECTORY "gkide")
+# For preparing a package
+set(CPACK_SET_DESTDIR true)
 
-    # The brand image displayed on the top of the installer.
-    set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\gkide.png")
-    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}\\\\LICENSE")
-    set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}\\\\README.md")
-    #set(CPACK_RESOURCE_FILE_WELCOME "")
-
-    # TODO: how can change the start menu to GKIDE/xdemo
-    # Display name is used for the installer and as start menu folder.
-    set(CPACK_NSIS_DISPLAY_NAME "xdemo")
-    # create start menu entries for executables
-    set(CPACK_PACKAGE_EXECUTABLES xdemo;xdemo)
-
-    # The ICON file for the generated install program.
-    set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}\\\\docs\\\\res\\\\install.ico")
-    # The ICON file for the generated uninstall program.
-    set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}\\\\docs\\\\res\\\\uninstall.ico")
-
-    # Set the icon used for the Windows "Add or Remove Programs" tool.
-    set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\helloworld.exe")
-
-    set(CPACK_NSIS_CONTACT "1213charlie@163.com")
-    set(CPACK_NSIS_HELP_LINK "https://github.com/gkide/xmake")
-    set(CPACK_NSIS_URL_INFO_ABOUT "https://github.com/gkide/xmake")
-else()
-    # The brand image displayed on the top of the GUI installer.
-    set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/gkide.png")
-    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
-    set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
-
-    # Info for debian packages
-    set(CPACK_PACKAGE_CONTACT "1213charlie@163.com")
-    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "GKIDE")
-endif()
+# The packing working directory
+set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/Release")
 
 include(CPack)

@@ -207,9 +207,16 @@ name should consist of [A-Za-z0-9_-], and the min-cmake version is v2.8.12
 
 # `InstallHelper`
 
-- `InstallHelper` is cmake install helper for convenience
+`InstallHelper` is cmake install helper for convenience.
 
-* `${XMAKE}_INSTALL_DIR` => `${CMAKE_INSTALL_PREFIX}`, install root
+`PKG_NAME` will be set to the lower case of `${PROJECT_NAME}` if not set,
+The install prefix can be set by `${CMAKE_INSTALL_PREFIX}`, default is:
+- Linux likes: **/opt**`/${PKG_NAME}-${PKG_VERSION}`
+- Windows: **C:\\Program Files**`\${PKG_NAME}-${PKG_VERSION}`
+
+NOTE! `PKG_VERSION` will be set to the project's **major.minor.patch** if not set.
+
+* `${XMAKE}_INSTALL_DIR`     => `${CMAKE_INSTALL_PREFIX}`, install root
 * `${XMAKE}_INSTALL_BIN_DIR` => `${CMAKE_INSTALL_PREFIX}/bin`, executable
 * `${XMAKE}_INSTALL_ETC_DIR` => `${CMAKE_INSTALL_PREFIX}/etc`, configuration
 * `${XMAKE}_INSTALL_DOC_DIR` => `${CMAKE_INSTALL_PREFIX}/doc`, documentation
@@ -349,3 +356,12 @@ given `EXECUTABLE_FORCE_SUCCESS`
 ## `CodeCoverageAppendFlags()`
 
 Append C/C++ compiler flags for code coverage.
+
+## Cpack
+
+- `PKG_NAME` will be set to lower case of `${PROJECT_NAME}` if not set
+- `PKG_VENDOR` is the name of the package vendor
+- `PKG_VERSION` will be set the project's **major.minor.patch** if not set
+- `PKG_MANUAL_DIR` for user manual, API manual by doxygen, and etc.
+  * if this is not set, then it will auto set to `${CMAKE_BINARY_DIR}`
+- `PKG_BRIEF_SUMMARY` short description of the project, only a few words

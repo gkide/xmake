@@ -1,6 +1,21 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(xdemo)
 
+set(PKG_VENDOR "GKIDE")
+#set(PKG_NAME)
+#set(PKG_VERSION)
+#set(PKG_SOURCE)
+#set(PKG_TYPE_GUI true)
+set(PKG_MANUAL_DIR "${CMAKE_BINARY_DIR}")
+set(PKG_BRIEF_SUMMARY "cmake & make quick project template!")
+set(PKG_REPO "https://github.com/gkide/xmake")
+set(PKG_BUG_REPORT "https://github.com/gkide/xmake/issues")
+set(PKG_MAINTAINER_EMAIL "Charlie WONG <1213charlie@163.com>")
+
+set(PKG_LOGO ${CMAKE_SOURCE_DIR}/gkide.png)
+set(PKG_INSTALLER_LOGO ${CMAKE_SOURCE_DIR}/docs/res/install.ico)
+set(PKG_UNINSTALLER_LOGO ${CMAKE_SOURCE_DIR}/docs/res/uninstall.ico)
+
 set(XDEMO_VERSION_MAJOR 1)
 set(XDEMO_VERSION_MINOR 0)
 set(XDEMO_VERSION_PATCH 0)
@@ -26,12 +41,6 @@ option(XDEMO_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(xmake) # xmake should include in the top CMakeLists.txt
-
-# Generate Doxygen API Manual
-find_package(Doxygen)
-if(DOXYGEN_PROG OR DOXYGEN_FOUND)
-    add_subdirectory(docs/doxygen)
-endif()
 
 if(QT5_AUTOMATIC OR QT5_STATIC_PREFIX OR QT5_SHARED_PREFIX)
     add_subdirectory(source/qt5)
@@ -243,7 +252,6 @@ InstallHelper(DIRECTORY cmake
     DESTINATION ${XDEMO_INSTALL_SHA_DIR})
 
 # Code Coverage Report
-########################################
 CodeCoverageGcovrXml(
     TARGET gcovr-xml
     EXECUTABLE another

@@ -12,9 +12,14 @@ string(APPEND ${XMAKE}_RELEASE_VERSION "v${${XMAKE}_VERSION_MAJOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_MINOR}")
 string(APPEND ${XMAKE}_RELEASE_VERSION ".${${XMAKE}_VERSION_PATCH}")
 
-string(TOLOWER ${PROJECT_NAME} PKG_NAME)
-set(PKG_VERSION "${${XMAKE}_RELEASE_VERSION}")
-mark_as_advanced(PKG_NAME PKG_VERSION)
+if(NOT PKG_VERSION)
+    set(PKG_VERSION "${${XMAKE}_RELEASE_VERSION}")
+endif()
+
+# If not set, auto use the lower case of project and make it hidden
+if(NOT PKG_NAME)
+    string(TOLOWER ${PROJECT_NAME} PKG_NAME)
+endif()
 
 # The available build type values
 if(NOT CMAKE_CONFIGURATION_TYPES)
@@ -54,11 +59,19 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     if(NOT HOST_WINDOWS)
         set(PKG_INSTALL_DIR "/opt/${PKG_NAME}")
     else()
-        set(PKG_INSTALL_DIR "C:/Program Files/${PKG_NAME}")
+        if(HOST_ARCH_32)
+            set(PKG_INSTALL_DIR "C:/$ENV{PROGRAMFILES}/${PKG_NAME}")
+        else()
+            set(PKG_INSTALL_DIR "C:/$ENV{PROGRAMFILES64}/${PKG_NAME}")
+        endif()
     endif()
 
     if(${XMAKE}_DEBUG_BUILD)
-        set(PKG_INSTALL_DIR "${PKG_INSTALL_DIR}-latest")
+        if(CMAKE_BUILD_TYPE MATCHES "Debug")
+            set(PKG_INSTALL_DIR "${PKG_INSTALL_DIR}-latest")
+        else()
+            set(PKG_INSTALL_DIR "${CMAKE_BINARY_DIR}/usr")
+        endif()
     else()
         set(PKG_INSTALL_DIR "${PKG_INSTALL_DIR}-${PKG_VERSION}")
     endif()
@@ -91,6 +104,10 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")
 include(PreventInTreeBuilds)
 include(CheckHostSystem)
 include(InstallHelper)
+
+# NOTE If want to strip the installed binaries for pack
+# 'include(PkgSrcPackage)' should be put the last statement
+# of the top cmake, thus when goes here, it gets all the targets
 include(PkgSrcPackage)
 
 #######################################################################
@@ -137,10 +154,10 @@ if(${XMAKE}_VERSION_TWEAK)
         message(AUTHOR_WARNING "Consider the normalized tweaks:\n${normalized}\n")
     endif()
 
-    set(xauto_semver_tweak "")
-    mark_as_advanced(xauto_semver_tweak)
+    set(pkg_version_tweak "")
+    mark_as_advanced(pkg_version_tweak)
     if(tweak_text)
-        set(xauto_semver_tweak "${tweak_text}")
+        set(pkg_version_tweak "${tweak_text}")
         string(APPEND ${XMAKE}_RELEASE_VERSION "-${tweak_text}")
     endif()
 
@@ -158,9 +175,9 @@ if(${XMAKE}_VERSION_TWEAK)
 
     if(tweak_nums)
         if(tweak_text)
-            set(xauto_semver_tweak "${xauto_semver_tweak}.${tweak_nums}")
+            set(pkg_version_tweak "${pkg_version_tweak}.${tweak_nums}")
         else()
-            set(xauto_semver_tweak "${tweak_nums}")
+            set(pkg_version_tweak "${tweak_nums}")
         endif()
     endif()
 endif()
@@ -338,4 +355,39 @@ endif()
 
 include(GetGitRepoInfo)
 
-mark_as_advanced(FORCE XMAKE)
+if(NOT PKG_MANUAL_DIR)
+    set(PKG_MANUAL_DIR "${CMAKE_BINARY_DIR}")
+endif()
+
+# Generate Doxygen API Manual
+find_package(Doxygen)
+if(DOXYGEN_PROG OR DOXYGEN_FOUND)
+    if(NOT DOXYGEN_PROG)
+        set(DOXYGEN_PROG ${DOXYGEN_EXECUTABLE})
+    endif()
+
+    if(NOT PKG_SOURCE)
+        if(EXISTS ${CMAKE_SOURCE_DIR}/src)
+            set(PKG_SOURCE ${CMAKE_SOURCE_DIR}/src)
+        elseif(EXISTS ${CMAKE_SOURCE_DIR}/source)
+            set(PKG_SOURCE ${CMAKE_SOURCE_DIR}/source)
+        else()
+            set(PKG_SOURCE ${CMAKE_SOURCE_DIR})
+        endif()
+    endif()
+
+    set(pkg_version ${PKG_VERSION})
+    if(pkg_version_tweak)
+        set(pkg_version ${pkg_version}-${pkg_version_tweak})
+    endif()
+
+    configure_file(
+        "${CMAKE_CURRENT_LIST_DIR}/xmake/doxygen/Doxyfile.in"
+        "${PKG_MANUAL_DIR}/doxygen/Doxyfile"
+    )
+
+    add_custom_target(doxygen
+        COMMENT "Generating API documentation by doxygen"
+        COMMAND ${DOXYGEN_PROG} ${PKG_MANUAL_DIR}/doxygen/Doxyfile
+    )
+endif()

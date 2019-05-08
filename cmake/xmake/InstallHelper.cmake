@@ -1,20 +1,12 @@
-# Provide user-settable values in 'CMakeCache.txt'
-set(${XMAKE}_INSTALL_DIR ${CMAKE_INSTALL_PREFIX} CACHE PATH
-    "The install root prefix path")
-set(${XMAKE}_INSTALL_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin CACHE PATH
-    "The executable install path")
-set(${XMAKE}_INSTALL_ETC_DIR ${CMAKE_INSTALL_PREFIX}/etc CACHE PATH
-    "The configurations install path")
-set(${XMAKE}_INSTALL_DOC_DIR ${CMAKE_INSTALL_PREFIX}/doc CACHE PATH
-    "The documentations install path")
-set(${XMAKE}_INSTALL_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib CACHE PATH
-    "The C/C++ library install path")
-set(${XMAKE}_INSTALL_SHA_DIR ${CMAKE_INSTALL_PREFIX}/share CACHE PATH
-    "The share data install path")
-set(${XMAKE}_INSTALL_PLG_DIR ${CMAKE_INSTALL_PREFIX}/plugin CACHE PATH
-    "The plugins install path")
-set(${XMAKE}_INSTALL_INC_DIR ${CMAKE_INSTALL_PREFIX}/include CACHE PATH
-    "The C/C++ header install path")
+set(${XMAKE}_INSTALL_DIR ${CMAKE_INSTALL_PREFIX})
+
+set(${XMAKE}_INSTALL_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
+set(${XMAKE}_INSTALL_ETC_DIR ${CMAKE_INSTALL_PREFIX}/etc)
+set(${XMAKE}_INSTALL_DOC_DIR ${CMAKE_INSTALL_PREFIX}/doc)
+set(${XMAKE}_INSTALL_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+set(${XMAKE}_INSTALL_SHA_DIR ${CMAKE_INSTALL_PREFIX}/share)
+set(${XMAKE}_INSTALL_PLG_DIR ${CMAKE_INSTALL_PREFIX}/plugin)
+set(${XMAKE}_INSTALL_INC_DIR ${CMAKE_INSTALL_PREFIX}/include)
 
 # If installed targets' default RPATH is NOT system implicit link
 # directories, then reset it to the cmake install library directory
@@ -94,6 +86,12 @@ function(CreateDestDirWithPerms)
     ")
 endfunction()
 
+set(installed_binaries "")
+function(GetInstalledBinaries BINS)
+    set(${BINS} "${installed_binaries}" PARENT_SCOPE)
+endfunction()
+
+# The install components: Runtime, Develop, Resource
 function(InstallHelper)
     cmake_parse_arguments(install_helper # prefix
         "" # options
@@ -175,19 +173,24 @@ function(InstallHelper)
                     endforeach()
                 endif()
                 CreateDestDirWithPerms(DESTINATION ${DomainShare}/resource)
-                set(install_resources
-                    RESOURCE DESTINATION ${DomainShare}/resource)
+                set(install_resources RESOURCE
+                    DESTINATION ${DomainShare}/resource COMPONENT Resource)
             endif()
 
             if(target_type STREQUAL EXECUTABLE) # Executable
                 if(HOST_MACOS AND macosx_bundle)
                     # install(TARGETS ${target}
-                    #    BUNDLE DESTINATION )
+                    #    BUNDLE DESTINATION ...
+                    #    COMPONENT Runtime)
                     message(FATAL_ERROR "MACOSX: Executable")
                 else()
-                    install(TARGETS ${target} ${install_resources}
-                        RUNTIME  DESTINATION ${DomainBin})
+                    install(TARGETS ${target}
+                        RUNTIME DESTINATION ${DomainBin} COMPONENT Runtime
+                        ${install_resources})
                 endif()
+
+                set(installed_binaries "${installed_binaries}"
+                    "${DomainBin}/${target}" PARENT_SCOPE)
 
                 if(${XMAKE}_XMAKE_VERBOSE)
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
@@ -229,8 +232,8 @@ function(InstallHelper)
                     endforeach()
                 endif()
                 CreateDestDirWithPerms(DESTINATION ${DomainInclude})
-                set(install_public_headers
-                    PUBLIC_HEADER DESTINATION ${DomainInclude})
+                set(install_public_headers PUBLIC_HEADER
+                    DESTINATION ${DomainInclude} COMPONENT Develop)
             endif()
 
             set(install_private_headers)
@@ -245,28 +248,31 @@ function(InstallHelper)
                     endforeach()
                 endif()
                 CreateDestDirWithPerms(DESTINATION ${DomainInclude}/private)
-                set(install_private_headers
-                    PRIVATE_HEADER DESTINATION ${DomainInclude}/private)
+                set(install_private_headers PRIVATE_HEADER
+                    DESTINATION ${DomainInclude}/private COMPONENT Develop)
             endif()
 
             get_target_property(macosx_framework ${target} FRAMEWORK)
             if(HOST_MACOS AND macosx_framework)
                 # install(TARGETS ${target}
-                #    FRAMEWORK DESTINATION)
+                #    FRAMEWORK DESTINATION
+                #    COMPONENT Runtime)
                 message(FATAL_ERROR "MACOSX: framework shared libraries")
             else()
-                install(TARGETS ${target}
+                install(TARGETS ${target} ${install_resources}
                     # Shared Library(DLL)
-                    RUNTIME DESTINATION ${DomainBin}
+                    RUNTIME DESTINATION ${DomainBin} COMPONENT Runtime
                     # Module Library, Shared Library(non-DLL)
-                    LIBRARY DESTINATION ${DomainLib}
+                    LIBRARY DESTINATION ${DomainLib} COMPONENT Runtime
                     # Static Library, Shared Import Library(DLL)
-                    ARCHIVE DESTINATION ${DomainLib}
-                    ${install_resources}
-                    ${install_public_headers}
-                    ${install_private_headers})
+                    ARCHIVE DESTINATION ${DomainLib} COMPONENT Develop
+                    ${install_public_headers} ${install_private_headers})
             endif()
+
+            set(installed_binaries "${installed_binaries}"
+                "${DomainLib}/${target}" PARENT_SCOPE)
         endforeach()
+
         return()
     endif()
 
@@ -280,7 +286,8 @@ function(InstallHelper)
             DIRECTORY ${install_helper_DIRECTORY}
             DESTINATION ${install_helper_DESTINATION}
             FILE_PERMISSIONS ${install_helper_FILE_PERMISSIONS}
-            DIRECTORY_PERMISSIONS ${install_helper_DIRECTORY_PERMISSIONS})
+            DIRECTORY_PERMISSIONS ${install_helper_DIRECTORY_PERMISSIONS}
+            COMPONENT Resource)
     endif()
 
     if(install_helper_RENAME)
@@ -292,7 +299,7 @@ function(InstallHelper)
             FILES ${install_helper_FILES}
             DESTINATION ${install_helper_DESTINATION}
             PERMISSIONS ${install_helper_FILE_PERMISSIONS}
-            ${install_rename})
+            COMPONENT Resource ${install_rename})
     endif()
 
     if(install_helper_PROGRAMS)
@@ -300,6 +307,6 @@ function(InstallHelper)
             PROGRAMS ${install_helper_PROGRAMS}
             DESTINATION ${install_helper_DESTINATION}
             PERMISSIONS ${install_helper_PROGRAM_PERMISSIONS}
-            ${install_rename})
+            COMPONENT Resource ${install_rename})
     endif()
 endfunction()
