@@ -7,6 +7,8 @@ find_program(PYTHON_PROG python)
 find_program(LCOV_PROG NAMES lcov lcov.bat lcov.exe lcov.perl)
 find_program(GENHTML_PROG NAMES genhtml genhtml.perl genhtml.bat)
 
+mark_as_advanced(GCOV_PROG GCOVR_PROG PYTHON_PROG LCOV_PROG GENHTML_PROG)
+
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang"
    AND "${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS 3)
     message(WARNING "Clang version must be 3.0.0 or greater, code coverage skip ...")
@@ -29,10 +31,11 @@ set(CMAKE_C_FLAGS_${buildType} ${code_coverage_flags}
     CACHE STRING "The C compiler flags for code coverage." FORCE)
 set(CMAKE_CXX_FLAGS_${buildType} ${code_coverage_flags}
     CACHE STRING "The C++ compiler flags for code coverage." FORCE)
-set(CMAKE_EXE_LINKER_FLAGS_${buildType} ""
-    CACHE STRING "The binaries linking flags for code coverage." FORCE)
-set(CMAKE_SHARED_LINKER_FLAGS_${buildType} ""
-    CACHE STRING "The shared libraries linking flags for code coverage." FORCE)
+
+#set(CMAKE_EXE_LINKER_FLAGS_${buildType} ""
+#    CACHE STRING "The binaries linking flags for code coverage." FORCE)
+#set(CMAKE_SHARED_LINKER_FLAGS_${buildType} ""
+#    CACHE STRING "The shared libraries linking flags for code coverage." FORCE)
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     link_libraries(gcov) # For all targets

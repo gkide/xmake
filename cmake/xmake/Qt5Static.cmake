@@ -14,6 +14,7 @@ function(Qt5StaticLibFind name qt5_libs_search_path output)
         NO_SYSTEM_ENVIRONMENT_PATH
         NO_CMAKE_SYSTEM_PATH
     )
+    mark_as_advanced(qt5StaticLibrary_${name})
     # message(STATUS "${libName} => ${qt5StaticLibrary_${name}}")
     if(EXISTS ${qt5StaticLibrary_${name}})
         set(${output} ${qt5StaticLibrary_${name}} PARENT_SCOPE)
@@ -24,6 +25,7 @@ endfunction()
 
 # Qt5 Static Library Search Prefix
 set(Qt5SLSPrefix ${QT5_STATIC_PREFIX})
+mark_as_advanced(Qt5SLSPrefix)
 
 # Static Qt5 Library: plugins/platforms/libqxcb.a
 Qt5StaticLibFind(qxcb ${Qt5SLSPrefix}/plugins/platforms Qt5StaticLibrary)
@@ -85,6 +87,7 @@ function(Qt5SystemLibFind name output shared_first)
         PATHS ${MultiArchSearchDirs}
     )
 
+    mark_as_advanced(qt5SystemLibrary_${name})
     if(EXISTS ${qt5SystemLibrary_${name}})
         set(${output} ${qt5SystemLibrary_${name}} PARENT_SCOPE)
     else()
@@ -180,11 +183,13 @@ list(APPEND ${XMAKE}_AUTO_LIBRARIES ${Qt5StaticLibrary})
 
 # Static Qt5 Library: lib/libQt5Core.a
 find_package(Qt5Core CONFIG REQUIRED)
+mark_as_advanced(Qt5Core_DIR)
 get_target_property(Qt5StaticLibrary Qt5::Core LOCATION)
 list(APPEND ${XMAKE}_AUTO_LIBRARIES ${Qt5StaticLibrary})
 
 # Static Qt5 Library: lib/libQt5Gui.a
 find_package(Qt5Gui CONFIG REQUIRED)
+mark_as_advanced(Qt5Gui_DIR)
 get_target_property(Qt5StaticLibrary Qt5::Gui LOCATION)
 list(APPEND ${XMAKE}_AUTO_LIBRARIES ${Qt5StaticLibrary})
 foreach(plugin ${Qt5Gui_PLUGINS})
@@ -195,6 +200,7 @@ endforeach()
 
 # Static Qt5 Library: lib/libQt5Sql.a
 find_package(Qt5Sql CONFIG REQUIRED)
+mark_as_advanced(Qt5Sql_DIR)
 get_target_property(Qt5StaticLibrary Qt5::Sql LOCATION)
 list(APPEND ${XMAKE}_AUTO_LIBRARIES ${Qt5StaticLibrary})
 foreach(plugin ${Qt5Sql_PLUGINS})
@@ -205,6 +211,7 @@ endforeach()
 
 # Static Qt5 Library: lib/libQt5Widgets.a
 find_package(Qt5Widgets CONFIG REQUIRED)
+mark_as_advanced(Qt5Widgets_DIR)
 get_target_property(Qt5StaticLibrary Qt5::Widgets LOCATION)
 list(APPEND ${XMAKE}_AUTO_LIBRARIES ${Qt5StaticLibrary})
 foreach(plugin ${Qt5Widgets_PLUGINS})
@@ -215,6 +222,7 @@ endforeach()
 
 # Static Qt5 Library: lib/libQt5Network.a
 find_package(Qt5Network CONFIG REQUIRED)
+mark_as_advanced(Qt5Network_DIR)
 get_target_property(Qt5StaticLibrary Qt5::Network LOCATION)
 list(APPEND ${XMAKE}_AUTO_LIBRARIES ${Qt5StaticLibrary})
 foreach(plugin ${Qt5Network_PLUGINS})

@@ -1,19 +1,19 @@
 # Provide user-settable values in 'CMakeCache.txt'
-set(${XMAKE}_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE PATH
+set(${XMAKE}_INSTALL_DIR ${CMAKE_INSTALL_PREFIX} CACHE PATH
     "The install root prefix path")
-set(${XMAKE}_BINDIR ${CMAKE_INSTALL_PREFIX}/bin CACHE PATH
+set(${XMAKE}_INSTALL_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin CACHE PATH
     "The executable install path")
-set(${XMAKE}_ETCDIR ${CMAKE_INSTALL_PREFIX}/etc CACHE PATH
+set(${XMAKE}_INSTALL_ETC_DIR ${CMAKE_INSTALL_PREFIX}/etc CACHE PATH
     "The configurations install path")
-set(${XMAKE}_DOCDIR ${CMAKE_INSTALL_PREFIX}/doc CACHE PATH
+set(${XMAKE}_INSTALL_DOC_DIR ${CMAKE_INSTALL_PREFIX}/doc CACHE PATH
     "The documentations install path")
-set(${XMAKE}_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib CACHE PATH
+set(${XMAKE}_INSTALL_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib CACHE PATH
     "The C/C++ library install path")
-set(${XMAKE}_SHADIR ${CMAKE_INSTALL_PREFIX}/share CACHE PATH
+set(${XMAKE}_INSTALL_SHA_DIR ${CMAKE_INSTALL_PREFIX}/share CACHE PATH
     "The share data install path")
-set(${XMAKE}_PLGDIR ${CMAKE_INSTALL_PREFIX}/plugin CACHE PATH
+set(${XMAKE}_INSTALL_PLG_DIR ${CMAKE_INSTALL_PREFIX}/plugin CACHE PATH
     "The plugins install path")
-set(${XMAKE}_INCDIR ${CMAKE_INSTALL_PREFIX}/include CACHE PATH
+set(${XMAKE}_INSTALL_INC_DIR ${CMAKE_INSTALL_PREFIX}/include CACHE PATH
     "The C/C++ header install path")
 
 # If installed targets' default RPATH is NOT system implicit link
@@ -26,13 +26,13 @@ if(NOT ${XMAKE}_SKIP_RPATH_ORIGIN AND "${isSysDir}" STREQUAL "-1")
 endif()
 
 if(false) # xmake debug message
-    message(STATUS "${XMAKE}_BINDIR=${${XMAKE}_BINDIR}")
-    message(STATUS "${XMAKE}_ETCDIR=${${XMAKE}_ETCDIR}")
-    message(STATUS "${XMAKE}_DOCDIR=${${XMAKE}_DOCDIR}")
-    message(STATUS "${XMAKE}_LIBDIR=${${XMAKE}_LIBDIR}")
-    message(STATUS "${XMAKE}_SHADIR=${${XMAKE}_SHADIR}")
-    message(STATUS "${XMAKE}_PLGDIR=${${XMAKE}_PLGDIR}")
-    message(STATUS "${XMAKE}_INCDIR=${${XMAKE}_INCDIR}")
+    message(STATUS "${XMAKE}_INSTALL_BIN_DIR=${${XMAKE}_INSTALL_BIN_DIR}")
+    message(STATUS "${XMAKE}_INSTALL_ETC_DIR=${${XMAKE}_INSTALL_ETC_DIR}")
+    message(STATUS "${XMAKE}_INSTALL_DOC_DIR=${${XMAKE}_INSTALL_DOC_DIR}")
+    message(STATUS "${XMAKE}_INSTALL_LIB_DIR=${${XMAKE}_INSTALL_LIB_DIR}")
+    message(STATUS "${XMAKE}_INSTALL_SHA_DIR=${${XMAKE}_INSTALL_SHA_DIR}")
+    message(STATUS "${XMAKE}_INSTALL_PLG_DIR=${${XMAKE}_INSTALL_PLG_DIR}")
+    message(STATUS "${XMAKE}_INSTALL_INC_DIR=${${XMAKE}_INSTALL_INC_DIR}")
 endif()
 
 # This will create any directories that need to be created in the destination
@@ -141,15 +141,15 @@ function(InstallHelper)
 
     if(install_helper_TARGETS)
         # The default domain for targets is empty
-        set(DomainBin ${${XMAKE}_BINDIR})
-        set(DomainLib ${${XMAKE}_LIBDIR})
-        set(DomainShare ${${XMAKE}_SHADIR})
-        set(DomainInclude ${${XMAKE}_INCDIR})
+        set(DomainBin ${${XMAKE}_INSTALL_BIN_DIR})
+        set(DomainLib ${${XMAKE}_INSTALL_LIB_DIR})
+        set(DomainShare ${${XMAKE}_INSTALL_SHA_DIR})
+        set(DomainInclude ${${XMAKE}_INSTALL_INC_DIR})
         if(install_helper_DOMAIN)
-            set(DomainBin ${${XMAKE}_BINDIR}/${install_helper_DOMAIN})
-            set(DomainLib ${${XMAKE}_LIBDIR}/${install_helper_DOMAIN})
-            set(DomainShare ${${XMAKE}_SHADIR}/${install_helper_DOMAIN})
-            set(DomainInclude ${${XMAKE}_INCDIR}/${install_helper_DOMAIN})
+            set(DomainBin ${${XMAKE}_INSTALL_BIN_DIR}/${install_helper_DOMAIN})
+            set(DomainLib ${${XMAKE}_INSTALL_LIB_DIR}/${install_helper_DOMAIN})
+            set(DomainShare ${${XMAKE}_INSTALL_SHA_DIR}/${install_helper_DOMAIN})
+            set(DomainInclude ${${XMAKE}_INSTALL_INC_DIR}/${install_helper_DOMAIN})
         endif()
 
         # Create directory with the correct permissions.

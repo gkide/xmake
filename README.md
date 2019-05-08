@@ -25,9 +25,10 @@ include in the top CMakeLists.txt
 name should consist of [A-Za-z0-9_-], and the min-cmake version is v2.8.12
 
 - **${XMAKE}**`_ENABLE_ASSERTION` enable assertion, default is **OFF**
-- **${XMAKE}**`_ENABLE_TRAVIS_CI` enable travis CI build, default is **OFF**
 - **${XMAKE}**`_XMAKE_VERBOSE` show verbose xmake message, default is **OFF**
 - **${XMAKE}**`_DISABLE_CCACHE` enable **ccache** for linux by default.
+- **${XMAKE}**`_ENABLE_CI` disable continuous integration build by default,
+  like [Travis](https://github.com/marketplace/travis-ci).
 
 - **${XMAKE}**`_AUTO_SOURCES`, xmake auto generated source files if any.
 - **${XMAKE}**`_AUTO_LIBRARIES`, xmake auto collection libraries for linking.
@@ -208,18 +209,18 @@ name should consist of [A-Za-z0-9_-], and the min-cmake version is v2.8.12
 
 - `InstallHelper` is cmake install helper for convenience
 
-* `${XMAKE}_PREFIX` => `${CMAKE_INSTALL_PREFIX}`, install root
-* `${XMAKE}_BINDIR` => `${CMAKE_INSTALL_PREFIX}/bin`, executable
-* `${XMAKE}_ETCDIR` => `${CMAKE_INSTALL_PREFIX}/etc`, configuration
-* `${XMAKE}_DOCDIR` => `${CMAKE_INSTALL_PREFIX}/doc`, documentation
-* `${XMAKE}_LIBDIR` => `${CMAKE_INSTALL_PREFIX}/lib`, C/C++ library
-* `${XMAKE}_SHADIR` => `${CMAKE_INSTALL_PREFIX}/share`, share data
-* `${XMAKE}_PLGDIR` => `${CMAKE_INSTALL_PREFIX}/plugin`, plugin data
-* `${XMAKE}_INCDIR` => `${CMAKE_INSTALL_PREFIX}/include`, C/C++ header
+* `${XMAKE}_INSTALL_DIR` => `${CMAKE_INSTALL_PREFIX}`, install root
+* `${XMAKE}_INSTALL_BIN_DIR` => `${CMAKE_INSTALL_PREFIX}/bin`, executable
+* `${XMAKE}_INSTALL_ETC_DIR` => `${CMAKE_INSTALL_PREFIX}/etc`, configuration
+* `${XMAKE}_INSTALL_DOC_DIR` => `${CMAKE_INSTALL_PREFIX}/doc`, documentation
+* `${XMAKE}_INSTALL_LIB_DIR` => `${CMAKE_INSTALL_PREFIX}/lib`, C/C++ library
+* `${XMAKE}_INSTALL_SHA_DIR` => `${CMAKE_INSTALL_PREFIX}/share`, share data
+* `${XMAKE}_INSTALL_PLG_DIR` => `${CMAKE_INSTALL_PREFIX}/plugin`, plugin data
+* `${XMAKE}_INSTALL_INC_DIR` => `${CMAKE_INSTALL_PREFIX}/include`, C/C++ header
 
-- `TARGETS` of cmake will be installed into `${${XMAKE}_BINDIR}` or `${${XMAKE}_LIBDIR}`
+- `TARGETS` of cmake will be installed into `${${XMAKE}_INSTALL_BIN_DIR}` or `${${XMAKE}_INSTALL_LIB_DIR}`
   * cmake targets: **executables**, **static**/**shared**/**module**/**import** libraries
-  * The executable resources will be installed into `${${XMAKE}_SHADIR}/resource` if NOT **MacOS**
+  * The executable resources will be installed into `${${XMAKE}_INSTALL_SHA_DIR}/resource` if NOT **MacOS**
 
 - installs contents of `DIRECTORY` into `DESTINATION` with optional permissions
   * if not set `FILE_PERMISSIONS`, the default value is **rw-r--r--**,

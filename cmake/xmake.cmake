@@ -200,8 +200,8 @@ else()
     endif()
 endif()
 
-# Disable Travis CI by default
-if(${XMAKE}_ENABLE_TRAVIS_CI)
+# Disable CI build by default, like: Travis
+if(${XMAKE}_ENABLE_CI)
     add_compile_options("-Werror")
     message(STATUS "Enable travis-ci")
 endif()
@@ -214,6 +214,7 @@ endif()
 # Enable ccache for linux & likes by default
 if(NOT HOST_WINDOWS AND NOT ${XMAKE}_DISABLE_CCACHE)
     find_program(CCACHE_PROG ccache)
+    mark_as_advanced(CCACHE_PROG)
     if(CCACHE_PROG)
         message(STATUS "Enable recompilation speeds up by ccache")
         set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ${CCACHE_PROG})
@@ -327,11 +328,11 @@ if(HOST_WINDOWS_MSYS OR HOST_WINDOWS_MINGW OR HOST_WINDOWS_CYGWIN)
     if(HOST_WINDOWS_MSYS)
         InstallHelper(FILES
             /usr/bin/${CMAKE_SHARED_LIBRARY_PREFIX}2.0${CMAKE_SHARED_LIBRARY_SUFFIX}
-            DESTINATION ${${XMAKE}_PREFIX}/bin)
+            DESTINATION ${${XMAKE}_INSTALL_DIR}/bin)
     elseif(HOST_WINDOWS_CYGWIN)
         InstallHelper(FILES
             /usr/bin/${CMAKE_SHARED_LIBRARY_PREFIX}win1${CMAKE_SHARED_LIBRARY_SUFFIX}
-            DESTINATION ${${XMAKE}_PREFIX}/bin)
+            DESTINATION ${${XMAKE}_INSTALL_DIR}/bin)
     endif()
 endif()
 

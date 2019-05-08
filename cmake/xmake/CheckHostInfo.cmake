@@ -10,6 +10,7 @@
 function(HostNameUserNameLinux user_name host_name)
     find_program(WHOAMI_PROG   whoami)
     find_program(HOSTNAME_PROG hostname)
+    mark_as_advanced(WHOAMI_PROG HOSTNAME_PROG)
     # user name
     if(EXISTS ${WHOAMI_PROG})
         execute_process(COMMAND ${WHOAMI_PROG}
@@ -53,6 +54,7 @@ endfunction()
 
 function(HostSystemInfoLinux os_name os_version)
     find_program(LSB_RELEASE_PROG  lsb_release)
+    mark_as_advanced(LSB_RELEASE_PROG)
     if(EXISTS ${LSB_RELEASE_PROG})
         execute_process(COMMAND ${LSB_RELEASE_PROG} -i
             OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -126,6 +128,7 @@ endfunction()
 
 function(HostSystemInfoMacosx os_name os_version)
     find_program(SW_VERS_PROG  sw_vers)
+    mark_as_advanced(SW_VERS_PROG)
     if(EXISTS ${SW_VERS_PROG})
         execute_process(COMMAND ${SW_VERS_PROG} -productName
             OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -149,6 +152,7 @@ endfunction()
 
 function(HostSystemTimeLinux system_time)
     find_program(DATE_PROG date)
+    mark_as_advanced(DATE_PROG)
     if(EXISTS ${DATE_PROG})
         execute_process(COMMAND ${DATE_PROG} "+%Y-%m-%d\ %T\ %z"
             OUTPUT_STRIP_TRAILING_WHITESPACE

@@ -10,7 +10,7 @@ set(XDEMO_VERSION_TWEAK "dev") # date & HASH auto update at build time
 
 option(XDEMO_ENABLE_GCOV "Enable Coverage" ON)
 option(XDEMO_ENABLE_ASSERTION "Enable assertion." ON)
-option(XDEMO_ENABLE_TRAVIS_CI "Enable Travis CI build." ON)
+option(XDEMO_ENABLE_CI "Enable for CI build, like: Travis." ON)
 option(XDEMO_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 
 #option(XDEMO_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" ON)
@@ -94,7 +94,7 @@ InstallHelper(TARGETS xlc
 )
 # include/anywhere/xlc.h
 InstallHelper(FILES source/xlc.h
-    DESTINATION ${XDEMO_PREFIX}/anywhere
+    DESTINATION ${XDEMO_INSTALL_DIR}/anywhere
 )
 
 # Install Shared Library Example 1
@@ -154,7 +154,7 @@ InstallHelper(TARGETS ylc
 )
 # include/anywhere/ylc.h
 InstallHelper(FILES source/ylc.h
-    DESTINATION ${XDEMO_PREFIX}/anywhere
+    DESTINATION ${XDEMO_INSTALL_DIR}/anywhere
 )
 
 file(GLOB SOURCES source/main.c)
@@ -226,21 +226,21 @@ include(PreInstall)
 # Install Executable of NOT Target
 ########################################
 InstallHelper(PROGRAMS scripts/release
-    DESTINATION ${XDEMO_PLGDIR})
+    DESTINATION ${XDEMO_INSTALL_PLG_DIR})
 InstallHelper(PROGRAMS scripts/release
-    DESTINATION ${XDEMO_PLGDIR}/scripts)
+    DESTINATION ${XDEMO_INSTALL_PLG_DIR}/scripts)
 
 # Install Normal Files
 ########################################
 InstallHelper(FILES LICENSE
-    DESTINATION ${XDEMO_PREFIX})
+    DESTINATION ${XDEMO_INSTALL_DIR})
 InstallHelper(FILES docs/local.mk
-    DESTINATION ${XDEMO_DOCDIR})
+    DESTINATION ${XDEMO_INSTALL_DOC_DIR})
 
 # Install Directory
 ########################################
 InstallHelper(DIRECTORY cmake
-    DESTINATION ${XDEMO_SHADIR})
+    DESTINATION ${XDEMO_INSTALL_SHA_DIR})
 
 # Code Coverage Report
 ########################################
