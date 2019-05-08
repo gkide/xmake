@@ -113,6 +113,6 @@ set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_BINARY_DIR}/CPackOptions.cmake")
 set(CPACK_SET_DESTDIR true)
 
 # The packing working directory
-set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/Release")
+set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/ReleasePackage")
 
 include(CPack)
