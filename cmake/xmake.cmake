@@ -54,30 +54,37 @@ else()
     endif()
 endif()
 
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    set(pkg_dir_name "${PKG_NAME}-latest")
+else()
+    set(pkg_dir_name "${PKG_NAME}-${PKG_VERSION}")
+endif()
+mark_as_advanced(pkg_dir_name)
+
 # Change the default cmake value without overriding the user-provided one
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     if(NOT HOST_WINDOWS)
-        set(PKG_INSTALL_DIR "/opt/${PKG_NAME}")
+        set(pkg_install_dir "/opt/${pkg_dir_name}")
     else()
         if(HOST_ARCH_32)
-            set(PKG_INSTALL_DIR "C:/$ENV{PROGRAMFILES}/${PKG_NAME}")
+            set(pkg_install_dir "C:/$ENV{PROGRAMFILES}/${pkg_dir_name}")
         else()
-            set(PKG_INSTALL_DIR "C:/$ENV{PROGRAMFILES64}/${PKG_NAME}")
+            set(pkg_install_dir "C:/$ENV{PROGRAMFILES64}/${pkg_dir_name}")
         endif()
     endif()
 
-    if(${XMAKE}_DEBUG_BUILD)
-        if(CMAKE_BUILD_TYPE MATCHES "Debug")
-            set(PKG_INSTALL_DIR "${PKG_INSTALL_DIR}-latest")
-        else() # for Dev, Coverage build
-            set(PKG_INSTALL_DIR "${CMAKE_BINARY_DIR}/usr")
-        endif()
-    else()
-        set(PKG_INSTALL_DIR "${PKG_INSTALL_DIR}-${PKG_VERSION}")
-    endif()
+    mark_as_advanced(pkg_install_dir)
+    set(CMAKE_INSTALL_PREFIX "${pkg_install_dir}" CACHE PATH "" FORCE)
+endif()
 
-    mark_as_advanced(PKG_INSTALL_DIR)
-    set(CMAKE_INSTALL_PREFIX "${PKG_INSTALL_DIR}" CACHE PATH "" FORCE)
+# Make sure always install to $PKG_NAME-$PKG_VERSION
+if(NOT CMAKE_INSTALL_PREFIX MATCHES ${pkg_dir_name})
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/${pkg_dir_name}")
+endif()
+
+# for Dev, Coverage build
+if(${XMAKE}_DEBUG_BUILD AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/usr")
 endif()
 
 string(TOUPPER ${CMAKE_BUILD_TYPE} buildType)
