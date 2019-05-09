@@ -24,4 +24,16 @@ else()
     )
 endif()
 
-set(GTEST_LIBRARY ${DEPS_INSTALL_DIR}/lib/libok.a)
+# This determines the thread library of the system, see 'FindThreads.cmake'
+find_package(Threads REQUIRED)
+#message(STATUS "THREAD_LIBS=${CMAKE_THREAD_LIBS_INIT}") # the thread library
+#message(STATUS "THREAD_USE_SPROC=${CMAKE_USE_SPROC_INIT}") # are we using sproc?
+#message(STATUS "THREAD_USE_WIN32=${CMAKE_USE_WIN32_THREADS_INIT}") # using WIN32 threads?
+#message(STATUS "THREAD_USE_PTHREADS=${CMAKE_USE_PTHREADS_INIT}") # are we using pthreads
+#message(STATUS "THREAD_HP_PTHREADS=${CMAKE_HP_PTHREADS_INIT}") # are we using hp pthreads
+
+list(APPEND ${XMAKE}_GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgtest.a)
+list(APPEND ${XMAKE}_GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgmock_main.a)
+list(APPEND ${XMAKE}_GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgmock.a)
+list(APPEND ${XMAKE}_GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgtest_main.a)
+list(APPEND ${XMAKE}_GTEST_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})

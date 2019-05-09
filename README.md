@@ -31,11 +31,13 @@ name should consist of [A-Za-z0-9_-], and the min-cmake version is v2.8.12
 - **${XMAKE}**`_ENABLE_CI` disable continuous integration build by default,
   like [Travis](https://github.com/marketplace/travis-ci).
 
-- **${XMAKE}**`ENABLE_CTEST` enable CMake ctest support, disable by default.
-- **${XMAKE}**`ENABLE_CTEST` enable Google gtest support, disable by default.
+- **${XMAKE}**`_ENABLE_CTEST` enable CMake ctest support, disable by default.
+- **${XMAKE}**`_ENABLE_GTEST` enable Google gtest support, disable by default.
+  - `BUILD_TESTING` can be use to control build the tests or not, default is ON.
+  - **${XMAKE}**`_GTEST_LIBRARIES` will auto set to the need libraries for linking.
 
-- **${XMAKE}**`_AUTO_SOURCES`, xmake auto generated source files if any.
-- **${XMAKE}**`_AUTO_LIBRARIES`, xmake auto collection libraries for linking.
+- **${XMAKE}**`_AUTO_QT5_SOURCES`, xmake auto generated source files if any.
+- **${XMAKE}**`_AUTO_QT5_LIBRARIES`, xmake auto collection libraries for linking.
 
 - **${XMAKE}**`_DEBUG_BUILD`, which depends on `CMAKE_BUILD_TYPE`:
   * if one of `Dev`, `Debug`, `Coverage`, then it will be true.
@@ -206,8 +208,8 @@ name should consist of [A-Za-z0-9_-], and the min-cmake version is v2.8.12
 - `SHARED_PREFIX` shared build of Qt5 install path
 
 - NOTE: static Qt5 need those two auto defined variables
-  * **${XMAKE}**`_AUTO_SOURCES`, xmake auto generated source file if need.
-  * **${XMAKE}**`_AUTO_LIBRARIES`, xmake auto collection libraries to link against.
+  * **${XMAKE}**`_AUTO_QT5_SOURCES`, xmake auto generated source file if need.
+  * **${XMAKE}**`_AUTO_QT5_LIBRARIES`, xmake auto collection libraries to link against.
 
 # `InstallHelper`
 

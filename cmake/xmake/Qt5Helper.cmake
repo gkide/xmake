@@ -76,14 +76,14 @@ if(qt5_STATIC_PREFIX)
     set(qt5_plugin_moc "${CMAKE_CURRENT_BINARY_DIR}/xmake_qt5_moc.cpp")
     mark_as_advanced(qt5_plugin_moc)
     file(WRITE ${qt5_plugin_moc} "#include <QtPlugin>\n")
-    list(APPEND ${XMAKE}_AUTO_SOURCES ${qt5_plugin_moc})
+    list(APPEND ${XMAKE}_AUTO_QT5_SOURCES ${qt5_plugin_moc})
 
     if(HOST_WINDOWS)
         file(APPEND ${qt5_plugin_moc}
              "Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)\n")
     else()
         include(Qt5Static)
-        list(APPEND ${XMAKE}_AUTO_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+        list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
         file(APPEND ${qt5_plugin_moc}
             "Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)\n")
         file(APPEND ${qt5_plugin_moc} "Q_IMPORT_PLUGIN(QGifPlugin)\n")

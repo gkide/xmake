@@ -29,7 +29,7 @@ CodeCoverageLcovTraceReport(
         --title "Basic example"
 )
 
-if(BUILD_TESTING)
+if(XDEMO_ENABLE_CTEST AND BUILD_TESTING)
     add_test(NAME ctest-ccr-args-none
         COMMAND ccr
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}

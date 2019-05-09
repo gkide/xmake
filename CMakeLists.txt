@@ -270,7 +270,7 @@ CodeCoverageLcovHtml(
     LCOV_EXCLUDES
         source/qt5
         source/main.cpp
-        ${XDEMO_AUTO_SOURCES}
+        ${XDEMO_AUTO_QT5_SOURCES}
         ${QT5_STATIC_PREFIX}
         ${QT5_SHARED_PREFIX}
     GENHTML_ARGS
@@ -278,3 +278,4 @@ CodeCoverageLcovHtml(
 )
 
 add_subdirectory(source/ccr)
+add_subdirectory(source/gtest)

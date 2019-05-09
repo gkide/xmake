@@ -413,11 +413,13 @@ if(DOXYGEN_PROG OR DOXYGEN_FOUND)
     )
 endif()
 
+# https://cmake.org/cmake/help/latest/module/CTest.html
 if(${XMAKE}_ENABLE_CTEST)
-    # Automatically creates a BUILD_TESTING, ON by default
-    include(CTest)
+    include(CTest) # Automatically creates a BUILD_TESTING, ON by default
 endif()
 
+# https://github.com/google/googletest
 if(${XMAKE}_ENABLE_GTEST)
     include(BuildGtest)
+    option(BUILD_TESTING ON) # To make consistent, also set it ON
 endif()
