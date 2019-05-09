@@ -18,6 +18,7 @@ include in the top CMakeLists.txt
   * [PrebuildInstall](#prebuildinstallname)
 
 - [Code Coverage Support](#code-coverage-support)
+- [Binary & Source Package](#package-source-binary)
 
 # Predefined Cmake Variables
 
@@ -357,11 +358,61 @@ given `EXECUTABLE_FORCE_SUCCESS`
 
 Append C/C++ compiler flags for code coverage.
 
-## Cpack
+# Package Source Binary
+
+[xmake.mk](cmake/xmake.mk) targets by `cpack` is: **xmake-pkg-source**, **xmake-pkg-binary**
 
 - `PKG_NAME` will be set to lower case of `${PROJECT_NAME}` if not set
 - `PKG_VENDOR` is the name of the package vendor
 - `PKG_VERSION` will be set the project's **major.minor.patch** if not set
+- `PKG_BRIEF_SUMMARY` short description of the project, only a few words
+
 - `PKG_MANUAL_DIR` for user manual, API manual by doxygen, and etc.
   * if this is not set, then it will auto set to `${CMAKE_BINARY_DIR}`
-- `PKG_BRIEF_SUMMARY` short description of the project, only a few words
+
+- `PKG_REPO` is the repo upstream URL
+- `PKG_BUG_REPORT` is the bug report URL
+- `PKG_MAINTAINER_EMAIL` is the maintainer email
+
+- `PKG_LOGO` is the project logo
+- `PKG_INSTALLER_LOGO` is for GUI installer INSTALL logo
+- `PKG_UNINSTALLER_LOGO` is for GUI installer UNINSTALL logo
+
+- `PKG_TYPE_GUI` true if the project is GUI
+
+- `PKG_SOURCE` list of project source files or directories
+  * if not set, check `${CMAKE_SOURCE_DIR}/source`, `${CMAKE_SOURCE_DIR}/src`,
+    use the first one founded, if both not, then just use `${CMAKE_SOURCE_DIR}`.
+    For now, `PKG_SOURCE` is only used by doxygen.
+
+- `PKG_SOURCE_EXCLUDES`
+  * For now, this is only used by cpack to package source tarballs.
+    By default, the following will ignored from the source tarballs:
+    - Version control files
+      * `.svn/`
+      * `.git/`
+      * `.github/`
+      * `.gitignore`
+      * `.hooks-config`
+      * `.gitattributes`
+    - Generated temp files
+      * `.swp`
+      * `.swap`
+
+    - Local log/config/debug files
+      * `.log`
+      * `local.mk`
+      * `.standard-release`
+      * `CMakeLists.txt.user`
+
+    - Build and external-deps directory
+      * `.deps/`
+      * `build/`
+
+    - Extra common regular temporary files
+      * `tmp/`
+      * `temp/`
+      * `todo/`
+
+    - Extra ignore files set by user
+      * `${PKG_SOURCE_EXCLUDES}`

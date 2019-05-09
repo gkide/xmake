@@ -115,6 +115,9 @@ set(CPACK_SOURCE_IGNORE_FILES
     "/tmp/"
     "/temp/"
     "/todo/"
+
+    # Extra ignore files set by user
+    "${PKG_SOURCE_EXCLUDES}"
 )
 
 # Set the options file that needs to be included
