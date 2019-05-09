@@ -398,3 +398,6 @@ if(DOXYGEN_PROG OR DOXYGEN_FOUND)
         COMMAND ${DOXYGEN_PROG} ${PKG_MANUAL_DIR}/doxygen/Doxyfile
     )
 endif()
+
+# Automatically creates a BUILD_TESTING, ON by default
+include(CTest)

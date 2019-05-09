@@ -28,3 +28,19 @@ CodeCoverageLcovTraceReport(
     GENHTML_ARGS
         --title "Basic example"
 )
+
+if(BUILD_TESTING)
+    add_test(NAME ctest-ccr-args-none
+        COMMAND ccr
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
+    #set_tests_properties(ctest-ccr-args-none)
+    add_test(NAME ctest-ccr-args-2_to_2000
+        COMMAND ccr 2 2000
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
+    add_test(NAME ctest-ccr-args-0_to_100000
+        COMMAND ccr 0 100000
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
+endif()

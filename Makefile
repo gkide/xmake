@@ -12,8 +12,11 @@ include cmake/xmake.mk
 PHONY += all
 all: xmake-all
 
-PHONY += test
-test: xmake-test
+PHONY += ctest
+ctest: xmake-ctest
+
+PHONY += xtest
+xtest: xmake-xtest
 
 PHONY += install
 install: xmake-install

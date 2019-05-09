@@ -274,10 +274,10 @@ VALGRIND_ARGS ?=
 ifeq ($(VALGRIND_PROG),)
     ifneq ($(strip $(shell (command -v valgrind))),)
         VALGRIND_PROG := $(Q)$(shell (command -v valgrind))
-        CMAKE_ARGS += -DVALGRIND_PROG=$(shell (command -v valgrind))
+        #CMAKE_ARGS += -DVALGRIND_PROG=$(shell (command -v valgrind))
     endif
 else
-    CMAKE_ARGS += -DVALGRIND_PROG=$(VALGRIND_PROG)
+    #CMAKE_ARGS += -DVALGRIND_PROG=$(VALGRIND_PROG)
     VALGRIND_PROG := $(Q)$(VALGRIND_PROG)
 endif
 
@@ -292,8 +292,12 @@ PHONY += xmake-ran-top-cmake
 xmake-ran-top-cmake:
 	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS)
 
-PHONY += xmake-test
-xmake-test: | xmake-ran-top-cmake
+# ctest target
+PHONY += xmake-ctest
+xmake-ctest: | xmake-ran-top-cmake
+	$(XMAKE) -C $(BUILD_DIR) test
+PHONY += xmake-xtest
+xmake-xtest: | xmake-ran-top-cmake
 	$(XMAKE) -C $(BUILD_DIR) xtest
 	$(Q)$(BUILD_DIR)/$(BUILD_TYPE)/bin/xtest
 
@@ -358,7 +362,8 @@ xmake-help:
 	@echo "-------------------------------------------------------------------------"
 	@echo "The <target> of the xmake Makefile are as following:"
 	@echo "    all              build the project."
-	@echo "    test             run project tests."
+	@echo "    ctest            run project tests by ctest."
+	@echo "    xtest            run project tests by xtest."
 	@echo "    doxygen          generate doxygen mannual."
 	@echo "    clean            clean the build directory."
 	@echo "    distclean        remove all generated files."
