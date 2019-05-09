@@ -10,7 +10,7 @@ include in the top CMakeLists.txt
   * Windows: [Msys](#windowsmsys), [MinGW32](#windowsmingw32),
     [MinGW64](#windowsmingw64), [Cygwin](#windowscygwin)
 
-- [Qt5 Static/Shared Link Support](#qt5-support-setup)
+- [Qt5 Static/Shared Link Support](#qt5supportsetup)
 - [Cmake Install Helper for Convenience](#installhelper)
 - [External Deps Download/Build/Install](#external-project-download-build-and-install)
   * [BuildDepsRepo](#builddepsreponame)
