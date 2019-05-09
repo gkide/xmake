@@ -21,6 +21,12 @@ install: xmake-install
 PHONY += release
 release: xmake-release
 
+PHONY += pkg-binary
+pkg-binary: xmake-pkg-binary
+
+PHONY += pkg-source
+pkg-source: xmake-pkg-source
+
 PHONY += clean
 clean: xmake-clean
 

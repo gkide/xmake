@@ -297,6 +297,15 @@ ifneq (,$(wildcard scripts/release))
 	@scripts/release
 endif
 
+# Use cpack for source/binary packing
+# https://cmake.org/cmake/help/latest/module/CPack.html
+PHONY += xmake-pkg-binary
+xmake-pkg-binary: | xmake-ran-top-cmake
+	$(XMAKE) -C $(BUILD_DIR) package
+PHONY += xmake-pkg-source
+xmake-pkg-source: | xmake-ran-top-cmake
+	$(XMAKE) -C $(BUILD_DIR) package_source
+
 PHONY += xmake-clean
 xmake-clean:
 	$(Q)rm -rf $(BUILD_DIR)
@@ -331,11 +340,13 @@ xmake-help:
 	@echo "The <target> of the xmake Makefile are as following:"
 	@echo "    all              build the project."
 	@echo "    test             run project tests."
-	@echo "    release          do project release."
-	@echo "    install          install the targets."
 	@echo "    doxygen          generate doxygen mannual."
 	@echo "    clean            clean the build directory."
 	@echo "    distclean        remove all generated files."
+	@echo "    install          install all the targets."
+	@echo "    release          do project release."
+	@echo "    pkg-binary       build binary release package."
+	@echo "    pkg-source       build source release package."
 	@echo "-------------------------------------------------------------------------"
 #	@echo "See 'docs/local.mk' for much more setting details."
 #

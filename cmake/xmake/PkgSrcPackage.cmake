@@ -13,7 +13,7 @@ set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${PKG_MAINTAINER_EMAIL}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PKG_NAME}-${PKG_VERSION}")
 
 # The source package name, not including the extension
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PKG_NAME}-${PKG_VERSION}")
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PKG_NAME}-${PKG_VERSION}-src")
 
 # The binary package name, not including the extension
 set(CPACK_PACKAGE_FILE_NAME "${PKG_NAME}-${PKG_VERSION}-${HOST_SYSTEM_NAME}-${HOST_ARCH}")
@@ -110,7 +110,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/CPackOptions.cmake.in"
 set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_BINARY_DIR}/CPackOptions.cmake")
 
 # For preparing a package
-set(CPACK_SET_DESTDIR true)
+#set(CPACK_SET_DESTDIR true)
 
 # The packing working directory
 set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/ReleasePackage")

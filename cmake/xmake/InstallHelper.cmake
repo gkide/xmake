@@ -1,12 +1,14 @@
 set(${XMAKE}_INSTALL_DIR ${CMAKE_INSTALL_PREFIX})
 
-set(${XMAKE}_INSTALL_BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
-set(${XMAKE}_INSTALL_ETC_DIR ${CMAKE_INSTALL_PREFIX}/etc)
-set(${XMAKE}_INSTALL_DOC_DIR ${CMAKE_INSTALL_PREFIX}/doc)
-set(${XMAKE}_INSTALL_LIB_DIR ${CMAKE_INSTALL_PREFIX}/lib)
-set(${XMAKE}_INSTALL_SHA_DIR ${CMAKE_INSTALL_PREFIX}/share)
-set(${XMAKE}_INSTALL_PLG_DIR ${CMAKE_INSTALL_PREFIX}/plugin)
-set(${XMAKE}_INSTALL_INC_DIR ${CMAKE_INSTALL_PREFIX}/include)
+# - If a full path (with a leading slash or drive letter) is, used it directly.
+# - If a relative path is given, relative to the value of CMAKE_INSTALL_PREFIX
+set(${XMAKE}_INSTALL_BIN_DIR bin)
+set(${XMAKE}_INSTALL_ETC_DIR etc)
+set(${XMAKE}_INSTALL_DOC_DIR doc)
+set(${XMAKE}_INSTALL_LIB_DIR lib)
+set(${XMAKE}_INSTALL_SHA_DIR share)
+set(${XMAKE}_INSTALL_PLG_DIR plugin)
+set(${XMAKE}_INSTALL_INC_DIR include)
 
 # If installed targets' default RPATH is NOT system implicit link
 # directories, then reset it to the cmake install library directory
@@ -54,16 +56,19 @@ function(CreateDestDirWithPerms)
     install(CODE
     "
     set(parent_dirs)
+    # message(STATUS \"X0=${usr_dir_DESTINATION}\")
     set(dir_perm \"${usr_dir_DIRECTORY_PERMISSIONS}\")
-    set(dest_dir \"${usr_dir_DESTINATION}\")
+    set(dest_dir \"${CMAKE_INSTALL_PREFIX}/${usr_dir_DESTINATION}\")
 
     #######################################################################
     # file(INSTALL ...) implicitly respects DESTDIR, but EXISTS does not. #
     #######################################################################
 
     set(prev_dir)
+    # message(STATUS \"X1=\$ENV{DESTDIR}\${dest_dir}\")
     while(NOT EXISTS \$ENV{DESTDIR}\${dest_dir}
-          AND NOT \${prev_dir} STREQUAL \${dest_dir})
+          AND NOT \"\${prev_dir}\" STREQUAL \"\${dest_dir}\")
+        # message(STATUS \"X2=\${dest_dir}\")
         list(APPEND parent_dirs \${dest_dir})
         set(prev_dir \${dest_dir})
         get_filename_component(dest_dir \${dest_dir} PATH)
@@ -73,7 +78,9 @@ function(CreateDestDirWithPerms)
         list(REVERSE parent_dirs)
     endif()
 
+    # message(STATUS \"X3=\${parent_dirs}\")
     foreach(dest_dir \${parent_dirs})
+        # message(STATUS \"X4=\${dest_dir}\")
         if(NOT IS_DIRECTORY \${dest_dir})
             # NOTE: a relative destination is evaluated
             # with respect to the current build directory
@@ -99,10 +106,6 @@ function(InstallHelper)
         # multi value keywords
         "FILES;PROGRAMS;TARGETS;DIRECTORY_PERMISSIONS;FILE_PERMISSIONS"
         ${ARGN})
-
-    if(NOT install_helper_DESTINATION AND NOT install_helper_TARGETS)
-        message(FATAL_ERROR "Must set TARGETS or DESTINATION")
-    endif()
 
     if(NOT install_helper_FILES
        AND NOT install_helper_TARGETS
@@ -274,6 +277,15 @@ function(InstallHelper)
         endforeach()
 
         return()
+    endif()
+
+    # install to the install prefix root directory
+    if(NOT install_helper_DESTINATION)
+        # NOTE DESTINATION can not empty though if want to install to
+        # the root of CMAKE_INSTALL_PREFIX, just go up-level and down
+        # to make it happy and it works.
+        get_filename_component(top_dir ${CMAKE_INSTALL_PREFIX} NAME)
+        set(install_helper_DESTINATION "../${top_dir}")
     endif()
 
     # Create directory with the correct permissions.

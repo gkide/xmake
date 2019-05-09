@@ -103,7 +103,7 @@ InstallHelper(TARGETS xlc
 )
 # include/anywhere/xlc.h
 InstallHelper(FILES source/xlc.h
-    DESTINATION ${XDEMO_INSTALL_DIR}/anywhere
+    DESTINATION anywhere # prefix/anywhere
 )
 
 # Install Shared Library Example 1
@@ -163,7 +163,7 @@ InstallHelper(TARGETS ylc
 )
 # include/anywhere/ylc.h
 InstallHelper(FILES source/ylc.h
-    DESTINATION ${XDEMO_INSTALL_DIR}/anywhere
+    DESTINATION anywhere # prefix/anywhere
 )
 
 file(GLOB SOURCES source/main.c)
@@ -241,8 +241,7 @@ InstallHelper(PROGRAMS scripts/release
 
 # Install Normal Files
 ########################################
-InstallHelper(FILES LICENSE
-    DESTINATION ${XDEMO_INSTALL_DIR})
+InstallHelper(FILES LICENSE) # prefix/LICENSE
 InstallHelper(FILES docs/local.mk
     DESTINATION ${XDEMO_INSTALL_DOC_DIR})
 
