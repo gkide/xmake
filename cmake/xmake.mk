@@ -362,6 +362,7 @@ xmake-help:
 	@echo "-------------------------------------------------------------------------"
 	@echo "The <target> of the xmake Makefile are as following:"
 	@echo "    all              build the project."
+	@echo "    gtest            run project tests by gtest."
 	@echo "    ctest            run project tests by ctest."
 	@echo "    xtest            run project tests by xtest."
 	@echo "    doxygen          generate doxygen mannual."

@@ -401,3 +401,5 @@ endif()
 
 # Automatically creates a BUILD_TESTING, ON by default
 include(CTest)
+
+include(BuildGtest)
