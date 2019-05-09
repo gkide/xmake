@@ -278,10 +278,8 @@ xmake-ran-top-cmake:
 
 PHONY += xmake-test
 xmake-test: | xmake-ran-top-cmake
-ifeq ($(filter-out Dev Debug Coverage,$(BUILD_TYPE)),)
 	$(XMAKE) -C $(BUILD_DIR) xtest
 	$(Q)$(BUILD_DIR)/$(BUILD_TYPE)/bin/xtest
-endif
 
 PHONY += xmake-install
 xmake-install: | xmake-all
@@ -301,10 +299,15 @@ endif
 # https://cmake.org/cmake/help/latest/module/CPack.html
 PHONY += xmake-pkg-binary
 xmake-pkg-binary: | xmake-ran-top-cmake
+ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)
 	$(XMAKE) -C $(BUILD_DIR) package
+endif
+
 PHONY += xmake-pkg-source
 xmake-pkg-source: | xmake-ran-top-cmake
+ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)
 	$(XMAKE) -C $(BUILD_DIR) package_source
+endif
 
 PHONY += xmake-clean
 xmake-clean:
@@ -335,7 +338,7 @@ xmake-help:
 	@echo "-------------------------------------------------------------------------"
 	@echo "$$ make V=1 ...      verbose of make & cmake, default is silent."
 	@echo "$$ make O=path ...   build directory abs-path, default is 'build'."
-	@echo "$$ make I=path ...   install directory abs-path, default is 'build/usr'."
+	@echo "$$ make I=path ...   for set install prefix directory of abs-path."
 	@echo "-------------------------------------------------------------------------"
 	@echo "The <target> of the xmake Makefile are as following:"
 	@echo "    all              build the project."

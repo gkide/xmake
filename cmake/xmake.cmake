@@ -69,7 +69,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     if(${XMAKE}_DEBUG_BUILD)
         if(CMAKE_BUILD_TYPE MATCHES "Debug")
             set(PKG_INSTALL_DIR "${PKG_INSTALL_DIR}-latest")
-        else()
+        else() # for Dev, Coverage build
             set(PKG_INSTALL_DIR "${CMAKE_BINARY_DIR}/usr")
         endif()
     else()

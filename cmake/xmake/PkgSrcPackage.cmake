@@ -1,3 +1,8 @@
+if(${XMAKE}_DEBUG_BUILD AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+    message(AUTHOR_WARNING "Skip src/bin package for Dev/Coverage build")
+    return()
+endif()
+
 # project name, logo, vendor, maintainer, summory
 set(CPACK_PACKAGE_NAME "${PKG_NAME}")
 set(CPACK_PACKAGE_ICON "${PKG_LOGO}")
@@ -15,8 +20,16 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PKG_NAME}-${PKG_VERSION}")
 # The source package name, not including the extension
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PKG_NAME}-${PKG_VERSION}-src")
 
+# NOTE Normally, the debug build should not make the binary package,
+# but to make it consistent, do the following to rename package file.
+set(pkg_bin_fname "${PKG_NAME}-${PKG_VERSION}")
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    set(pkg_bin_fname "${PKG_NAME}-latest")
+endif()
+mark_as_advanced(pkg_bin_fname)
+
 # The binary package name, not including the extension
-set(CPACK_PACKAGE_FILE_NAME "${PKG_NAME}-${PKG_VERSION}-${HOST_SYSTEM_NAME}-${HOST_ARCH}")
+set(CPACK_PACKAGE_FILE_NAME "${pkg_bin_fname}")
 
 if(EXISTS ${CMAKE_SOURCE_DIR}/LICENSE)
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
