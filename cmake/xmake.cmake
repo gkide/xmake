@@ -272,9 +272,23 @@ else()
     message(FATAL_ERROR "ERROR: log level is ${${XMAKE}_LOG_TYPE}(${${XMAKE}_LOG_LEVEL})")
 endif()
 
-if(QT5_STATIC_PREFIX OR QT5_SHARED_PREFIX OR QT5_AUTOMATIC)
-    include(Qt5Helper)
-endif()
+# Enable static/shared Qt5 support
+#   AUTOMATIC       Enable Qt5 support, auto detect from system
+#   STATIC_PREFIX   full path to Qt5 static install, like: /opt/qt-5.9.1
+#   SHARED_PREFIX   full path to Qt5 static install, like: /opt/Qt5.5.1/5.5/gcc_64
+#   SHARED_PREFIX   full path to Qt5 static install, like: /usr/lib/gcc/x86_64-linux-gnu
+macro(Qt5SupportSetup)
+    cmake_parse_arguments(qt5 # prefix
+        "" # options
+        "STATIC_PREFIX;SHARED_PREFIX;AUTOMATIC" # one value keywords
+        "" # multi value keywords
+        ${ARGN})
+    if(qt5_STATIC_PREFIX OR qt5_SHARED_PREFIX OR qt5_AUTOMATIC)
+        include(Qt5Helper)
+    else()
+        return()
+    endif()
+endmacro()
 
 if(${XMAKE}_ENABLE_DEPENDENCY)
     include(Dependencies)
@@ -399,7 +413,11 @@ if(DOXYGEN_PROG OR DOXYGEN_FOUND)
     )
 endif()
 
-# Automatically creates a BUILD_TESTING, ON by default
-include(CTest)
+if(${XMAKE}_ENABLE_CTEST)
+    # Automatically creates a BUILD_TESTING, ON by default
+    include(CTest)
+endif()
 
-include(BuildGtest)
+if(${XMAKE}_ENABLE_GTEST)
+    include(BuildGtest)
+endif()

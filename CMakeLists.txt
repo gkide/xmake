@@ -29,23 +29,19 @@ option(XDEMO_ENABLE_ASSERTION "Enable assertion." ON)
 option(XDEMO_ENABLE_CI "Enable for CI build, like: Travis." ON)
 option(XDEMO_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 
+option(XDEMO_ENABLE_CTEST "Enable Cmake ctest support" ON)
+option(XDEMO_ENABLE_GTEST "Enable Google gtest support" ON)
+
 #option(XDEMO_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" ON)
 #option(XDEMO_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" ON)
 #option(XDEMO_DISABLE_CCACHE "Enale ccache by default for linux" ON)
-
-# Enable static/shared Qt5 support
-#option(QT5_AUTOMATIC "Enable Qt5 support" ON)
-#set(QT5_STATIC_PREFIX "/opt/qt-5.9.1")
-#set(QT5_SHARED_PREFIX "/opt/Qt5.5.1/5.5/gcc_64")
-#set(QT5_SHARED_PREFIX "/usr/lib/gcc/x86_64-linux-gnu")
 
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(xmake) # xmake should include in the top CMakeLists.txt
 
-if(QT5_AUTOMATIC OR QT5_STATIC_PREFIX OR QT5_SHARED_PREFIX)
-    add_subdirectory(source/qt5)
-endif()
+# Qt5 static/shared support
+add_subdirectory(source/qt5)
 
 # Install Static Library Example 1
 ########################################

@@ -1,3 +1,9 @@
+Qt5SupportSetup(
+    AUTOMATIC ${QT5_AUTOMATIC}
+    STATIC_PREFIX ${QT5_STATIC_PREFIX}
+    SHARED_PREFIX ${QT5_SHARED_PREFIX}
+)
+
 # Find Qt5 library
 find_package(Qt5Gui CONFIG REQUIRED)
 find_package(Qt5Widgets CONFIG REQUIRED)

@@ -10,7 +10,7 @@ include in the top CMakeLists.txt
   * Windows: [Msys](#windowsmsys), [MinGW32](#windowsmingw32),
     [MinGW64](#windowsmingw64), [Cygwin](#windowscygwin)
 
-- [Qt5 Static/Shared Link Support](#qt5-support)
+- [Qt5 Static/Shared Link Support](#qt5-support-setup)
 - [Cmake Install Helper for Convenience](#installhelper)
 - [External Deps Download/Build/Install](#external-project-download-build-and-install)
   * [BuildDepsRepo](#builddepsreponame)
@@ -30,6 +30,9 @@ name should consist of [A-Za-z0-9_-], and the min-cmake version is v2.8.12
 - **${XMAKE}**`_DISABLE_CCACHE` enable **ccache** for linux by default.
 - **${XMAKE}**`_ENABLE_CI` disable continuous integration build by default,
   like [Travis](https://github.com/marketplace/travis-ci).
+
+- **${XMAKE}**`ENABLE_CTEST` enable CMake ctest support, disable by default.
+- **${XMAKE}**`ENABLE_CTEST` enable Google gtest support, disable by default.
 
 - **${XMAKE}**`_AUTO_SOURCES`, xmake auto generated source files if any.
 - **${XMAKE}**`_AUTO_LIBRARIES`, xmake auto collection libraries for linking.
@@ -192,15 +195,15 @@ name should consist of [A-Za-z0-9_-], and the min-cmake version is v2.8.12
 - **XDEMO**_RELEASE_VERSION  : v1.0.0-release
 - **XDEMO**_RELEASE_TIMESTAMP: 2019-04-10 21:40:14 +0800
 
-# Qt5 Support
+# `Qt5SupportSetup(...)`
 
-- `QT5_AUTOMATIC`
-  * if set `QT5_STATIC_PREFIX`, support static Qt5
-  * if set `QT5_SHARED_PREFIX`, support shared Qt5
+- `AUTOMATIC`
+  * if set `STATIC_PREFIX`, support static Qt5
+  * if set `SHARED_PREFIX`, support shared Qt5
   * if both not set, try to find Qt5 from the system wide
 
-- `QT5_STATIC_PREFIX` static build of Qt5 install path
-- `QT5_SHARED_PREFIX` shared build of Qt5 install path
+- `STATIC_PREFIX` static build of Qt5 install path
+- `SHARED_PREFIX` shared build of Qt5 install path
 
 - NOTE: static Qt5 need those two auto defined variables
   * **${XMAKE}**`_AUTO_SOURCES`, xmake auto generated source file if need.
