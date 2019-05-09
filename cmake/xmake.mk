@@ -205,6 +205,7 @@ CMAKE_ARGS += $(SOURCE_DIR)
 #
 # - GIT_PROG      full path of git programme
 # - MAKE_PROG     full path of make programme
+# - VALGRIND_PROG full path of valgrind programme
 
 #######################################################
 # Auto Detect System Common Development Tools
@@ -263,6 +264,21 @@ ifeq ($(DOXYGEN_PROG),)
 else
     CMAKE_ARGS += -DDOXYGEN_PROG=$(DOXYGEN_PROG)
     DOXYGEN_PROG := $(Q)$(DOXYGEN_PROG)
+endif
+
+###########################################
+# Debugging and Profiling Generating Tool #
+###########################################
+# http://valgrind.org/docs/manual/manual.html
+VALGRIND_ARGS ?=
+ifeq ($(VALGRIND_PROG),)
+    ifneq ($(strip $(shell (command -v valgrind))),)
+        VALGRIND_PROG := $(Q)$(shell (command -v valgrind))
+        CMAKE_ARGS += -DVALGRIND_PROG=$(shell (command -v valgrind))
+    endif
+else
+    CMAKE_ARGS += -DVALGRIND_PROG=$(VALGRIND_PROG)
+    VALGRIND_PROG := $(Q)$(VALGRIND_PROG)
 endif
 
 ###########################
