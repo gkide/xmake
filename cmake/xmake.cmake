@@ -54,6 +54,36 @@ else()
     endif()
 endif()
 
+string(TOUPPER ${CMAKE_BUILD_TYPE} buildType)
+mark_as_advanced(buildType)
+
+# Enable verbose output from Makefile builds.
+option(CMAKE_VERBOSE_MAKEFILE OFF)
+# Output compile commands to compile_commands.json
+option(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
+
+# Output for binary, static/shared libraries.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+foreach(type ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER ${type} TYPE)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/bin)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/lib)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/lib)
+endforeach()
+
+# Cmake modules
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")
+include(PreventInTreeBuilds)
+include(CheckHostSystem)
+include(InstallHelper)
+
+# NOTE If want to strip the installed binaries for pack
+# 'include(PkgSrcPackage)' should be put the last statement
+# of the top cmake, thus when goes here, it gets all the targets
+include(PkgSrcPackage)
+
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
     set(pkg_dir_name "${PKG_NAME}-latest")
 else()
@@ -86,36 +116,6 @@ endif()
 if(${XMAKE}_DEBUG_BUILD AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
     set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/usr")
 endif()
-
-string(TOUPPER ${CMAKE_BUILD_TYPE} buildType)
-mark_as_advanced(buildType)
-
-# Enable verbose output from Makefile builds.
-option(CMAKE_VERBOSE_MAKEFILE OFF)
-# Output compile commands to compile_commands.json
-option(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
-
-# Output for binary, static/shared libraries.
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-foreach(type ${CMAKE_CONFIGURATION_TYPES})
-    string(TOUPPER ${type} TYPE)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/bin)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/lib)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/lib)
-endforeach()
-
-# Cmake modules
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")
-include(PreventInTreeBuilds)
-include(CheckHostSystem)
-include(InstallHelper)
-
-# NOTE If want to strip the installed binaries for pack
-# 'include(PkgSrcPackage)' should be put the last statement
-# of the top cmake, thus when goes here, it gets all the targets
-include(PkgSrcPackage)
 
 #######################################################################
 # dev/pre/nightly => alpha => beta => rc => lts/stable/release => eol #

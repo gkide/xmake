@@ -3,7 +3,7 @@ if(true)
     BuildDepsRepo(  gtest
         REPO_URL    https://github.com/google/googletest.git
         CONFIG_CMD  ${CMAKE_COMMAND} -E make_directory build
-            COMMAND cd build && ${CMAKE_COMMAND}
+            COMMAND cd build && ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}"
                 -DCMAKE_BUILD_TYPE=${DEPS_BUILD_TYPE}
                 -DCMAKE_INSTALL_PREFIX=${DEPS_INSTALL_DIR} ..
         BUILD_CMD   ${MAKE_PROG} -C build

@@ -5,37 +5,49 @@
 # To pass variables to cpack from cmake, they must be configured here.
 
 # NOTE There is a bug in NSI that does not handle full unix paths properly.
+# https://cmake.org/cmake/help/latest/cpack_gen/nsis.html
 if(CPACK_GENERATOR MATCHES "NSIS")
+    # The default installation directory presented to the end user
     set(CPACK_NSIS_INSTALL_ROOT "@CPACK_NSIS_INSTALL_ROOT@")
 
-    # The brand image displayed on the top of the installer.
+    # The brand image displayed on the top of the installer
     string(REPLACE "/" "\\\\" WIN_PKG_LOGO "@PKG_LOGO@")
     set(CPACK_PACKAGE_ICON "${WIN_PKG_LOGO}")
 
-    # Set the install/unistall icon used for the installer itself
+    # The install icon for the installer
     string(REPLACE "/" "\\\\" WIN_INSTALLER_LOGO "@PKG_INSTALLER_LOGO@")
     set(CPACK_NSIS_MUI_ICON "${WIN_INSTALLER_LOGO}")
+
+    # The unistall icon for the uninstaller
     string(REPLACE "/" "\\\\" WIN_UNINSTALLER_LOGO "@PKG_UNINSTALLER_LOGO@")
     set(CPACK_NSIS_MUI_UNIICON "${WIN_UNINSTALLER_LOGO}")
 
-    #set(CPACK_RESOURCE_FILE_README "")
-    #set(CPACK_RESOURCE_FILE_WELCOME "")
-
-    # TODO Tell cpack to create links to the doc files
+    # Tell cpack to create links in start menu folder
     set(CPACK_NSIS_MENU_LINKS
-        "@CMAKE_DOC_DIR@/html/index.html" "CMake Documentation"
-        "https://cmake.org" "CMake Web Site"
+        "@PKG_REPO@" "@PKG_NAME@ Home"
+        "@PKG_HELP@" "@PKG_NAME@ Help"
     )
 
-    # TODO Use the icon from cmake-gui for add-remove programs
-    set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\xtext.exe")
+    # A path to the executable that contains the installer icon
+    string(REPLACE "/" "\\\\" WIN_MAIN "@PKG_WIN_MAIN@")
+    set(CPACK_NSIS_INSTALLED_ICON_NAME "${WIN_MAIN}")
 
+    # Whether add to system ENV path 
     set(CPACK_NSIS_MODIFY_PATH ON)
+    
+    # URL to a web site providing assistance for installing application
     set(CPACK_NSIS_HELP_LINK "@PKG_REPO@")
+
+    # URL to a web site providing more information about the application
     set(CPACK_NSIS_URL_INFO_ABOUT "@PKG_REPO@")
+
+    # Contact information for questions and comments about the application
     set(CPACK_NSIS_CONTACT @CPACK_PACKAGE_CONTACT@)
+
+    # The title displayed at the top of the installer.
     set(CPACK_NSIS_PACKAGE_NAME "@CPACK_NSIS_PACKAGE_NAME@")
-    # The start menu folder of windows
+
+    # The windows control panel display name for 'Add/Remove Program'
     set(CPACK_NSIS_DISPLAY_NAME "@CPACK_NSIS_PACKAGE_NAME@ - @PKG_VERSION@")
 endif()
 
