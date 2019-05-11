@@ -49,6 +49,24 @@ if(CPACK_GENERATOR MATCHES "NSIS")
 
     # The windows control panel display name for 'Add/Remove Program'
     set(CPACK_NSIS_DISPLAY_NAME "@CPACK_NSIS_PACKAGE_NAME@ - @PKG_VERSION@")
+    
+    ##############################################################################
+    # NSIS Advanced Configurations to Cpack
+    # https://gitlab.kitware.com/cmake/community/wikis/doc/cpack/NSISAdvancedTips
+    ##############################################################################
+    set(NSIS_PKG_NAME "@PKG_NAME@")
+    set(NSIS_PKG_VENDOR "@PKG_VENDOR@")
+    string(REPLACE "v" "" win_version_nums @PKG_VERSION@)
+    set(NSIS_PKG_DESCRIPTION "@PKG_NAME@ @PKG_VERSION@ installer")
+
+    execute_process(COMMAND cmd /c echo %date:~0,4%
+        OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE YEAR
+    )
+    set(NSIS_PKG_VERSION_ZERO "${win_version_nums}.${YEAR}")
+
+    if(NOT NSIS_PKG_LICENSE AND NSIS_PKG_VENDOR)
+       set(NSIS_PKG_LICENSE "Copyright(C) 2018-${YEAR} ${NSIS_PKG_VENDOR}")
+    endif()
 endif()
 
 # TODO MacOS App packer

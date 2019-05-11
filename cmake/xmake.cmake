@@ -78,6 +78,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")
 include(PreventInTreeBuilds)
 include(CheckHostSystem)
 include(InstallHelper)
+include(Utils)
 
 # NOTE If want to strip the installed binaries for pack
 # 'include(PkgSrcPackage)' should be put the last statement
