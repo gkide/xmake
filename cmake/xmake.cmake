@@ -373,15 +373,35 @@ if(HOST_WINDOWS_MSYS OR HOST_WINDOWS_MINGW OR HOST_WINDOWS_CYGWIN)
     #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static")
 
     if(HOST_WINDOWS_MSYS)
-    message(WARNING "MSYS build, may need: msys-gcc_s-seh-1.dll or msys-stdc++-6.dll")
-        InstallHelper(FILES
-            /usr/bin/${CMAKE_SHARED_LIBRARY_PREFIX}2.0${CMAKE_SHARED_LIBRARY_SUFFIX}
-            DESTINATION ${${XMAKE}_INSTALL_BIN_DIR})
+        message(WARNING "MSYS build, may need: "
+            "msys-gcc_s-seh-1.dll or msys-stdc++-6.dll"
+        )
+        set(msys20_dll ${CMAKE_SHARED_LIBRARY_PREFIX}2.0${CMAKE_SHARED_LIBRARY_SUFFIX})
+        InstallHelper(FILES /usr/bin/${msys20_dll}
+            DESTINATION ${${XMAKE}_INSTALL_BIN_DIR}
+        )
+        # Always update and run for each build
+        add_custom_target(copy-msys20-dll ALL
+            COMMAND ${CMAKE_COMMAND} -E make_directory 
+                ${CMAKE_BINARY_DIR}/${buildType}/bin
+            COMMAND ${CMAKE_COMMAND} -E copy /usr/bin/${msys20_dll}
+                ${CMAKE_BINARY_DIR}/${buildType}/bin
+        )
     elseif(HOST_WINDOWS_CYGWIN)
-    message(WARNING "CYGWIN build, may need: cyg-gcc_s-seh-1.dll or cyg-stdc++-6.dll")
-        InstallHelper(FILES
-            /usr/bin/${CMAKE_SHARED_LIBRARY_PREFIX}win1${CMAKE_SHARED_LIBRARY_SUFFIX}
-            DESTINATION ${${XMAKE}_INSTALL_BIN_DIR})
+        message(WARNING "CYGWIN build, may need: "
+            "cyg-gcc_s-seh-1.dll or cyg-stdc++-6.dll"
+        )
+        set(cygwin_dll ${CMAKE_SHARED_LIBRARY_PREFIX}win1${CMAKE_SHARED_LIBRARY_SUFFIX})
+        InstallHelper(FILES /usr/bin/${cygwin_dll}
+            DESTINATION ${${XMAKE}_INSTALL_BIN_DIR}
+        )
+        # Always update and run for each build
+        add_custom_target(copy-msys20-dll ALL
+            COMMAND ${CMAKE_COMMAND} -E make_directory 
+                ${CMAKE_BINARY_DIR}/${buildType}/bin
+            COMMAND ${CMAKE_COMMAND} -E copy /usr/bin/${cygwin_dll}
+                ${CMAKE_BINARY_DIR}/${buildType}/bin
+        )
     endif()
 endif()
 
