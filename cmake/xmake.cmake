@@ -356,23 +356,29 @@ if(${XMAKE}_EXPORT_AS_COMPILER_ARGS)
     endif()
 endif()
 
+# Linker flags to be used to create executables
+# --verbose is for debug the linking process of executables
+#set(CMAKE_EXE_LINKER_FLAGS --verbose)
+
 if(HOST_WINDOWS_MSYS OR HOST_WINDOWS_MINGW OR HOST_WINDOWS_CYGWIN)
     # do not need:
-    # - msys-gcc_s-seh-1.dll for MSYS
     # - libgcc_s-seh-1.dll for MinGW
+    # - msys-gcc_s-seh-1.dll for MSYS
     # - cyg-gcc_s-seh-1.dll for Cygwin
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc -static")
+    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc -static")
     # do not need:
-    # - msys-stdc++-6.dll for MSYS
     # - libstdc++-6.dll for MinGW
+    # - msys-stdc++-6.dll for MSYS
     # - cyg-stdc++-6.dll for Cygwin
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static")
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static")
 
     if(HOST_WINDOWS_MSYS)
+    message(WARNING "MSYS build, may need: msys-gcc_s-seh-1.dll or msys-stdc++-6.dll")
         InstallHelper(FILES
             /usr/bin/${CMAKE_SHARED_LIBRARY_PREFIX}2.0${CMAKE_SHARED_LIBRARY_SUFFIX}
             DESTINATION ${${XMAKE}_INSTALL_BIN_DIR})
     elseif(HOST_WINDOWS_CYGWIN)
+    message(WARNING "CYGWIN build, may need: cyg-gcc_s-seh-1.dll or cyg-stdc++-6.dll")
         InstallHelper(FILES
             /usr/bin/${CMAKE_SHARED_LIBRARY_PREFIX}win1${CMAKE_SHARED_LIBRARY_SUFFIX}
             DESTINATION ${${XMAKE}_INSTALL_BIN_DIR})

@@ -4,7 +4,7 @@ DistRepoInfo
 CMakeLists.txt.user
 
 todo/
-build/
+build*/
 .deps/
 .github/
 .standard-release/
