@@ -86,3 +86,9 @@ include(CheckHostInfo)
 HostNameUserName(HOST_NAME HOST_USER)
 HostSystemInfo(HOST_OS_DIST_NAME HOST_OS_DIST_VERSION)
 HostSystemTime(${XMAKE}_RELEASE_TIMESTAMP)
+
+string(REGEX MATCH "^([0-9]+)-([0-9]+)-([0-9]+) +([0-9]+):([0-9]+):([0-9]+).*"
+    match_result "${${XMAKE}_RELEASE_TIMESTAMP}")
+set(${XMAKE}_YEAR "${CMAKE_MATCH_1}")
+set(${XMAKE}_MONTH "${CMAKE_MATCH_2}")
+set(${XMAKE}_DAY "${CMAKE_MATCH_3}")
