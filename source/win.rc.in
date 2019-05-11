@@ -73,7 +73,7 @@ BEGIN
 
     BLOCK "VarFileInfo"
     BEGIN
-    // The following line should only be modified for localized versions.     
+    // The following line should only be modified for localized versions.
     // It consists of any number of WORD,WORD pairs, with each pair
     // describing a language,codepage combination supported by the file.
         // For example, "0x409,1252" indicating that it supports

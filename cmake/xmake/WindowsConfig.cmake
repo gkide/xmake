@@ -1,3 +1,3 @@
 if(NOT PKG_LICENSE AND PKG_VENDOR)
-    set(PKG_LICENSE "Copyright(C) 2018-${${XMAKE}_YEAR} ${PKG_VENDOR}")
+    set(PKG_LICENSE "Copyright(C) 2018-${${XMAKE}_RELEASE_YEAR} ${PKG_VENDOR}")
 endif()
