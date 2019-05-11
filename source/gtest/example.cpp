@@ -1,3 +1,9 @@
+// gtest use access non-ANSI symbols
+#ifdef ENABLE_NONE_ANSI_SYMBOLS
+    #define _POSIX_C_SOURCE 200809L
+    #define _BSD_SOURCE
+#endif
+
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
