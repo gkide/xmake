@@ -97,11 +97,15 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     if(NOT HOST_WINDOWS)
         set(pkg_install_dir "/opt/${pkg_dir_name}")
     else()
-        if(HOST_ARCH_32)
-            set(pkg_install_dir "C:/$ENV{PROGRAMFILES}/${pkg_dir_name}")
-        else()
-            set(pkg_install_dir "C:/$ENV{PROGRAMFILES64}/${pkg_dir_name}")
-        endif()
+# ----------------------------------------------------------------------
+#                    windows of 64-bit          windows of 32-bit
+# ----------------------------------------------------------------------
+# PROGRAMFILES       "C:\Program Files"         "C:\Program Files (x86)"
+# ProgramW6432       "C:\Program Files"         "C:\Program Files"
+# PROGRAMFILES(x86)  "C:\Program Files (x86)"   "C:\Program Files (x86)"
+# ----------------------------------------------------------------------
+# https://docs.microsoft.com/zh-cn/windows/desktop/WinProg64/wow64-implementation-details
+        set(pkg_install_dir "$ENV{PROGRAMFILES}/${pkg_dir_name}")
     endif()
 
     mark_as_advanced(pkg_install_dir)

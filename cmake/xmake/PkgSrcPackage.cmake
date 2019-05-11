@@ -56,14 +56,13 @@ if(HOST_WINDOWS)
         set(CPACK_GENERATOR "NSIS64")
     endif()
 
+    # Root install directory, displayed to end user at installer-run time
+    set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES")
     if(HOST_ARCH_32)
-        # Root install directory, displayed to end user at installer-run time
-        set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES")
         # "NSIS Package Display Name", text used in the installer GUI
-        set(CPACK_NSIS_PACKAGE_NAME "${PKG_NAME} ${PKG_VERSION} WIN64")
-    else()
-        set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
         set(CPACK_NSIS_PACKAGE_NAME "${PKG_NAME} ${PKG_VERSION} WIN32")
+    else()
+        set(CPACK_NSIS_PACKAGE_NAME "${PKG_NAME} ${PKG_VERSION} WIN64")
     endif()
     # Registry key used to store info about the installation
     set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CPACK_NSIS_PACKAGE_NAME}")
