@@ -10,6 +10,7 @@ set(PKG_REPO "https://github.com/gkide/xmake")
 set(PKG_BUG_REPORT "https://github.com/gkide/xmake/issues")
 set(PKG_MAINTAINER_EMAIL "Charlie WONG <1213charlie@163.com>")
 set(PKG_LOGO ${CMAKE_SOURCE_DIR}/gkide.png)
+set(PKG_ICON ${CMAKE_SOURCE_DIR}/docs/res/xmake.ico)
 set(PKG_INSTALLER_LOGO ${CMAKE_SOURCE_DIR}/docs/res/install.ico)
 set(PKG_UNINSTALLER_LOGO ${CMAKE_SOURCE_DIR}/docs/res/uninstall.ico)
 #set(PKG_SOURCE)
@@ -178,7 +179,17 @@ endif()
 
 # Install Executable Example 1
 ########################################
-add_executable(xtest ${SOURCES} source/library.c)
+if(HOST_WINDOWS)
+    configure_file(
+        "${CMAKE_SOURCE_DIR}/source/win.rc.in"
+        "${CMAKE_BINARY_DIR}/generated.win.rc")
+    list(APPEND XTEST_RC ${CMAKE_BINARY_DIR}/generated.win.rc)
+elseif(HOST_MACOS)
+    # TODO
+    list(APPEND XTEST_RC info.plist)
+endif()
+
+add_executable(xtest ${SOURCES} ${XTEST_RC} source/library.c)
 add_executable(xtest-cxx source/main.cpp source/library.c)
 InstallHelper(TARGETS xtest)
 

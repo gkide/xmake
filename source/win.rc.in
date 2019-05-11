@@ -1,0 +1,86 @@
+// Set windows App ICON
+// http://doc.qt.io/qt-5/appicon.html
+// https://docs.microsoft.com/en-us/windows/desktop/menurc/vs-versioninfo
+// https://docs.microsoft.com/en-us/windows/desktop/menurc/about-resource-files
+
+// #pragma message("Including CntrOutl.H from " __FILE__)
+
+#include <winver.h>
+#include <winresrc.h>
+
+#define AV_MAJOR    @XDEMO_VERSION_MAJOR@
+#define AV_MINOR    @XDEMO_VERSION_MINOR@
+#define AV_PATCH    @XDEMO_VERSION_PATCH@
+#define AV_YEAR     @XDEMO_RELEASE_YEAR@
+
+#define VER_COMPANYNAME_STR         "@PKG_VENDOR@"
+#define VER_PRODUCTNAME_STR         "@PKG_VENDOR@"
+#define VER_INTERNALNAME_STR        "@PKG_NAME@.exe"
+#define VER_ORIGINALFILENAME_STR    "@PKG_NAME@.exe"
+#define VER_FILEDESCRIPTION_STR     "@PKG_BRIEF_SUMMARY@"
+#define VER_FULL_SEMVER_STR         "@XDEMO_RELEASE_VERSION@"
+#define VER_LEGALCOPYRIGHT_STR      "@PKG_LICENSE@"
+
+// https://docs.microsoft.com/en-us/windows/desktop/menurc/icon-resource
+#cmakedefine PKG_ICON
+#ifdef PKG_ICON
+    APP_ICON_IDX    ICON    "@PKG_ICON@"
+#endif
+
+#define VER_FILEVERSION_STR     VER_FULL_SEMVER_STR
+#define VER_FILEVERSION         AV_MAJOR,AV_MINOR,AV_PATCH,AV_YEAR
+#define VER_PRODUCTVERSION_STR  VER_FULL_SEMVER_STR
+#define VER_PRODUCTVERSION      AV_MAJOR,AV_MINOR,AV_PATCH,AV_YEAR
+
+// https://docs.microsoft.com/en-us/windows/desktop/menurc/versioninfo-resource
+VS_VERSION_INFO     VERSIONINFO
+FILEVERSION         VER_FILEVERSION // format must be 'X,X,X,X', X is number 
+PRODUCTVERSION      VER_PRODUCTVERSION // format must be 'X,X,X,X', X is number
+FILEFLAGSMASK       VS_FFI_FILEFLAGSMASK // enable all file flag bits
+FILEFLAGS           0x0L // do NOT set any flags by default
+//FILEFLAGS         (VS_FF_DEBUG|VS_FF_PRERELEASE)
+FILEOS              (VOS_NT|VOS__WINDOWS32|VOS_NT_WINDOWS32)
+FILETYPE            VFT_APP // VFT_DLL
+FILESUBTYPE         VFT2_UNKNOWN
+
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0" // langID/charsetID: Chinese/Unicode
+        BEGIN
+            VALUE "CompanyName",      VER_COMPANYNAME_STR
+            VALUE "FileDescription",  VER_FILEDESCRIPTION_STR
+            VALUE "FileVersion",      VER_FILEVERSION_STR
+            VALUE "InternalName",     VER_INTERNALNAME_STR
+            VALUE "LegalCopyright",   VER_LEGALCOPYRIGHT_STR
+            VALUE "OriginalFilename", VER_ORIGINALFILENAME_STR
+            VALUE "ProductName",      VER_PRODUCTNAME_STR
+            VALUE "ProductVersion",   VER_PRODUCTVERSION_STR
+        END
+
+        BLOCK "040904E4" // langID/charsetID: English/Multilingual
+        BEGIN
+            VALUE "CompanyName",      VER_COMPANYNAME_STR
+            VALUE "FileDescription",  VER_FILEDESCRIPTION_STR
+            VALUE "FileVersion",      VER_FILEVERSION_STR
+            VALUE "InternalName",     VER_INTERNALNAME_STR
+            VALUE "LegalCopyright",   VER_LEGALCOPYRIGHT_STR
+            VALUE "OriginalFilename", VER_ORIGINALFILENAME_STR
+            VALUE "ProductName",      VER_PRODUCTNAME_STR
+            VALUE "ProductVersion",   VER_PRODUCTVERSION_STR
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+    // The following line should only be modified for localized versions.     
+    // It consists of any number of WORD,WORD pairs, with each pair
+    // describing a language,codepage combination supported by the file.
+        // For example, "0x409,1252" indicating that it supports
+        // English language (0x409) in the Windows ANSI codepage (1252)
+        VALUE "Translation", 0x409, 1252
+        // For example, "0x804,1200" indicating that it supports
+        // Chinese language (0x409) in the Windows ANSI codepage (1200)
+        // VALUE "Translation", 0x804, 1200
+    END
+END
