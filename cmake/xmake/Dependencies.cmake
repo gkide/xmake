@@ -5,10 +5,27 @@ endif()
 
 set(DEPS_DOWNLOAD_DIR "${DEPS_ROOT_DIR}/downloads"
     CACHE PATH "Dependencies download directory.")
+
 set(DEPS_BUILD_DIR "${DEPS_ROOT_DIR}/build"
     CACHE PATH "Dependencies build directory.")
 set(DEPS_INSTALL_DIR "${DEPS_ROOT_DIR}/usr"
     CACHE PATH "Dependencies install directory.")
+
+if(HOST_WINDOWS)
+    if(HOST_WINDOWS_MSYS)
+        set(DEPS_BUILD_DIR "${DEPS_ROOT_DIR}/msys/build")
+        set(DEPS_INSTALL_DIR "${DEPS_ROOT_DIR}/msys/usr")
+    elseif(HOST_WINDOWS_CYGWIN)
+        set(DEPS_BUILD_DIR "${DEPS_ROOT_DIR}/cygwin/build")
+        set(DEPS_INSTALL_DIR "${DEPS_ROOT_DIR}/cygwin/usr")
+    elseif(HOST_WINDOWS_MINGW AND HOST_ARCH_32)
+        set(DEPS_BUILD_DIR "${DEPS_ROOT_DIR}/mingw32/build")
+        set(DEPS_INSTALL_DIR "${DEPS_ROOT_DIR}/mingw32/usr")
+    elseif(HOST_WINDOWS_MINGW AND HOST_ARCH_64)
+        set(DEPS_BUILD_DIR "${DEPS_ROOT_DIR}/mingw64/build")
+        set(DEPS_INSTALL_DIR "${DEPS_ROOT_DIR}/mingw64/usr")
+    endif()
+endif()
 
 set(DEPS_BIN_DIR "${DEPS_INSTALL_DIR}/bin"
     CACHE PATH "Dependencies binary install directory.")
