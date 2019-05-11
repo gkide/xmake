@@ -29,7 +29,7 @@ if(CPACK_GENERATOR MATCHES "NSIS")
     )
 
     # A path to the executable that contains the installer icon
-    string(REPLACE "/" "\\\\" WIN_MAIN "@PKG_WIN_MAIN@")
+    string(REPLACE "/" "\\" WIN_MAIN "@PKG_WIN_MAIN@")
     set(CPACK_NSIS_INSTALLED_ICON_NAME "${WIN_MAIN}")
 
     # Whether add to system ENV path 
@@ -56,17 +56,14 @@ if(CPACK_GENERATOR MATCHES "NSIS")
     ##############################################################################
     set(NSIS_PKG_NAME "@PKG_NAME@")
     set(NSIS_PKG_VENDOR "@PKG_VENDOR@")
-    string(REPLACE "v" "" win_version_nums @PKG_VERSION@)
+    set(NSIS_PKG_LICENSE "@PKG_LICENSE@")
     set(NSIS_PKG_DESCRIPTION "@PKG_NAME@ @PKG_VERSION@ installer")
 
+    string(REPLACE "v" "" win_version_nums @PKG_VERSION@)
     execute_process(COMMAND cmd /c echo %date:~0,4%
         OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE YEAR
     )
     set(NSIS_PKG_VERSION_ZERO "${win_version_nums}.${YEAR}")
-
-    if(NOT NSIS_PKG_LICENSE AND NSIS_PKG_VENDOR)
-       set(NSIS_PKG_LICENSE "Copyright(C) 2018-${YEAR} ${NSIS_PKG_VENDOR}")
-    endif()
 endif()
 
 # TODO MacOS App packer

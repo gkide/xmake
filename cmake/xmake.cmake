@@ -80,6 +80,10 @@ include(CheckHostSystem)
 include(InstallHelper)
 include(Utils)
 
+if(HOST_WINDOWS)
+    include(WindowsConfig)
+endif()
+
 # NOTE If want to strip the installed binaries for pack
 # 'include(PkgSrcPackage)' should be put the last statement
 # of the top cmake, thus when goes here, it gets all the targets
