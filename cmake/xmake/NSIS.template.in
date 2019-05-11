@@ -824,12 +824,12 @@ Section "Uninstall"
     "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" "InstallToDesktop"
     # MessageBox MB_OK "Install to desktop: $INSTALL_DESKTOP "
 
-    @CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS@
+@CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS@
 
     # Remove files we installed.
     # Keep the list of directories here in sync with the File commands above.
-    @CPACK_NSIS_DELETE_FILES@
-    @CPACK_NSIS_DELETE_DIRECTORIES@
+@CPACK_NSIS_DELETE_FILES@
+@CPACK_NSIS_DELETE_DIRECTORIES@
 
     !ifdef CPACK_NSIS_ADD_REMOVE
         # Remove the add/remove program
@@ -851,8 +851,8 @@ Section "Uninstall"
     !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
     Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
     
-    @CPACK_NSIS_DELETE_ICONS@
-    @CPACK_NSIS_DELETE_ICONS_EXTRA@
+@CPACK_NSIS_DELETE_ICONS@
+@CPACK_NSIS_DELETE_ICONS_EXTRA@
 
     # Delete empty start menu parent diretories
     StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
