@@ -8,6 +8,13 @@
 # message(STATUS ...) do not working, i do not known why?
 # message(WARNING/FATAL_ERROR ...) works, can be used to debug!
 
+# User extra configuration for package installer build
+if(EXISTS @CMAKE_SOURCE_DIR@/PkgInstaller.cmake)
+    include(@CMAKE_SOURCE_DIR@/PkgInstaller.cmake)
+elseif(EXISTS @CMAKE_SOURCE_DIR@/cmake/PkgInstaller.cmake)
+    include(@CMAKE_SOURCE_DIR@/cmake/PkgInstaller.cmake)
+endif()
+
 # NOTE There is a bug in NSI that does not handle full unix paths properly.
 # https://cmake.org/cmake/help/latest/cpack_gen/nsis.html
 if(CPACK_GENERATOR MATCHES "NSIS")
@@ -28,9 +35,12 @@ if(CPACK_GENERATOR MATCHES "NSIS")
 
     # Tell cpack to create links in start menu folder
     # The pair as the value of 'CPACK_NSIS_CREATE_ICONS'
+    string(REPLACE "/" "\\" _NSIS_MENU_LINKS_ "${CPACK_NSIS_MENU_LINKS}")
     set(CPACK_NSIS_MENU_LINKS
         "@PKG_REPO@" "@PKG_NAME@ Home"
         "@PKG_HELP@" "@PKG_NAME@ Help"
+        # Extra user settings for create links
+        ${_NSIS_MENU_LINKS_}
     )
 
     # Whether add to system ENV path 
@@ -65,13 +75,6 @@ if(CPACK_GENERATOR MATCHES "NSIS")
         OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE YEAR
     )
     set(NSIS_PKG_VERSION_ZERO "${win_version_nums}.${YEAR}")
-
-    # User extra NSIS configuration
-    if(EXISTS @CMAKE_SOURCE_DIR@/InstallerConfig.cmake)
-        include(@CMAKE_SOURCE_DIR@/InstallerConfig.cmake)
-    elseif(EXISTS @CMAKE_SOURCE_DIR@/cmake/InstallerConfig.cmake)
-        include(@CMAKE_SOURCE_DIR@/cmake/InstallerConfig.cmake)
-    endif()
 endif()
 
 # TODO MacOS App packer
