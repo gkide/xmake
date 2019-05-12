@@ -693,10 +693,13 @@ Section "-Core installation"
 
     # Create shortcuts
     CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
-    
-    @CPACK_NSIS_CREATE_ICONS@
-    @CPACK_NSIS_CREATE_ICONS_EXTRA@
-    
+
+# Come from CpackOptions.cmake: CPACK_NSIS_MENU_LINKS settings
+@CPACK_NSIS_CREATE_ICONS@
+
+# Additional NSIS commands for creating start menu shortcuts
+@CPACK_NSIS_CREATE_ICONS_EXTRA@
+
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
 
     # Read a value from an InstallOptions INI file
@@ -850,8 +853,11 @@ Section "Uninstall"
     !insertmacro SectionList "RemoveSection_CPack"
     !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
     Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
-    
+
+# Come from CpackOptions.cmake: CPACK_NSIS_MENU_LINKS settings
 @CPACK_NSIS_DELETE_ICONS@
+
+# Additional NSIS commands for deleting start menu shortcuts
 @CPACK_NSIS_DELETE_ICONS_EXTRA@
 
     # Delete empty start menu parent diretories

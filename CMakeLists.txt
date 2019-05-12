@@ -17,8 +17,7 @@ set(PKG_UNINSTALLER_LOGO ${CMAKE_SOURCE_DIR}/docs/res/uninstall.ico)
 #set(PKG_TYPE_GUI true)
 #set(PKG_SOURCE_EXCLUDES)
 set(PKG_MANUAL_DIR "${CMAKE_BINARY_DIR}")
-set(PKG_HELP "docs/manual/index.html")
-set(PKG_WIN_MAIN "bin/xtext.exe")
+set(PKG_HELP "doc/manual/index.html")
 
 set(XDEMO_VERSION_MAJOR 1)
 set(XDEMO_VERSION_MINOR 0)
@@ -254,6 +253,8 @@ InstallHelper(PROGRAMS scripts/release
 InstallHelper(FILES LICENSE) # prefix/LICENSE
 InstallHelper(FILES docs/local.mk
     DESTINATION ${XDEMO_INSTALL_DOC_DIR})
+InstallHelper(FILES docs/manual/index.html # PKG_HELP
+    DESTINATION ${XDEMO_INSTALL_DOC_DIR}/manual)
 
 # Install Directory
 ########################################
