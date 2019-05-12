@@ -286,6 +286,10 @@ endif()
 #   STATIC_PREFIX   full path to Qt5 static install, like: /opt/qt-5.9.1
 #   SHARED_PREFIX   full path to Qt5 static install, like: /opt/Qt5.5.1/5.5/gcc_64
 #   SHARED_PREFIX   full path to Qt5 static install, like: /usr/lib/gcc/x86_64-linux-gnu
+#
+# This should be used in the top Qt5 directory. With the return(), thus on host
+# that has Qt5 installed, build the Qt5 part; and on host that has no Qt5   
+# installed, just skip the Qt5 build part and continue with other parts
 macro(Qt5SupportSetup)
     cmake_parse_arguments(qt5 # prefix
         "" # options
