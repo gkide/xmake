@@ -44,6 +44,14 @@ if(MINGW OR CMAKE_HOST_SYSTEM_NAME MATCHES "MINGW")
     set(HOST_SYSTEM_NAME "windows" CACHE INTERNAL "Host OS Name" FORCE)
 endif()
 
+if(HOST_WINDOWS)
+    if(NOT HOST_WINDOWS_CYGWIN
+       AND NOT HOST_WINDOWS_MSYS
+       AND NOT HOST_WINDOWS_MINGW)
+        message(FATAL_ERROR "xmake only support windows by cygwin/msys/mingw!")
+    endif()
+endif()
+
 set(HOST_SYSTEM_VERSION
     "${CMAKE_HOST_SYSTEM_VERSION}" CACHE INTERNAL "Host OS Name" FORCE)
 

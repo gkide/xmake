@@ -37,6 +37,7 @@ option(XDEMO_ENABLE_GTEST "Enable Google gtest support" ON)
 #option(XDEMO_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" ON)
 #option(XDEMO_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" ON)
 #option(XDEMO_DISABLE_CCACHE "Enale ccache by default for linux" ON)
+#option(XDEMO_USE_STATIC_GCC_LIBS "Use static c/c++ libraries." ON)
 
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")

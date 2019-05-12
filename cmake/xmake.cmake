@@ -82,11 +82,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")
 include(PreventInTreeBuilds)
 include(CheckHostSystem)
 include(InstallHelper)
+include(PkgSrcConfig)
 include(Utils)
-
-if(HOST_WINDOWS)
-    include(WindowsConfig)
-endif()
 
 # NOTE If want to strip the installed binaries for pack
 # 'include(PkgSrcPackage)' should be put the last statement
@@ -215,6 +212,15 @@ add_compile_options(-Wunused-parameter)
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_BINARY_DIR})
 
+if(${XMAKE}_USE_STATIC_GCC_LIBS)
+    # do NOT need the binding gcc runtime library
+    # {lib|msys-|cyg-}gcc_s-seh-1.dll for MinGW/MSYS/Cygwin
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc -static")
+    # do NOT need the binding gcc runtime library
+    # {lib|msys-|cyg-}stdc++-6.dll for MinGW/MSYS/Cygwin
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static")
+endif()
+
 if(${XMAKE}_ENABLE_ASSERTION)
     message(STATUS "Enable assert")
     if(CMAKE_C_FLAGS_${buildType} MATCHES DNDEBUG)
@@ -312,109 +318,16 @@ if(${XMAKE}_ENABLE_DEPENDENCY)
 endif()
 
 #include(PrintCmake)
-
 if(${XMAKE}_EXPORT_AS_COMPILER_ARGS)
-    add_definitions(-DHOST_NAME=\"${HOST_NAME}\")
-    add_definitions(-DHOST_USER=\"${HOST_USER}\")
-    add_definitions(-DHOST_ARCH=\"${HOST_ARCH}\")
-    add_definitions(-DHOST_SYSTEM_NAME=\"${HOST_SYSTEM_NAME}\")
-    add_definitions(-DHOST_SYSTEM_VERSION=\"${HOST_SYSTEM_VERSION}\")
-    add_definitions(-DHOST_OS_DIST_NAME=\"${HOST_OS_DIST_NAME}\")
-    add_definitions(-DHOST_OS_DIST_VERSION=\"${HOST_OS_DIST_VERSION}\")
-
-    add_definitions(-D${XMAKE}_VERSION_MAJOR=${${XMAKE}_VERSION_MAJOR})
-    add_definitions(-D${XMAKE}_VERSION_MINOR=${${XMAKE}_VERSION_MINOR})
-    add_definitions(-D${XMAKE}_VERSION_PATCH=${${XMAKE}_VERSION_PATCH})
-    add_definitions(-D${XMAKE}_VERSION_TWEAK=\"${${XMAKE}_VERSION_TWEAK}\")
-
-    add_definitions(-D${XMAKE}_RELEASE_TYPE=\"${CMAKE_BUILD_TYPE}\")
-    add_definitions(-D${XMAKE}_RELEASE_VERSION=\"${${XMAKE}_RELEASE_VERSION}\")
-    add_definitions(-D${XMAKE}_RELEASE_TIMESTAMP=\"${${XMAKE}_RELEASE_TIMESTAMP}\")
-
-    if(HOST_LINUX)
-        add_definitions(-DHOST_LINUX)
-    endif()
-
-    if(HOST_MACOS)
-        add_definitions(-DHOST_MACOS)
-    endif()
-
-    if(HOST_WINDOWS)
-        add_definitions(-DHOST_WINDOWS)
-    endif()
-
-    if(HOST_WINDOWS_MSYS)
-        add_definitions(-DHOST_WINDOWS_MSYS)
-    endif()
-
-    if(HOST_WINDOWS_MINGW)
-        add_definitions(-DHOST_WINDOWS_MINGW)
-    endif()
-
-    if(HOST_WINDOWS_CYGWIN)
-        add_definitions(-DHOST_WINDOWS_CYGWIN)
-    endif()
-
-    if(HOST_ARCH_32)
-        add_definitions(-DHOST_ARCH_32)
-    endif()
-
-    if(HOST_ARCH_64)
-        add_definitions(-DHOST_ARCH_64)
-    endif()
-
-    if(HOST_BIG_ENDIAN)
-        add_definitions(-DHOST_BIG_ENDIAN)
-    endif()
+    include(ExportArgsToCc)
 endif()
 
 # Linker flags to be used to create executables
 # --verbose is for debug the linking process of executables
 #set(CMAKE_EXE_LINKER_FLAGS --verbose)
 
-if(HOST_WINDOWS_MSYS OR HOST_WINDOWS_MINGW OR HOST_WINDOWS_CYGWIN)
-    # do not need:
-    # - libgcc_s-seh-1.dll for MinGW
-    # - msys-gcc_s-seh-1.dll for MSYS
-    # - cyg-gcc_s-seh-1.dll for Cygwin
-    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc -static")
-    # do not need:
-    # - libstdc++-6.dll for MinGW
-    # - msys-stdc++-6.dll for MSYS
-    # - cyg-stdc++-6.dll for Cygwin
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static")
-
-    if(HOST_WINDOWS_MSYS)
-        message(WARNING "MSYS build, may need: "
-            "msys-gcc_s-seh-1.dll or msys-stdc++-6.dll"
-        )
-        set(msys20_dll ${CMAKE_SHARED_LIBRARY_PREFIX}2.0${CMAKE_SHARED_LIBRARY_SUFFIX})
-        InstallHelper(FILES /usr/bin/${msys20_dll}
-            DESTINATION ${${XMAKE}_INSTALL_BIN_DIR}
-        )
-        # Always update and run for each build
-        add_custom_target(copy-msys20-dll ALL
-            COMMAND ${CMAKE_COMMAND} -E make_directory 
-                ${CMAKE_BINARY_DIR}/${buildType}/bin
-            COMMAND ${CMAKE_COMMAND} -E copy /usr/bin/${msys20_dll}
-                ${CMAKE_BINARY_DIR}/${buildType}/bin
-        )
-    elseif(HOST_WINDOWS_CYGWIN)
-        message(WARNING "CYGWIN build, may need: "
-            "cyg-gcc_s-seh-1.dll or cyg-stdc++-6.dll"
-        )
-        set(cygwin_dll ${CMAKE_SHARED_LIBRARY_PREFIX}win1${CMAKE_SHARED_LIBRARY_SUFFIX})
-        InstallHelper(FILES /usr/bin/${cygwin_dll}
-            DESTINATION ${${XMAKE}_INSTALL_BIN_DIR}
-        )
-        # Always update and run for each build
-        add_custom_target(copy-msys20-dll ALL
-            COMMAND ${CMAKE_COMMAND} -E make_directory 
-                ${CMAKE_BINARY_DIR}/${buildType}/bin
-            COMMAND ${CMAKE_COMMAND} -E copy /usr/bin/${cygwin_dll}
-                ${CMAKE_BINARY_DIR}/${buildType}/bin
-        )
-    endif()
+if(HOST_WINDOWS)
+    include(WindowsConfig)
 endif()
 
 include(GetGitRepoInfo)
