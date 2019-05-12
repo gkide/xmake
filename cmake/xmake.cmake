@@ -1,6 +1,10 @@
 # xmake git repo is https://github.com/gkide/xmake
 cmake_minimum_required(VERSION 2.8.12)
 
+if(MSVC)
+    message(FATAL_ERROR "do NOT support MSVC for now!")
+endif()
+
 if(NOT PROJECT_NAME MATCHES "^[A-Za-z0-9_-]+$")
     message(FATAL_ERROR "PROJECT_NAME should consist of [A-Za-z0-9_-]!")
 endif()
