@@ -294,3 +294,8 @@ CodeCoverageLcovHtml(
 
 add_subdirectory(source/ccr)
 add_subdirectory(source/gtest)
+
+GetInstalledBinaries(installed_binaries)
+foreach(item ${installed_binaries})
+    message(STATUS "Install: ${item}")
+endforeach()

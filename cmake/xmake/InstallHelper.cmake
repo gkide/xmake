@@ -193,7 +193,7 @@ function(InstallHelper)
                 endif()
 
                 set(installed_binaries "${installed_binaries}"
-                    "${DomainBin}/${target}" PARENT_SCOPE)
+                    "EXE => ${DomainBin}/${target}" PARENT_SCOPE)
 
                 if(${XMAKE}_XMAKE_VERBOSE)
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
@@ -273,7 +273,7 @@ function(InstallHelper)
             endif()
 
             set(installed_binaries "${installed_binaries}"
-                "${DomainLib}/${target}" PARENT_SCOPE)
+                "LIB => ${DomainLib}/${target}" PARENT_SCOPE)
         endforeach()
 
         return()

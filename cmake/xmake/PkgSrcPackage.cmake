@@ -89,16 +89,7 @@ endif()
 set(CPACK_SOURCE_STRIP_FILES false)
 
 # The binary package files to strip
-GetInstalledBinaries(installed_binaries)
-if(installed_binaries)
-    set(CPACK_STRIP_FILES ${installed_binaries})
-endif()
-
-if(false)
-    foreach(item ${installed_binaries})
-        message(STATUS "Install: ${item}")
-    endforeach()
-endif()
+set(CPACK_STRIP_FILES false)
 
 # The source package ignored file regex patterns
 set(CPACK_SOURCE_IGNORE_FILES
