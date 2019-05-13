@@ -82,7 +82,7 @@ if(qt5_STATIC_PREFIX)
         file(APPEND ${qt5_plugin_moc}
              "Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)\n")
     else()
-        include(Qt5Static)
+        include(xmake/Qt5Static)
         list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
         file(APPEND ${qt5_plugin_moc}
             "Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)\n")

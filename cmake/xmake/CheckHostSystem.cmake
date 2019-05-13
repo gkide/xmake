@@ -90,7 +90,7 @@ endif()
 include(TestBigEndian)
 TEST_BIG_ENDIAN(HOST_BIG_ENDIAN)
 
-include(CheckHostInfo)
+include(xmake/CheckHostInfo)
 HostNameUserName(HOST_NAME HOST_USER)
 HostSystemInfo(HOST_OS_DIST_NAME HOST_OS_DIST_VERSION)
 HostSystemTime(${XMAKE}_RELEASE_TIMESTAMP)

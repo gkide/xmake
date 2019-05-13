@@ -77,18 +77,12 @@ foreach(type ${CMAKE_CONFIGURATION_TYPES})
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/lib)
 endforeach()
 
-# Cmake modules
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/xmake")
-include(PreventInTreeBuilds)
-include(CheckHostSystem)
-include(InstallHelper)
-include(PkgSrcConfig)
-include(Utils)
-
-# NOTE If want to strip the installed binaries for pack
-# 'include(PkgSrcPackage)' should be put the last statement
-# of the top cmake, thus when goes here, it gets all the targets
-include(PkgSrcPackage)
+include(xmake/PreventInTreeBuilds)
+include(xmake/CheckHostSystem)
+include(xmake/InstallHelper)
+include(xmake/PkgSrcConfig)
+include(xmake/PkgSrcPackage)
+include(xmake/Utils)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
     set(pkg_dir_name "${PKG_NAME}-latest")
@@ -251,7 +245,7 @@ endif()
 
 # Enable code coverage
 if(${XMAKE}_ENABLE_GCOV)
-    include(CodeCoverage)
+    include(xmake/CodeCoverage)
 endif()
 
 # Enable ccache for linux & likes by default
@@ -307,19 +301,20 @@ macro(Qt5SupportSetup)
         "" # multi value keywords
         ${ARGN})
     if(qt5_STATIC_PREFIX OR qt5_SHARED_PREFIX OR qt5_AUTOMATIC)
-        include(Qt5Helper)
+        include(xmake/Qt5Helper)
     else()
         return()
     endif()
 endmacro()
 
 if(${XMAKE}_ENABLE_DEPENDENCY)
-    include(Dependencies)
+    include(xmake/Dependencies)
 endif()
 
-#include(PrintCmake)
+#include(xmake/PrintCmake)
+
 if(${XMAKE}_EXPORT_AS_COMPILER_ARGS)
-    include(ExportArgsToCc)
+    include(xmake/ExportArgsToCc)
 endif()
 
 # Linker flags to be used to create executables
@@ -327,10 +322,10 @@ endif()
 #set(CMAKE_EXE_LINKER_FLAGS --verbose)
 
 if(HOST_WINDOWS)
-    include(WindowsConfig)
+    include(xmake/WindowsConfig)
 endif()
 
-include(GetGitRepoInfo)
+include(xmake/GetGitRepoInfo)
 
 if(NOT PKG_MANUAL_DIR)
     set(PKG_MANUAL_DIR "${CMAKE_BINARY_DIR}")
@@ -343,8 +338,8 @@ endif()
 
 # https://github.com/google/googletest
 if(${XMAKE}_ENABLE_GTEST)
-    include(BuildGtest)
+    include(xmake/BuildGtest)
     option(BUILD_TESTING ON) # To make consistent, also set it ON
 endif()
 
-include(DoxygenHelper)
+include(xmake/DoxygenHelper)

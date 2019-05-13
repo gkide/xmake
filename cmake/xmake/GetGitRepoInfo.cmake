@@ -20,7 +20,7 @@ endif()
 
 # Get git repo info
 set(FOUND_GIT_REPO true)
-include(CheckGitRepoInfo)
+include(xmake/CheckGitRepoInfo)
 GegGitRecentTag(${XMAKE}_RECENT_TAG)
 GetGitCommitTime(${XMAKE}_COMMIT_MDTZ)
 GetGitBranchInfo(${XMAKE}_BRANCH_NAME ${XMAKE}_COMMIT_SHA1)
