@@ -292,22 +292,15 @@ PHONY += xmake-ran-top-cmake
 xmake-ran-top-cmake:
 	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS)
 
-# ctest target
-PHONY += xmake-ctest
-xmake-ctest: | xmake-ran-top-cmake
-	$(XMAKE) -C $(BUILD_DIR) test
-PHONY += xmake-xtest
-xmake-xtest: | xmake-ran-top-cmake
-	$(XMAKE) -C $(BUILD_DIR) xtest
-	$(Q)$(BUILD_DIR)/$(BUILD_TYPE)/bin/xtest
-
 PHONY += xmake-install
 xmake-install: | xmake-all
 	$(XMAKE) -C $(BUILD_DIR) install
 
 PHONY += xmake-doxygen
 xmake-doxygen: | xmake-ran-top-cmake
+ifneq ($(Q)$(DOXYGEN_PROG),)
 	$(XMAKE) -C $(BUILD_DIR) doxygen
+endif
 
 PHONY += xmake-release
 xmake-release:
@@ -362,14 +355,11 @@ xmake-help:
 	@echo "-------------------------------------------------------------------------"
 	@echo "The <target> of the xmake Makefile are as following:"
 	@echo "    all              build the project."
-	@echo "    gtest            run project tests by gtest."
-	@echo "    ctest            run project tests by ctest."
-	@echo "    xtest            run project tests by xtest."
-	@echo "    doxygen          generate doxygen mannual."
 	@echo "    clean            clean the build directory."
 	@echo "    distclean        remove all generated files."
 	@echo "    install          install all the targets."
 	@echo "    release          do project release."
+	@echo "    doxygen          generate doxygen mannual."
 	@echo "    pkg-binary       build binary release package."
 	@echo "    pkg-source       build source release package."
 	@echo "-------------------------------------------------------------------------"
