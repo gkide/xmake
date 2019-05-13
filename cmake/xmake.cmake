@@ -336,39 +336,6 @@ if(NOT PKG_MANUAL_DIR)
     set(PKG_MANUAL_DIR "${CMAKE_BINARY_DIR}")
 endif()
 
-# Generate Doxygen API Manual
-find_package(Doxygen)
-if(DOXYGEN_PROG OR DOXYGEN_FOUND)
-    if(NOT DOXYGEN_PROG)
-        set(DOXYGEN_PROG ${DOXYGEN_EXECUTABLE})
-    endif()
-
-    if(NOT PKG_SOURCE)
-        if(EXISTS ${CMAKE_SOURCE_DIR}/src)
-            set(PKG_SOURCE ${CMAKE_SOURCE_DIR}/src)
-        elseif(EXISTS ${CMAKE_SOURCE_DIR}/source)
-            set(PKG_SOURCE ${CMAKE_SOURCE_DIR}/source)
-        else()
-            set(PKG_SOURCE ${CMAKE_SOURCE_DIR})
-        endif()
-    endif()
-
-    set(pkg_version ${PKG_VERSION})
-    if(pkg_version_tweak)
-        set(pkg_version ${pkg_version}-${pkg_version_tweak})
-    endif()
-
-    configure_file(
-        "${CMAKE_CURRENT_LIST_DIR}/xmake/doxygen/Doxyfile.in"
-        "${PKG_MANUAL_DIR}/doxygen/Doxyfile"
-    )
-
-    add_custom_target(doxygen
-        COMMENT "Generating API documentation by doxygen"
-        COMMAND ${DOXYGEN_PROG} ${PKG_MANUAL_DIR}/doxygen/Doxyfile
-    )
-endif()
-
 # https://cmake.org/cmake/help/latest/module/CTest.html
 if(${XMAKE}_ENABLE_CTEST)
     include(CTest) # Automatically creates a BUILD_TESTING, ON by default
@@ -379,3 +346,5 @@ if(${XMAKE}_ENABLE_GTEST)
     include(BuildGtest)
     option(BUILD_TESTING ON) # To make consistent, also set it ON
 endif()
+
+include(DoxygenHelper)
