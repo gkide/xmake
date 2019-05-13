@@ -6,7 +6,8 @@
 #endif
 
 #include "macros.h"
-#include "library.h"
+
+#include "foo.h"
 
 static int is_big_endian(void)
 {
@@ -24,7 +25,9 @@ int main(int argc, char **argv)
     UNUSED_ARG(argc);
     UNUSED_ARG(argv);
 
-    library();
+    foo();
+
+    printf("*********************************************************\n");
 
 #ifdef HOST_LINUX
     printf("HOST_LINUX\n");
@@ -71,6 +74,8 @@ int main(int argc, char **argv)
     printf("HOST_OS_DIST_NAME       : %s\n", HOST_OS_DIST_NAME);
     printf("HOST_OS_DIST_VERSION    : %s\n", HOST_OS_DIST_VERSION);
 
+    printf("*********************************************************\n");
+
     printf("XDEMO_VERSION_MAJOR     : %d\n", XDEMO_VERSION_MAJOR);
     printf("XDEMO_VERSION_MINOR     : %d\n", XDEMO_VERSION_MINOR);
     printf("XDEMO_VERSION_PATCH     : %d\n", XDEMO_VERSION_PATCH);
@@ -85,6 +90,8 @@ int main(int argc, char **argv)
     printf("XDEMO_COMMIT_DATE       : %s\n", XDEMO_COMMIT_DATE);
     printf("XDEMO_COMMIT_HASH       : %s\n", XDEMO_COMMIT_HASH);
     printf("XDEMO_COMMIT_MDTZ       : %s\n", XDEMO_COMMIT_MDTZ);
+
+    printf("*********************************************************\n");
 
     return 0;
 }

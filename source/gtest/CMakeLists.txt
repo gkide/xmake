@@ -18,5 +18,5 @@ set_source_files_properties(
 
 aux_source_directory(. GTEST_SRCS)
 
-add_executable(gtest-demo ${GTEST_SRCS})
-target_link_libraries(gtest-demo ${XDEMO_GTEST_LIBRARIES})
+add_executable(gtest ${GTEST_SRCS})
+target_link_libraries(gtest ${XDEMO_GTEST_LIBRARIES})

@@ -6,7 +6,8 @@
 #endif
 
 #include "macros.h"
-#include "library.h"
+
+#include "bar.h"
 
 static int is_big_endian(void)
 {
@@ -24,7 +25,7 @@ int main(int argc, char **argv)
     UNUSED_ARG(argc);
     UNUSED_ARG(argv);
 
-    library();
+    bar();
 
 #ifdef HOST_LINUX
     printf("HOST_LINUX\n");

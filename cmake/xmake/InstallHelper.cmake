@@ -94,12 +94,12 @@ function(CreateDestDirWithPerms)
 endfunction()
 
 set(installed_binaries "")
-function(GetInstalledBinaries BINS)
+function(XmakeGetInstallBinaries BINS)
     set(${BINS} "${installed_binaries}" PARENT_SCOPE)
 endfunction()
 
 # The install components: Runtime, Develop, Resource
-function(InstallHelper)
+function(XmakeInstallHelper)
     cmake_parse_arguments(install_helper # prefix
         "" # options
         "DESTINATION;DIRECTORY;RENAME;DOMAIN" # one value keywords
@@ -141,21 +141,26 @@ function(InstallHelper)
     endif()
 
     if(install_helper_TARGETS)
-        # The default domain for targets is empty
-        set(DomainBin ${${XMAKE}_INSTALL_BIN_DIR})
-        set(DomainLib ${${XMAKE}_INSTALL_LIB_DIR})
-        set(DomainShare ${${XMAKE}_INSTALL_SHA_DIR})
-        set(DomainInclude ${${XMAKE}_INSTALL_INC_DIR})
-        if(install_helper_DOMAIN)
-            set(DomainBin ${${XMAKE}_INSTALL_BIN_DIR}/${install_helper_DOMAIN})
-            set(DomainLib ${${XMAKE}_INSTALL_LIB_DIR}/${install_helper_DOMAIN})
-            set(DomainShare ${${XMAKE}_INSTALL_SHA_DIR}/${install_helper_DOMAIN})
-            set(DomainInclude ${${XMAKE}_INSTALL_INC_DIR}/${install_helper_DOMAIN})
+        if(install_helper_DESTINATION)
+            # The install layout controled by end user
+            set(DomainBin ${install_helper_DESTINATION})
+            set(DomainLib ${install_helper_DESTINATION})
+            set(DomainShare ${install_helper_DESTINATION})
+            set(DomainInclude ${install_helper_DESTINATION})
+        else()
+            # The default install layout
+            set(DomainBin ${${XMAKE}_INSTALL_BIN_DIR})
+            set(DomainLib ${${XMAKE}_INSTALL_LIB_DIR})
+            set(DomainShare ${${XMAKE}_INSTALL_SHA_DIR})
+            set(DomainInclude ${${XMAKE}_INSTALL_INC_DIR})
         endif()
 
-        # Create directory with the correct permissions.
-        CreateDestDirWithPerms(DESTINATION ${DomainBin})
-        CreateDestDirWithPerms(DESTINATION ${DomainLib})
+        if(install_helper_DOMAIN)
+            set(DomainBin ${DomainBin}/${install_helper_DOMAIN})
+            set(DomainLib ${DomainLib}/${install_helper_DOMAIN})
+            set(DomainShare ${DomainShare}/${install_helper_DOMAIN})
+            set(DomainInclude ${DomainInclude}/${install_helper_DOMAIN})
+        endif()
 
         string(REGEX REPLACE " +" ";"
                install_targets "${install_helper_TARGETS}")
@@ -181,6 +186,9 @@ function(InstallHelper)
             endif()
 
             if(target_type STREQUAL EXECUTABLE) # Executable
+                # Create directory with the correct permissions.
+                CreateDestDirWithPerms(DESTINATION ${DomainBin})
+
                 if(HOST_MACOS AND macosx_bundle)
                     # install(TARGETS ${target}
                     #    BUNDLE DESTINATION ...
@@ -254,6 +262,9 @@ function(InstallHelper)
                 set(install_private_headers PRIVATE_HEADER
                     DESTINATION ${DomainInclude}/private COMPONENT Develop)
             endif()
+
+            # Create directory with the correct permissions.
+            CreateDestDirWithPerms(DESTINATION ${DomainLib})
 
             get_target_property(macosx_framework ${target} FRAMEWORK)
             if(HOST_MACOS AND macosx_framework)

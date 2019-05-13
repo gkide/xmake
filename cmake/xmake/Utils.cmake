@@ -30,7 +30,7 @@ function(AutoCopyInstallFiles)
     endif()
 
     if(auto_INS_DEST)
-        InstallHelper(FILES ${auto_files} DESTINATION ${auto_INS_DEST})
+        XmakeInstallHelper(FILES ${auto_files} DESTINATION ${auto_INS_DEST})
     endif()
 
     if(auto_CPY_DEST)
