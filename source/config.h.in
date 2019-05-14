@@ -25,6 +25,10 @@
 #define XDEMO_VERSION_PATCH          @XDEMO_VERSION_PATCH@
 #define XDEMO_VERSION_TWEAK         "@XDEMO_VERSION_TWEAK@"
 
+/// Combine semantic version(major, minor, patch) into a number
+#define SEMVER(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
+#define XDEMO_VERSION_NUMBER        @XDEMO_VERSION_NUMBER@
+
 #define XDEMO_RELEASE_TYPE          "@CMAKE_BUILD_TYPE@"
 #define XDEMO_RELEASE_VERSION       "@XDEMO_RELEASE_VERSION@"
 

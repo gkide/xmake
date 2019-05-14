@@ -1,7 +1,7 @@
 # xmake cmake APIs
 
-- [XmakeInstallHelper]()
-- [XmakeGetInstallBinaries]()
+- [XmakeInstallHelper](xmakeinstallhelper)
+- [XmakeGetInstallBinaries](xmakegetinstallbinaries)
 
 ## XmakeInstallHelper
 

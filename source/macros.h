@@ -295,11 +295,11 @@ static inline bool ASCII_ISSPACE(int c)
     return (c >= 9 && c <= 13) || c == ' ';
 }
 
-#define __M2S__(x)      #x // do not expand, just convert to string
-#define M2S(x)          __M2S__(x) // expand, then convert to string
-
 #define CAST(T, V)      ((T)(V))
 #define UNUSED_ARG(v)   (void)v
+
+#define __M2S__(x)      #x // do not expand, just convert to string
+#define M2S(x)          __M2S__(x) // expand, then convert to string
 
 #define API_SYNC
 #define API_ASYNC

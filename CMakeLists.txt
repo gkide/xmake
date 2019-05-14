@@ -39,6 +39,9 @@ option(XDEMO_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(xmake) # xmake should include in the top CMakeLists.txt
 
+file(GLOB HOSTINFO_SOURCES source/*.c)
+file(GLOB HOSTINFO_HEADERS source/*.h)
+
 #option(XDEMO_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" ON)
 if(NOT XDEMO_EXPORT_AS_COMPILER_ARGS)
     configure_file(
@@ -47,10 +50,8 @@ if(NOT XDEMO_EXPORT_AS_COMPILER_ARGS)
     list(APPEND SOURCES
         "${CMAKE_BINARY_DIR}/config.generated.h")
     add_definitions(-DXDEMO_EXPORT_AS_CONFIG_FILE)
+    list(APPEND HOSTINFO_HEADERS ${CMAKE_BINARY_DIR}/config.generated.h)
 endif()
-
-file(GLOB HOSTINFO_SOURCES source/*.c)
-file(GLOB HOSTINFO_HEADERS source/*.h)
 
 if(HOST_WINDOWS)
     configure_file(

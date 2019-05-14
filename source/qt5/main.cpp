@@ -1,7 +1,10 @@
 #include <QUdpSocket>
 #include <QTcpSocket>
 #include <QTcpServer>
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 8, 0)
 #include <QNetworkDatagram>
+#endif
 
 #include <QApplication>
 

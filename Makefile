@@ -111,9 +111,12 @@ demo-xihd3:
 	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS) -DDEMO_RUN_XIHD3=ON
 	$(XMAKE) -C $(BUILD_DIR) install
 
-PHONY += xtest
-xtest: | all
-	$(XMAKE) -C $(BUILD_DIR) xtest
-	$(Q)$(BUILD_DIR)/$(BUILD_TYPE)/bin/xtest
+PHONY += demo-all
+demo-all:
+	$(Q)rm -rf $(BUILD_DIR)/CMakeCache.txt # clean cmake cache
+	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS) \
+	-DDEMO_RUN_CTEST=ON -DDEMO_RUN_GTEST=ON -DDEMO_RUN_QT5=ON \
+	-DDEMO_RUN_XIHD1=ON -DDEMO_RUN_XIHD2=ON -DDEMO_RUN_XIHD3=ON
+	$(XMAKE) -C $(BUILD_DIR)
 
 .PHONY: $(PHONY)
