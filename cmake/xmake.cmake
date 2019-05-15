@@ -339,12 +339,14 @@ endif()
 
 # https://cmake.org/cmake/help/latest/module/CTest.html
 if(${XMAKE}_ENABLE_CTEST)
+    option(${XMAKE}_BUILD_CTEST "Build ctest by default." ON)
     include(CTest) # Automatically creates a BUILD_TESTING, ON by default
 endif()
 
 # https://github.com/google/googletest
 if(${XMAKE}_ENABLE_GTEST)
     include(xmake/BuildGtest)
+    option(${XMAKE}_BUILD_GTEST "Build gtest by default." ON)
     option(BUILD_TESTING ON) # To make consistent, also set it ON
 endif()
 
