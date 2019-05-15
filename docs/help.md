@@ -466,7 +466,10 @@ file any where as you want to, can be used combie with **DOMAIN**, and the
 
 ## XmakeGetInstallBinaries
 
-Get all the binary targets(executable, library) of `XmakeInstallHelper`
+Get all the binary targets(executable, library) of [XmakeInstallHelper](#xmakeinstallhelper)
+
+NOTE! This may not work if the `XmakeGetInstallBinaries`
+is not a sub-scope of the XmakeInstallHelper called.
 
 ``` cmake
 XmakeGetInstallBinaries(binaries)
