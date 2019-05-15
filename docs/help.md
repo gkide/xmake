@@ -536,14 +536,14 @@ endforeach()
 ## DistRepoInfo
 
 xmake will auto generated **DistRepoInfo** file to the project root directory,
-which contains the following contents, it may be wise to add it to .gitignore.
+which contains the following contents, it may be wise to add it to `.gitignore`.
 
-- Version: value of PKG_VERSION
+- Version: value of **PKG_VERSION**
 - Branch: git repo current branch name, like 'master'
 - Commit: git repo current commit full SHA1
 - Timestamp: current build time of UTC format
-- Repo: value of PKG_REPO
-- BugReport: value of PKG_BUG_REPORT
+- Repo: value of **PKG_REPO**
+- BugReport: value of **PKG_BUG_REPORT**
 
 
 ```
