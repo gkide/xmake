@@ -1,6 +1,6 @@
 # The xmake version to downloaded
-xmakeVersion ?= v1.0.0-dev
-xmakeRelease := https://github.com/gkide/xmake/releases/download
+xmakeVersion ?= v1.0.0-dev # This is the tag version string
+xmakeDownloadUrl := https://github.com/gkide/xmake/releases/download
 
 # tar/unzip tools for decompress the xmake tarball
 TAR ?= $(shell (command -v tar))
@@ -35,7 +35,7 @@ PHONY += xmake-init
 xmake-init:
 ifeq ($(xmakeInit),)
 	CMAKE="$(PWD)/cmake"; mkdir -p $${CMAKE} && cd $${CMAKE} && $(FETCH) \
-	$(xmakeRelease)/$(xmakeVersion)/$(xmakeTarball) && $(UNTGZ) && \
+	$(xmakeDownloadUrl)/$(xmakeVersion)/$(xmakeTarball) && $(UNTGZ) && \
 	mv xmake-$(xmakeVersion)/cmake/* ./ && rm -rf xmake-$(xmakeVersion)*
 endif
 

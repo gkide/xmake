@@ -15,15 +15,15 @@ in the top CMakeLists.txt
 
 Using **xmake** is much simple:
 
-1. Download the [xmake.init](xmake.init)
-2. Create directory **cmake** at project root and put **xmake.init** there
+1. Download the [xmake.init.mk](xmake.init.mk)
+2. Create directory **cmake** at project root and put **xmake.init.mk** there
 3. Create a **Makefile** for the project and add two lines to the top
 
 ``` Makefile
 # This is for local configuration, not necessary
 -include local.mk
 # Include the xmake init makefile
--include cmake/xmake.init
+-include cmake/xmake.init.mk
 ...
 ```
 
