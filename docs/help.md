@@ -3,9 +3,9 @@
 - Cmake [APIs](#cmake-apis)
 - Project [Options](#project-options)
 - Host and Repo Info
-  [<img src="docs/os/apple.svg" width=40 height=40 />](#macos),
-  [<img src="docs/os/linux.png" width=40 height=40 />](#linux-likes),
-  [<img src="docs/os/windows.png" width=40 height=40 />](#windows)
+  [<img src="os/apple.svg" width=40 height=40 />](#macos),
+  [<img src="os/linux.png" width=40 height=40 />](#linux-likes),
+  [<img src="os/windows.png" width=40 height=40 />](#windows)
 - Cmake [Configurations](#cmakeconfigurations)
 
 NOTE:
