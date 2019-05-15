@@ -1,9 +1,11 @@
 # Xmake Manual
 
-- Cmake [APIs](#cmakeapis)
-- Project [Options](#projectoptions)
-- Host and Repo [Info](#hostrepoinfo)
-  [MacOS](#macos), [Linux](#linux-likes), [Windows](#windows)
+- Cmake [APIs](#cmake-apis)
+- Project [Options](#project-options)
+- Host and Repo Info
+  [<img src="docs/os/apple.svg" width=40 height=40 />](#macos),
+  [<img src="docs/os/linux.png" width=40 height=40 />](#linux-likes),
+  [<img src="docs/os/windows.png" width=40 height=40 />](#windows)
 - Cmake [Configurations](#cmakeconfigurations)
 
 NOTE:
