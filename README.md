@@ -12,3 +12,20 @@ in the top CMakeLists.txt
 - [Package and Release](docs/help.md#package-and-release)
 
 # How Do I Use `xmake`
+
+Using **xmake** is much simple:
+
+1. Download the [xmake.init](xmake.init)
+2. Create directory **cmake** at project root and put **xmake.init** there
+3. Create a **Makefile** for the project and add two lines to the top
+
+``` Makefile
+# This is for local configuration, not necessary
+-include local.mk
+# Include the xmake init makefile
+-include cmake/xmake.init
+...
+```
+
+4. Create a **CmakeLists.txt**
+5. That's all, just type `make`
