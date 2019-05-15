@@ -2,6 +2,7 @@
 xmakeVersion ?= v1.0.0-dev
 xmakeRelease := https://github.com/gkide/xmake/releases/download
 
+# tar/unzip tools for decompress the xmake tarball
 TAR ?= $(shell (command -v tar))
 xmakeTarball := xmake-$(xmakeVersion).tar.gz
 UNTGZ := $(TAR) -xvf $(xmakeTarball)
@@ -14,6 +15,7 @@ ifeq ($(TAR),)
     UNTGZ := $(UNZIP) $(xmakeTarball)
 endif
 
+# curl/wget tools for download the xmake tarball
 CURL ?= $(shell (command -v curl))
 FETCH := $(CURL) -L -o $(xmakeTarball)
 ifeq ($(CURL),)
@@ -24,13 +26,14 @@ ifeq ($(CURL),)
     FETCH := $(WGET) -O $(xmakeTarball)
 endif
 
+# check if xmake is inited or not
 xmakeInit := cmake/xmake.cmake
 xmakeInit := $(shell if [ -f $(xmakeInit) ]; then echo "true"; else echo ""; fi;)
 
+# The target to init xmake
 PHONY += xmake-init
 xmake-init:
 ifeq ($(xmakeInit),)
-    # xmake not init yet, set default goal to init xmake
 	CMAKE="$(PWD)/cmake"; mkdir -p $${CMAKE} && cd $${CMAKE} && $(FETCH) \
 	$(xmakeRelease)/$(xmakeVersion)/$(xmakeTarball) && $(UNTGZ) && \
 	mv xmake-$(xmakeVersion)/cmake/* ./ && rm -rf xmake-$(xmakeVersion)*
