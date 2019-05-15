@@ -29,11 +29,18 @@ if(${XMAKE}_BRANCH_NAME AND ${XMAKE}_COMMIT_SHA1 AND ${XMAKE}_COMMIT_MDTZ)
     set(REPO_INFO_FILE ${CMAKE_SOURCE_DIR}/DistRepoInfo)
     mark_as_advanced(REPO_INFO_FILE)
 
-    file(WRITE ${REPO_INFO_FILE}
-        "${${XMAKE}_BRANCH_NAME} ${${XMAKE}_COMMIT_SHA1} ${${XMAKE}_COMMIT_MDTZ}")
-
     string(REPLACE "\"" "" ${XMAKE}_COMMIT_MDTZ "${${XMAKE}_COMMIT_MDTZ}")
     string(REPLACE "\\" "" ${XMAKE}_COMMIT_MDTZ "${${XMAKE}_COMMIT_MDTZ}")
+
+    file(WRITE ${REPO_INFO_FILE}
+        "Version: ${PKG_VERSION}\n"
+        "Branch: ${${XMAKE}_BRANCH_NAME}\n"
+        "Commit: ${${XMAKE}_COMMIT_SHA1}\n"
+        "Timestamp: ${${XMAKE}_COMMIT_MDTZ}\n"
+        "Repo: ${PKG_REPO}\n"
+        "BugReport: ${PKG_BUG_REPORT}\n"
+    )
+
     string(SUBSTRING "${${XMAKE}_COMMIT_MDTZ}" 00 10 ${XMAKE}_COMMIT_DATE)
     string(SUBSTRING "${${XMAKE}_COMMIT_MDTZ}" 11 08 ${XMAKE}_COMMIT_TIME)
     string(SUBSTRING "${${XMAKE}_COMMIT_MDTZ}" 20 05 ${XMAKE}_COMMIT_ZONE)

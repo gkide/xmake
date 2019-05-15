@@ -1,5 +1,5 @@
 # Download & install pre-build binaries
-include(PreInstall)
+include(InstallAstyle)
 # Download, extrac, build, install external project
 include(BuildLibok)
 set(XIHD_SRC ${CMAKE_SOURCE_DIR}/source)

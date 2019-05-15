@@ -22,13 +22,28 @@ math(EXPR ${XMAKE}_VERSION_NUMBER
     | (${${XMAKE}_VERSION_PATCH})"
 )
 
-if(NOT PKG_VERSION)
-    set(PKG_VERSION "${${XMAKE}_RELEASE_VERSION}")
+# User extra configuration for package
+if(EXISTS ${CMAKE_SOURCE_DIR}/PkgConfig.cmake)
+    include(${CMAKE_SOURCE_DIR}/PkgConfig.cmake)
+elseif(EXISTS ${CMAKE_SOURCE_DIR}/cmake/PkgConfig.cmake)
+    include(${CMAKE_SOURCE_DIR}/cmake/PkgConfig.cmake)
 endif()
 
 # If not set, auto use the lower case of project and make it hidden
 if(NOT PKG_NAME)
     string(TOLOWER ${PROJECT_NAME} PKG_NAME)
+endif()
+
+if(NOT PKG_VERSION)
+    set(PKG_VERSION "${${XMAKE}_RELEASE_VERSION}")
+endif()
+
+if(NOT PKG_LICENSE AND PKG_VENDOR)
+    set(PKG_LICENSE "Copyright(C) 2018-${${XMAKE}_RELEASE_YEAR} ${PKG_VENDOR}")
+endif()
+
+if(NOT PKG_MANUAL_DIR)
+    set(PKG_MANUAL_DIR "${CMAKE_BINARY_DIR}")
 endif()
 
 # The available build type values
@@ -86,7 +101,6 @@ endforeach()
 include(xmake/PreventInTreeBuilds)
 include(xmake/CheckHostSystem)
 include(xmake/InstallHelper)
-include(xmake/PkgSrcConfig)
 include(xmake/PkgSrcPackage)
 include(xmake/Utils)
 
@@ -332,10 +346,6 @@ if(HOST_WINDOWS)
 endif()
 
 include(xmake/GetGitRepoInfo)
-
-if(NOT PKG_MANUAL_DIR)
-    set(PKG_MANUAL_DIR "${CMAKE_BINARY_DIR}")
-endif()
 
 # https://cmake.org/cmake/help/latest/module/CTest.html
 if(${XMAKE}_ENABLE_CTEST)

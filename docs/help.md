@@ -2,7 +2,7 @@
 
 - Cmake [APIs](#cmake-apis)
 - Project [Options](#project-options)
-- Cmake [Configurations](#cmake-configurations)
+- Project [Configurations](#local-configurations)
 - Host and Repo [Info](#host-repo-info)
   <img src="os/apple.svg" width=25 height=25 />
   <img src="os/linux.png" width=25 height=25 />
@@ -52,6 +52,38 @@ The following cmake variables will auto defined to idenify the host and project:
 - **XXX**`_LOG_LEVEL`, number, like **0**
 - **XXX**`_LOG_TYPE`, string, like **DEV**
 
+
+# Local Configurations
+
+## Package Local Configurations
+
+The cpack run with a generated cmake config file `CPackOptions.cmake`, it will
+check the local config file `PkgInstaller.cmake`, if it exist, the local config
+file will be include to provided more detail info for binary & source packaging.
+It will include the first one founded as following.
+
+- `${CMAKE_SOURCE_DIR}/PkgInstaller.cmake`
+- `${CMAKE_SOURCE_DIR}/cmake/PkgInstaller.cmake`
+
+## Doxygen Local Configurations
+
+xmake provide a default **Doxyfile** which is generated from a template, but the
+end user can use the one wanted by provided a **Doxyfile** or **Doxyfile.in**
+file. xmake will check if the local doxygen config file is exist, it will use
+the first one founded, if the local doxygen config file not exit, then use the
+default template to generated one for doxygen to run with.
+
+- `${CMAKE_SOURCE_DIR}/Doxyfile`
+- `${CMAKE_SOURCE_DIR}/doc/Doxyfile`
+- `${CMAKE_SOURCE_DIR}/doc/doxygen/Doxyfile`
+- `${CMAKE_SOURCE_DIR}/docs/Doxyfile`
+- `${CMAKE_SOURCE_DIR}/docs/doxygen/Doxyfile`
+
+- `${CMAKE_SOURCE_DIR}/Doxyfile.in`
+- `${CMAKE_SOURCE_DIR}/doc/Doxyfile.in`
+- `${CMAKE_SOURCE_DIR}/doc/doxygen/Doxyfile.in`
+- `${CMAKE_SOURCE_DIR}/docs/Doxyfile.in`
+- `${CMAKE_SOURCE_DIR}/docs/doxygen/Doxyfile.in`
 
 # Project Options
 
@@ -469,7 +501,7 @@ file any where as you want to, can be used combie with **DOMAIN**, and the
 Get all the binary targets(executable, library) of [XmakeInstallHelper](#xmakeinstallhelper)
 
 NOTE! This may not work if the `XmakeGetInstallBinaries`
-is not a sub-scope of the XmakeInstallHelper called.
+is not a sub-scope of the `XmakeInstallHelper` called.
 
 ``` cmake
 XmakeGetInstallBinaries(binaries)
