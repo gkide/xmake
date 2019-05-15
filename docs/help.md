@@ -84,21 +84,23 @@ result in the version: `v1.0.0-dev.20190425+4ad12f8dfb`
 
 ## Project Building
 
-- **XXX**`_EXPORT_AS_COMPILER_ARGS`, export to predefined args to CC, default **OFF**
+- **XXX**`_EXPORT_AS_COMPILER_ARGS`, export predefined args as CC args, default **OFF**
 - **XXX**`_ENABLE_ASSERTION`, enable assertion, default is **OFF**
 - **XXX**`_XMAKE_VERBOSE`, show verbose xmake message, default is **OFF**
 - **XXX**`_DISABLE_CCACHE`, enable **ccache** for linux by default.
 - **XXX**`_ENABLE_CI`, disable continuous integration build by default,
   like [Travis](https://github.com/marketplace/travis-ci).
 
-- **XXX**`_ENABLE_CTEST`, enable CMake ctest, disable by default.
+[ctest]: https://cmake.org/cmake/help/latest/module/CTest.html
+- **XXX**`_ENABLE_CTEST`, enable CMake [ctest](ctest), disable by default.
 
-`BUILD_TESTING` can be use to control build the tests or not, default is ON.
+  * **XXX**`_BUILD_CTEST` can be use to control build the tests or not, default is ON.
 
-- **XXX**`_ENABLE_GTEST`, enable Google gtest, disable by default.
+[gtest]: https://github.com/google/googletest
+- **XXX**`_ENABLE_GTEST`, enable Google [gtest](gtest), disable by default.
 
-`BUILD_TESTING` can be use to control build the tests or not, default is ON.
-**XXX**`_GTEST_LIBRARIES` will auto set to the need libraries for linking.
+  * **XXX**`_GTEST_LIBRARIES` will auto set to the need libraries for linking.
+  * **XXX**`_BUILD_GTEST` can be use to control build the tests or not, default is ON.
 
 - **XXX**`_DEBUG_BUILD`, project is debug build or not
 
@@ -107,12 +109,12 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 
 - **XXX**`_SKIP_RPATH_ORIGIN`, default is **OFF**
 
-if **OFF**, **RPATH** will be set to `$ORIGIN/../lib`;
-if **ON**, executables & shared libraries rpath will be set to empty.
+  * if **OFF**, **RPATH** will be set to `$ORIGIN/../lib`;
+  * if **ON**, executables & shared libraries rpath will be set to empty.
 
 - **XXX**`_GTEST_LIBRARIES`
 
-The collections of link libraries for **XXX**`_ENABLE_GTEST`.
+  * The collections of link libraries for **XXX**`_ENABLE_GTEST`
 
 ## Qt5 Support
 
@@ -135,35 +137,38 @@ The collections of link libraries for **XXX**`_ENABLE_GTEST`.
 - **XXX**`_ENABLE_DEPENDENCY`, external deps project support enable or not, default **OFF**
 
   [XmakeDepRepoBuild](#xmakedeprepobuild),
-  [XmakeDepBinaryInstall](#xmakedepbinaryinstall),
+  [XmakeDepTarballBuild](#xmakedeptarballbuild),
   [XmakeDepBinaryInstall](#xmakedepbinaryinstall)
 
 ## Package and Release
 
-- `PKG_NAME`, will be set to lower case of `${PROJECT_NAME}` if not set
-- `PKG_VENDOR`, is the name of the package vendor
-- `PKG_VERSION`, will be set the project's **major.minor.patch** if not set
-- `PKG_BRIEF_SUMMARY`, short description of the project, only a few words
+- `PKG_NAME`, auto set to lower case of `${PROJECT_NAME}` if not set
+- `PKG_VENDOR`, name of the package vendor, empty if not set
+- `PKG_BRIEF_SUMMARY`, project short description, empty if not set
+- `PKG_VERSION`, auto set to project's **major.minor.patch** if not set
 
-- `PKG_MANUAL_DIR`, for user manual, API manual by doxygen, and etc.
-  * if this is not set, then it will auto set to `${CMAKE_BINARY_DIR}`
+- `PKG_MANUAL_DIR`, user manual directory, like API manual by doxygen.
+  * it will auto set to `${CMAKE_BINARY_DIR}` if not set
 
-- `PKG_REPO`, is the repo upstream URL
-- `PKG_BUG_REPORT`, is the bug report URL
-- `PKG_MAINTAINER_EMAIL`, is the maintainer email
+- `PKG_REPO`, the repo upstream URL, empty if not set
+- `PKG_BUG_REPORT`, bug report URL, empty if not set
+- `PKG_MAINTAINER_EMAIL`, maintainer and email, empty if not set
 
-- `PKG_LOGO`, is the project logo
-- `PKG_INSTALLER_LOGO`, is for GUI installer INSTALL logo
-- `PKG_UNINSTALLER_LOGO`, is for GUI installer UNINSTALL logo
+- `PKG_LOGO`, project logo, empty if not set
+- `PKG_INSTALLER_LOGO`, GUI installer INSTALL logo, empty if not set
+- `PKG_UNINSTALLER_LOGO`, GUI installer UNINSTALL logo, empty if not set
 
-- `PKG_TYPE_GUI`, true if the project is GUI
+- `PKG_TYPE_GUI`, set to true if the project is GUI
 
-- `PKG_SOURCE`, list of project source files or directories
-  * if not set, check `${CMAKE_SOURCE_DIR}/source`, `${CMAKE_SOURCE_DIR}/src`,
-    use the first one founded, if both not, then just use `${CMAKE_SOURCE_DIR}`.
-    For now, `PKG_SOURCE` is only used by doxygen.
+- `PKG_DOXYGEN_SOURCE`, list of project source files or directories
+  * if not set, do the following checking, use the first one founded:
+    - `${CMAKE_SOURCE_DIR}/src`
+    - `${CMAKE_SOURCE_DIR}/source`
+    - `${CMAKE_SOURCE_DIR}`
 
-- `PKG_SOURCE_EXCLUDES`, only used by cpack to package source tarballs.
+- `PKG_DOXYGEN_EXCLUDES`, doxygen input files exclude pattren, empty if not set
+
+- `PKG_PACKAGE_EXCLUDES`, only used by cpack to package source tarballs.
 
     By default, the following will ignored from the source tarballs:
     - Version control files
@@ -193,7 +198,7 @@ The collections of link libraries for **XXX**`_ENABLE_GTEST`.
       * `todo/`
 
     - Extra ignore files set by user
-      * `${PKG_SOURCE_EXCLUDES}`
+      * `${PKG_PACKAGE_EXCLUDES}`
 
 ## External Project Support
 
