@@ -1,6 +1,6 @@
 include(CMakeParseArguments)
 
-function(BuildDepsTarball name)
+function(XmakeDepTarballBuild name)
     cmake_parse_arguments(tarball # prefix
         "" # options
         "URL;SHA256;VERSION" # one value keywords

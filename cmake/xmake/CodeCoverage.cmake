@@ -26,27 +26,27 @@ endif()
 
 mark_as_advanced(define_empty_function)
 if(define_empty_function)
-    function(CodeCoverageAppendFlags)
+    function(XmakeCCRAppendFlags)
         #message(STATUS "Skip Code Coverage for ${CMAKE_BUILD_TYPE} Build!")
     endfunction()
 
-    function(CodeCoverageLcovHtml)
+    function(XmakeCCRLcovHtml)
         #message(STATUS "Skip Code Coverage for ${CMAKE_BUILD_TYPE} Build!")
     endfunction()
-    function(CodeCoverageLcovTrace)
+    function(XmakeCCRLcovTrace)
         #message(STATUS "Skip Code Coverage for ${CMAKE_BUILD_TYPE} Build!")
     endfunction()
-    function(CodeCoverageLcovTraceReport)
+    function(XmakeCCRLcovTraceReport)
         #message(STATUS "Skip Code Coverage for ${CMAKE_BUILD_TYPE} Build!")
     endfunction()
 
-    function(CodeCoverageGcovrXml)
+    function(XmakeCCRGcovrXml)
         #message(STATUS "Skip Code Coverage for ${CMAKE_BUILD_TYPE} Build!")
     endfunction()
-    function(CodeCoverageGcovrHtml)
+    function(XmakeCCRGcovrHtml)
         #message(STATUS "Skip Code Coverage for ${CMAKE_BUILD_TYPE} Build!")
     endfunction()
-    function(CodeCoverageGcovrText)
+    function(XmakeCCRGcovrText)
         #message(STATUS "Skip Code Coverage for ${CMAKE_BUILD_TYPE} Build!")
     endfunction()
     return()
@@ -74,7 +74,7 @@ else()
 endif()
 
 # Append C/C++ compiler flags for code coverage
-function(CodeCoverageAppendFlags)
+function(XmakeCCRAppendFlags)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${code_coverage_flags}" PARENT_SCOPE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${code_coverage_flags}" PARENT_SCOPE)
     message(STATUS "Code coverage compiler flags: ${code_coverage_flags}")
@@ -119,7 +119,7 @@ mark_as_advanced(LCOV_EXTRA_ARGS)
 # - LCOV_EXCLUDES               Exclude patterns from the report
 #
 # - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
-function(CodeCoverageLcovHtml)
+function(XmakeCCRLcovHtml)
     cmake_parse_arguments(cct
         "EXECUTABLE_FORCE_SUCCESS" # options
         "TARGET" # one value keywords
@@ -238,7 +238,7 @@ endfunction()
 # - LCOV_ARGS           Extra arguments for lcov
 # - GENHTML_ARGS        Extra arguments for genhtml
 # - LCOV_EXCLUDES       Exclude patterns from the report
-function(CodeCoverageLcovTraceReport)
+function(XmakeCCRLcovTraceReport)
     cmake_parse_arguments(cct
         "" # options
         "TARGET" # one value keywords
@@ -344,7 +344,7 @@ endfunction()
 # - LCOV_EXCLUDES               Exclude patterns from the report
 #
 # - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
-function(CodeCoverageLcovTrace)
+function(XmakeCCRLcovTrace)
     cmake_parse_arguments(cct
         "EXECUTABLE_FORCE_SUCCESS" # options
         "TEST_NAME" # one value keywords
@@ -423,7 +423,7 @@ endfunction()
 # - GCOVR_EXCLUDES              Extra arguments for gcovr
 #
 # - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
-function(CodeCoverageGcovrXml)
+function(XmakeCCRGcovrXml)
     cmake_parse_arguments(cct
         "EXECUTABLE_FORCE_SUCCESS"
         "TARGET"
@@ -527,7 +527,7 @@ endfunction()
 # - GCOVR_EXCLUDES              Extra arguments for gcovr
 #
 # - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
-function(CodeCoverageGcovrHtml)
+function(XmakeCCRGcovrHtml)
     cmake_parse_arguments(cct
         "EXECUTABLE_FORCE_SUCCESS"
         "TARGET"
@@ -630,7 +630,7 @@ endfunction()
 # - GCOVR_EXCLUDES              Extra arguments for gcovr
 #
 # - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
-function(CodeCoverageGcovrText)
+function(XmakeCCRGcovrText)
     cmake_parse_arguments(cct
         "EXECUTABLE_FORCE_SUCCESS"
         "TARGET"

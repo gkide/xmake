@@ -1,4 +1,8 @@
-Qt5SupportSetup(
+if(NOT DEMO_RUN_QT5)
+    return()
+endif()
+
+XmakeQt5SupportSetup(
     AUTOMATIC ${QT5_AUTOMATIC}
     STATIC_PREFIX ${QT5_STATIC_PREFIX}
     SHARED_PREFIX ${QT5_SHARED_PREFIX}

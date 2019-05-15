@@ -300,7 +300,7 @@ endif()
 # This should be used in the top Qt5 directory. With the return(), thus on host
 # that has Qt5 installed, build the Qt5 part; and on host that has no Qt5   
 # installed, just skip the Qt5 build part and continue with other parts
-macro(Qt5SupportSetup)
+macro(XmakeQt5SupportSetup)
     cmake_parse_arguments(qt5 # prefix
         "" # options
         "STATIC_PREFIX;SHARED_PREFIX;AUTOMATIC" # one value keywords

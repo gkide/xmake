@@ -35,6 +35,18 @@ option(XDEMO_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 #option(XDEMO_DISABLE_CCACHE "Enale ccache by default for linux" ON)
 #option(XDEMO_USE_STATIC_GCC_LIBS "Use static c/c++ libraries." ON)
 
+if(DEMO_RUN_CTEST)
+    option(XDEMO_ENABLE_CTEST "Enable Cmake ctest support" ON)
+endif()
+
+if(DEMO_RUN_GTEST)
+    option(XDEMO_ENABLE_GTEST "Enable Google gtest support" ON)
+endif()
+
+if(DEMO_RUN_QT5)
+    option(QT5_AUTOMATIC "Enable Google gtest support" ON)
+endif()
+
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(xmake) # xmake should include in the top CMakeLists.txt
@@ -68,21 +80,9 @@ add_executable(hostinfo ${HOSTINFO_SOURCES} ${HOSTINFO_HEADERS})
 
 # For XmakeInstallHelper demo
 add_subdirectory(source/xihd)
-
-if(DEMO_RUN_CTEST)
-    option(XDEMO_ENABLE_CTEST "Enable Cmake ctest support" ON)
-    add_subdirectory(source/ctest)
-endif()
-
-if(DEMO_RUN_GTEST)
-    option(XDEMO_ENABLE_GTEST "Enable Google gtest support" ON)
-    add_subdirectory(source/gtest)
-endif()
-
-if(DEMO_RUN_QT5)
-    option(QT5_AUTOMATIC "Enable Google gtest support" ON)
-    add_subdirectory(source/qt5) # Qt5 static/shared support
-endif()
+add_subdirectory(source/ctest)
+add_subdirectory(source/gtest)
+add_subdirectory(source/qt5)
 
 XmakeInstallHelper(FILES LICENSE)
 XmakeInstallHelper(FILES docs/local.mk
@@ -91,11 +91,9 @@ XmakeInstallHelper(FILES docs/local.mk
 XmakeInstallHelper(FILES docs/manual/index.html # PKG_HELP
     DESTINATION ${XDEMO_INSTALL_DOC_DIR}/manual
 )
-
 XmakeInstallHelper(PROGRAMS scripts/release
     DESTINATION ${XDEMO_INSTALL_PLG_DIR}/scripts
 )
-
 XmakeInstallHelper(DIRECTORY cmake/xmake
     DESTINATION ${XDEMO_INSTALL_SHA_DIR}/xmake
 )

@@ -1,5 +1,5 @@
 if(true)
-    PrebuildInstall(astyle TARBALL
+    XmakeDepBinaryInstall(astyle TARBALL
         # SKIP # This can be skip
         VERSION     3.0.1
         URL         https://gitlab.com/gkide/prebuild/astyle/-/archive/v3.0.1/astyle-v3.0.1.tar.gz
@@ -8,7 +8,7 @@ if(true)
         INSTALL_CMD echo The install stuff ...
     )
 else()
-    PrebuildInstall(astyle REPO
+    XmakeDepBinaryInstall(astyle REPO
         # SKIP # This can be skip
         URL         https://gitlab.com/gkide/prebuild/astyle.git
         PATCH_CMD   echo The patch stuff ...

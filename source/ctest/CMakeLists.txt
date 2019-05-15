@@ -1,3 +1,7 @@
+if(NOT DEMO_RUN_CTEST)
+    return()
+endif()
+
 aux_source_directory(. CCR_SRCS)
 aux_source_directory(methods CCR_LIBS)
 
@@ -22,25 +26,22 @@ if(XDEMO_ENABLE_CTEST AND BUILD_TESTING)
 endif()
 
 # Code Coverage Report: Lcov HTML Report
-CodeCoverageLcovTrace(
+XmakeCCRLcovTrace(
     EXECUTABLE ccr
     TEST_NAME "ccr_args_none"
 )
-
-CodeCoverageLcovTrace(
+XmakeCCRLcovTrace(
     EXECUTABLE ccr
     EXECUTABLE_ARGS "2 2000"
     TEST_NAME "ccr_args_2_to_2000"
 )
-
-CodeCoverageLcovTrace(
+XmakeCCRLcovTrace(
     EXECUTABLE ccr
     EXECUTABLE_ARGS 0 100000
     EXECUTABLE_FORCE_SUCCESS
     TEST_NAME "ccr_args_overflow"
 )
-
-CodeCoverageLcovTraceReport(
+XmakeCCRLcovTraceReport(
     EXECUTABLE ccr
     TARGET "ccr_html_report"
     GENHTML_ARGS
@@ -48,7 +49,7 @@ CodeCoverageLcovTraceReport(
 )
 
 # Code Coverage Report: Lcov HTML Report
-CodeCoverageLcovHtml(
+XmakeCCRLcovHtml(
     TARGET lcov-html
     EXECUTABLE hostinfo
     LCOV_EXCLUDES
@@ -64,20 +65,20 @@ CodeCoverageLcovHtml(
 )
 
 # Code Coverage Report: Gcovr XML Report
-CodeCoverageGcovrXml(
+XmakeCCRGcovrXml(
     TARGET gcovr-xml
     EXECUTABLE check
 )
 
 # Code Coverage Report: Gcovr HTML Report
-CodeCoverageGcovrHtml(
+XmakeCCRGcovrHtml(
     TARGET gcovr-html
     EXECUTABLE awesome
     GCOVR_ARGS --html-title "CCR - awesome"
 )
 
 # Code Coverage Report: Gcovr TEXT Report
-CodeCoverageGcovrText(
+XmakeCCRGcovrText(
     TARGET gcovr-text
     EXECUTABLE xtest
 )

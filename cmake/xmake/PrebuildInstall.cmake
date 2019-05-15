@@ -1,7 +1,7 @@
 include(CMakeParseArguments)
 
 # Download & Install Prebuild Binary
-function(PrebuildInstall name)
+function(XmakeDepBinaryInstall name)
     cmake_parse_arguments(bin # prefix
         "SKIP;REPO;TARBALL" # options
         "URL;SHA256;VERSION" # one value keywords
@@ -30,7 +30,7 @@ function(PrebuildInstall name)
 
     if(bin_TARBALL)
         # Download tarball, extract, and install the prebuild binary
-        BuildDepsTarball(${name}
+        XmakeDepTarballBuild(${name}
             VERSION     ${bin_VERSION}
             URL         ${bin_URL}
             SHA256      ${bin_SHA256}
@@ -41,7 +41,7 @@ function(PrebuildInstall name)
     endif()
 
     # Download git repo, and install the prebuild binary
-    BuildDepsRepo(  ${name}
+    XmakeDepRepoBuild(  ${name}
         REPO_URL    ${bin_URL}
         PATCH_CMD   ${bin_PATCH_CMD}
         INSTALL_CMD ${bin_INSTALL_CMD}

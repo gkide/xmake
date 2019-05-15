@@ -1,6 +1,6 @@
 include(CMakeParseArguments)
 
-function(BuildDepsRepo name)
+function(XmakeDepRepoBuild name)
     cmake_parse_arguments(repo # prefix
         "" # options
         "REPO_URL" # one value keywords

@@ -1,4 +1,4 @@
-if(NOT XDEMO_ENABLE_GTEST OR NOT BUILD_TESTING)
+if(NOT DEMO_RUN_GTEST)
     return()
 endif()
 

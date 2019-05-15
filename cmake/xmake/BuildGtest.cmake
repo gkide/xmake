@@ -1,6 +1,6 @@
 if(true)
     # Download git repo & build
-    BuildDepsRepo(  libgtest
+    XmakeDepRepoBuild(  libgtest
         REPO_URL    https://github.com/google/googletest.git
         CONFIG_CMD  ${CMAKE_COMMAND} -E make_directory build
             COMMAND cd build && ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}"
@@ -11,7 +11,7 @@ if(true)
     )
 else()
     # Download tarball & build
-    BuildDepsTarball(libgtest
+    XmakeDepTarballBuild(libgtest
         VERSION      1.8.1
         URL          https://github.com/google/googletest/archive/release-1.8.1.tar.gz
         SHA256       9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c
