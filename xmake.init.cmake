@@ -18,9 +18,9 @@ if(NOT EXISTS "${xmakeInited}" OR xmakeForceUpdate)
     )
 
     list(GET status 0 rc)
-    list(GET status 1 msg)
+    list(GET status 1 emsg)
 
     if(rc)
-        message(FATAL_ERROR "Download ${xmakeTarball} failed")
+        message(FATAL_ERROR "Download ${xmakeTarball} failed => ${emsg}")
     endif()
 endif()
