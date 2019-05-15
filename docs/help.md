@@ -12,11 +12,11 @@ NOTE:
 - min-cmake version is v2.8.12
 - project name should consist of [A-Za-z0-9_-]
 - **XMAKE** variable will auto set to `${PROJECT_NAME}` of uppercase
-- The following **XXX** represent the uppercase of project name.
+- The following **XXX** represent the uppercase of project name
 
 # Host Repo Info
 
-The following cmake variables will auto defined to idenify the build host:
+The following cmake variables will auto defined to idenify the host and project:
 
 - `HOST_LINUX`, `HOST_MACOS`, `HOST_WINDOWS`
 - `HOST_WINDOWS_MSYS`, `HOST_WINDOWS_MINGW`, `HOST_WINDOWS_CYGWIN`
@@ -29,28 +29,28 @@ The following cmake variables will auto defined to idenify the build host:
 
 - `HOST_BIG_ENDIAN`
 
-- **XXX**`_VERSION_MAJOR`
-- **XXX**`_VERSION_MINOR`
-- **XXX**`_VERSION_PATCH`
-- **XXX**`_VERSION_TWEAK`
+- **XXX**`_VERSION_MAJOR`, number, like **1**
+- **XXX**`_VERSION_MINOR`, number, like **2**
+- **XXX**`_VERSION_PATCH`, number, like **3**
+- **XXX**`_VERSION_TWEAK`, string, like **dev**
 - **XXX**`_VERSION_NUMBER`
 
-- **XXX**`_RELEASE_TYPE`
-- **XXX**`_RELEASE_VERSION`
-- **XXX**`_RELEASE_TIMESTAMP`
+- **XXX**`_RELEASE_TYPE`, string, like **Debug**
+- **XXX**`_RELEASE_VERSION`, string, like **v1.2.3-dev.20190515+73ebb13b0e**
+- **XXX**`_RELEASE_TIMESTAMP`, string, like **2019-05-15 19:10:13 +0800**
 
-- **XXX**`_RELEASE_YEAR`
-- **XXX**`_RELEASE_MONTH`
-- **XXX**`_RELEASE_DAY`
+- **XXX**`_RELEASE_YEAR`, string, like **2019**
+- **XXX**`_RELEASE_MONTH`, string, like **05**
+- **XXX**`_RELEASE_DAY`, string, like **15**
 
-- **XXX**`_COMMIT_ZONE`
-- **XXX**`_COMMIT_TIME`
-- **XXX**`_COMMIT_DATE`
-- **XXX**`_COMMIT_HASH`
-- **XXX**`_COMMIT_MDTZ`
+- **XXX**`_COMMIT_ZONE`, string, like **+0800**
+- **XXX**`_COMMIT_TIME`, string, like **07:29:01**
+- **XXX**`_COMMIT_DATE`, string, like **2019-05-12**
+- **XXX**`_COMMIT_HASH`, string, like **73ebb13b0e**
+- **XXX**`_COMMIT_MDTZ`, string, like **2019-05-15 07:29:01 +0800**
 
-- **XXX**`_LOG_LEVEL`
-- **XXX**`_LOG_TYPE`
+- **XXX**`_LOG_LEVEL`, number, like **0**
+- **XXX**`_LOG_TYPE`, string, like **DEV**
 
 
 # Project Options
