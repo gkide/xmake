@@ -2,144 +2,55 @@
 
 - Cmake [APIs](#cmake-apis)
 - Project [Options](#project-options)
-- Host and Repo Info
-  [<img src="os/apple.svg" width=25 height=25 />](#macos)
-  [<img src="os/linux.png" width=25 height=25 />](#linux-likes)
-  [<img src="os/windows.png" width=25 height=25 />](#windows)
-- Cmake [Configurations](#cmakeconfigurations)
+- Cmake [Configurations](#cmake-configurations)
+- Host and Repo [Info](#host-repo-info)
+  <img src="os/apple.svg" width=25 height=25 />
+  <img src="os/linux.png" width=25 height=25 />
+  <img src="os/windows.png" width=25 height=25 />
 
 NOTE:
+- min-cmake version is v2.8.12
+- project name should consist of [A-Za-z0-9_-]
+- **XMAKE** variable will auto set to `${PROJECT_NAME}` of uppercase
 - The following **XXX** represent the uppercase of project name.
-- **XMAKE** variable will auto set to `${PROJECT_NAME}` of uppercase, project
-  name should consist of [A-Za-z0-9_-], and the min-cmake version is v2.8.12
-
 
 # Host Repo Info
 
 The following cmake variables will auto defined to idenify the build host:
 
-## Linux & Likes
+- `HOST_LINUX`, `HOST_MACOS`, `HOST_WINDOWS`
+- `HOST_WINDOWS_MSYS`, `HOST_WINDOWS_MINGW`, `HOST_WINDOWS_CYGWIN`
 
-- HOST_LINUX
-- HOST_ARCH_64               : little endian
-- HOST_NAME                  : charlie
-- HOST_USER                  : ThinkPad
-- HOST_ARCH                  : x86_64
-- HOST_SYSTEM_NAME           : linux
-- HOST_SYSTEM_VERSION        : 3.16.0-30-generic
-- HOST_OS_DIST_NAME          : Ubuntu
-- HOST_OS_DIST_VERSION       : 14.04
-- **XXX**_VERSION_MAJOR      : 1
-- **XXX**_VERSION_MINOR      : 0
-- **XXX**_VERSION_PATCH      : 0
-- **XXX**_VERSION_TWEAK      : release
-- **XXX**_RELEASE_TYPE       : Debug
-- **XXX**_RELEASE_VERSION    : v1.0.0-release~20190411@a419980
-- **XXX**_RELEASE_TIMESTAMP  : 2019-04-10 21:50:38 +0800
+- `HOST_ARCH_32`, `HOST_ARCH_64`
 
-## Windows
+- `HOST_NAME`, `HOST_USER`, `HOST_ARCH`
+- `HOST_SYSTEM_NAME`, `HOST_SYSTEM_VERSION`
+- `HOST_OS_DIST_NAME`, `HOST_OS_DIST_VERSION`
 
-### Windows/MSYS
+- `HOST_BIG_ENDIAN`
 
-- HOST_LINUX
-- HOST_WINDOWS
-- HOST_WINDOWS_MSYS
-- HOST_ARCH_64               : little endian
-- HOST_NAME                  : 书生
-- HOST_USER                  : ThinkPad
-- HOST_ARCH                  : x86_64
-- HOST_SYSTEM_NAME           : windows/msys
-- HOST_SYSTEM_VERSION        : 2.8.2(0.313/5/3)
-- HOST_OS_DIST_NAME          : Windows 7
-- HOST_OS_DIST_VERSION       : 6.1.7601
-- **XXX**_VERSION_MAJOR      : 1
-- **XXX**_VERSION_MINOR      : 0
-- **XXX**_VERSION_PATCH      : 0
-- **XXX**_VERSION_TWEAK      : release
-- **XXX**_RELEASE_TYPE       : Debug
-- **XXX**_RELEASE_VERSION    : v1.0.0-release~20190411@bf3c447
-- **XXX**_RELEASE_TIMESTAMP  : 2019-04-10 21:26:52 +0800
+- **XXX**`_VERSION_MAJOR`
+- **XXX**`_VERSION_MINOR`
+- **XXX**`_VERSION_PATCH`
+- **XXX**`_VERSION_TWEAK`
+- **XXX**`_VERSION_NUMBER`
 
-### Windows/MinGW32
+- **XXX**`_RELEASE_TYPE`
+- **XXX**`_RELEASE_VERSION`
+- **XXX**`_RELEASE_TIMESTAMP`
 
-- HOST_WINDOWS
-- HOST_WINDOWS_MINGW
-- HOST_ARCH_32               : little endian
-- HOST_NAME                  : 书生
-- HOST_USER                  : ThinkPad
-- HOST_ARCH                  : x86
-- HOST_SYSTEM_NAME           : windows/mingw
-- HOST_SYSTEM_VERSION        : 6.1.7601
-- HOST_OS_DIST_NAME          : Windows 7
-- HOST_OS_DIST_VERSION       : 6.1.7601
-- **XXX**_VERSION_MAJOR      : 1
-- **XXX**_VERSION_MINOR      : 0
-- **XXX**_VERSION_PATCH      : 0
-- **XXX**_VERSION_TWEAK      : release
-- **XXX**_RELEASE_TYPE       : Debug
-- **XXX**_RELEASE_VERSION    : v1.0.0-release~20190411@bf3c447
-- **XXX**_RELEASE_TIMESTAMP  : 2019-04-10 21:57:53
+- **XXX**`_RELEASE_YEAR`
+- **XXX**`_RELEASE_MONTH`
+- **XXX**`_RELEASE_DAY`
 
-### Windows/MinGW64
+- **XXX**`_COMMIT_ZONE`
+- **XXX**`_COMMIT_TIME`
+- **XXX**`_COMMIT_DATE`
+- **XXX**`_COMMIT_HASH`
+- **XXX**`_COMMIT_MDTZ`
 
-- HOST_WINDOWS
-- HOST_WINDOWS_MINGW
-- HOST_ARCH_64               : little endian
-- HOST_NAME                  : 书生
-- HOST_USER                  : ThinkPad
-- HOST_ARCH                  : x86_64
-- HOST_SYSTEM_NAME           : windows/mingw
-- HOST_SYSTEM_VERSION        : 6.1.7601
-- HOST_OS_DIST_NAME          : Windows 7
-- HOST_OS_DIST_VERSION       : 6.1.7601
-- **XXX**_VERSION_MAJOR      : 1
-- **XXX**_VERSION_MINOR      : 0
-- **XXX**_VERSION_PATCH      : 0
-- **XXX**_VERSION_TWEAK      : release
-- **XXX**_RELEASE_TYPE       : Debug
-- **XXX**_RELEASE_VERSION    : v1.0.0-release~20190411@bf3c447
-- **XXX**_RELEASE_TIMESTAMP  : 2019-04-10 21:02:43
-
-### Windows/Cygwin
-
-- HOST_LINUX
-- HOST_WINDOWS
-- HOST_WINDOWS_CYGWIN
-- HOST_ARCH_64               : little endian
-- HOST_NAME                  : 书生
-- HOST_USER                  : ThinkPad
-- HOST_ARCH                  : x86_64
-- HOST_SYSTEM_NAME           : windows/cygwin
-- HOST_SYSTEM_VERSION        : 3.0.6(0.338/5/3)
-- HOST_OS_DIST_NAME          : Windows 7
-- HOST_OS_DIST_VERSION       : 6.1.7601
-- **XXX**_VERSION_MAJOR      : 1
-- **XXX**_VERSION_MINOR      : 0
-- **XXX**_VERSION_PATCH      : 0
-- **XXX**_VERSION_TWEAK      : release
-- **XXX**_RELEASE_TYPE       : Debug
-- **XXX**_RELEASE_VERSION    : v1.0.0-release
-- **XXX**_RELEASE_TIMESTAMP  : 2019-04-10 21:40:14 +0800
-
-## MacOS
-
-- HOST_LINUX
-- HOST_MACOS
-- HOST_ARCH_64               : little endian
-- HOST_NAME                  : charlie
-- HOST_USER                  : BlackMacOS.local
-- HOST_ARCH                  : x86_64
-- HOST_SYSTEM_NAME           : macos
-- HOST_SYSTEM_VERSION        : 15.0.0
-- HOST_OS_DIST_NAME          : Mac OS X
-- HOST_OS_DIST_VERSION       : 10.11.1-15B42
-- **XXX**_VERSION_MAJOR      : 1
-- **XXX**_VERSION_MINOR      : 0
-- **XXX**_VERSION_PATCH      : 0
-- **XXX**_VERSION_TWEAK      : release
-- **XXX**_RELEASE_TYPE       : Debug
-- **XXX**_RELEASE_VERSION    : v1.0.0-release~20190411@c13ea86
-- **XXX**_RELEASE_TIMESTAMP  : 2019-04-10 21:26:52 +0800
+- **XXX**`_LOG_LEVEL`
+- **XXX**`_LOG_TYPE`
 
 
 # Project Options
@@ -165,54 +76,38 @@ result in the version: `v1.0.0-dev.20190425+4ad12f8dfb`
 - compatible with [semver spec 2.0](https://semver.org/spec/v2.0.0.html) & [npm-semver](https://docs.npmjs.com/misc/semver)
 - a unique ID for each build with repo-hash, build date, etc.
 
-- `v1.0.0` is the basic part, major/minor/patch
-- `dev` is the text part, which set to one of those make sense:
+- `v1.0.0` is the basic part: major, minor, patch
+- `dev` is the text part, which set to one of those [make sense](https://github.com/gkide/repo-hooks/blob/master/scripts/sync-release):
   * `dev`, `pre`, `nightly`, `alpha`, `beta`, `rc`, `lts`, `stable`, `release`, `eol`
-  * The auto stuff [repo-hooks](https://github.com/gkide/repo-hooks/blob/master/scripts/sync-release)
 - `20190425` is **YYYYMMDD** which will auto update to the build time
-- `4ad12f8dfb` is the repo SHA1 numbers auto update to the build commit's value
-
-- **XXX**`_EXPORT_AS_COMPILER_ARGS`
-  * if **ON**, export the variables as CC command line arguments
-  * if **OFF**(default), do not export to CC, use cmake `configure_file()`
+- `4ad12f8dfb` is the repo SHA1 numbers auto update to the build commit
 
 ## Project Building
 
-- **XXX**`_ENABLE_ASSERTION`
+- **XXX**`_EXPORT_AS_COMPILER_ARGS`, export to predefined args to CC, default **OFF**
+- **XXX**`_ENABLE_ASSERTION`, enable assertion, default is **OFF**
+- **XXX**`_XMAKE_VERBOSE`, show verbose xmake message, default is **OFF**
+- **XXX**`_DISABLE_CCACHE`, enable **ccache** for linux by default.
+- **XXX**`_ENABLE_CI`, disable continuous integration build by default,
+  like [Travis](https://github.com/marketplace/travis-ci).
 
-Enable assertion, default is **OFF**
+- **XXX**`_ENABLE_CTEST`, enable CMake ctest, disable by default.
 
-- **XXX**`_XMAKE_VERBOSE`
-
-Show verbose xmake message, default is **OFF**
-
-- **XXX**`_DISABLE_CCACHE`
-
-Enable **ccache** for linux by default.
-
-- **XXX**`_ENABLE_CI`
-
-Disable continuous integration build by default, like
-[Travis](https://github.com/marketplace/travis-ci).
-
-- **XXX**`_ENABLE_CTEST`
-
-Enable CMake ctest support, disable by default.
 `BUILD_TESTING` can be use to control build the tests or not, default is ON.
 
-- **XXX**`_ENABLE_GTEST`
+- **XXX**`_ENABLE_GTEST`, enable Google gtest, disable by default.
 
-Enable Google gtest support, disable by default.
 `BUILD_TESTING` can be use to control build the tests or not, default is ON.
 **XXX**`_GTEST_LIBRARIES` will auto set to the need libraries for linking.
 
-- **XXX**`_DEBUG_BUILD`
+- **XXX**`_DEBUG_BUILD`, project is debug build or not
 
-The project is debug build or not, which depends on `CMAKE_BUILD_TYPE`:
-if one of `Dev`, `Debug`, `Coverage`, then it will be true, otherwise, false.
+which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
+`Debug`, `Coverage`, then it will be true, otherwise false.
 
-- **XXX**`_SKIP_RPATH_ORIGIN`
-if **OFF**(default), **RPATH** will be set to `$ORIGIN/../lib`
+- **XXX**`_SKIP_RPATH_ORIGIN`, default is **OFF**
+
+if **OFF**, **RPATH** will be set to `$ORIGIN/../lib`;
 if **ON**, executables & shared libraries rpath will be set to empty.
 
 - **XXX**`_GTEST_LIBRARIES`
@@ -221,45 +116,29 @@ The collections of link libraries for **XXX**`_ENABLE_GTEST`.
 
 ## Qt5 Support
 
-- **XXX**`_AUTO_QT5_SOURCES`
-
-xmake auto generated source files for Qt5 if any.
-
-- **XXX**`_AUTO_QT5_LIBRARIES`
-
-xmake auto collection libraries for linking for Qt5 if any.
-
-- **XXX**`_AUTO_QT5_SOURCES`
-
-For details see [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
-
-- **XXX**`_AUTO_QT5_LIBRARIES`
-
-For details see [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
+- **XXX**`_AUTO_QT5_SOURCES`, auto generated source files for Qt5 if any.
+- **XXX**`_AUTO_QT5_LIBRARIES`, auto collection libraries for linking for Qt5 if any.
+- **XXX**`_AUTO_QT5_SOURCES`, for details see [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
+- **XXX**`_AUTO_QT5_LIBRARIES`, for details see [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
 
 ## Code Coverage Support
 
-- **XXX**`_ENABLE_GCOV`
+- **XXX**`_ENABLE_GCOV`, enable gcov or not, default is **OFF**
 
-Enable gcov or not, default is **OFF**, for details see
-[XmakeCCRLcovHtml](#xmakeccrlcovhtml),
-[XmakeCCRLcovTrace](#xmakeccrlcovtrace),
-[XmakeCCRLcovTraceReport](#xmakeccrlcovtracereport),
-[XmakeCCRGcovrXml](#xmakeccrgcovrxml)
-[XmakeCCRGcovrHtml](#xmakeccrgcovrhtml),
-[XmakeCCRGcovrText](#xmakeccrgcovrtext)
+  [XmakeCCRLcovHtml](#xmakeccrlcovhtml),
+  [XmakeCCRLcovTrace](#xmakeccrlcovtrace),
+  [XmakeCCRLcovTraceReport](#xmakeccrlcovtracereport),
+  [XmakeCCRGcovrXml](#xmakeccrgcovrxml)
+  [XmakeCCRGcovrHtml](#xmakeccrgcovrhtml),
+  [XmakeCCRGcovrText](#xmakeccrgcovrtext)
 
-- **XXX**`_ENABLE_DEPENDENCY`
+- **XXX**`_ENABLE_DEPENDENCY`, external deps project support enable or not, default **OFF**
 
-External deps project download, build, install support enable or not, default
-is **OFF**, for details see
-[XmakeDepRepoBuild](#xmakedeprepobuild),
-[XmakeDepBinaryInstall](#xmakedepbinaryinstall),
-[XmakeDepBinaryInstall](#xmakedepbinaryinstall)
+  [XmakeDepRepoBuild](#xmakedeprepobuild),
+  [XmakeDepBinaryInstall](#xmakedepbinaryinstall),
+  [XmakeDepBinaryInstall](#xmakedepbinaryinstall)
 
 ## Package and Release
-
-[xmake.mk](cmake/xmake/xmake.mk) targets(`cpack`): **xmake-pkg-source**, **xmake-pkg-binary**
 
 - `PKG_NAME`, will be set to lower case of `${PROJECT_NAME}` if not set
 - `PKG_VENDOR`, is the name of the package vendor
@@ -284,8 +163,8 @@ is **OFF**, for details see
     use the first one founded, if both not, then just use `${CMAKE_SOURCE_DIR}`.
     For now, `PKG_SOURCE` is only used by doxygen.
 
-- `PKG_SOURCE_EXCLUDES`
-  * For now, this is only used by cpack to package source tarballs.
+- `PKG_SOURCE_EXCLUDES`, only used by cpack to package source tarballs.
+
     By default, the following will ignored from the source tarballs:
     - Version control files
       * `.svn/`
@@ -318,48 +197,24 @@ is **OFF**, for details see
 
 ## External Project Support
 
-- `DEPS_ROOT_DIR`
+- `DEPS_ROOT_DIR`, download & build directory, default **.deps/**
 
-Download & build directory, default is **.deps/**
+- `DEPS_BUILD_TYPE`, external project build type, default **Release**
 
-- `DEPS_BUILD_TYPE`
+- `MAKE_PROG`, GNU make progame used for external project building.
 
-External project build type, default is **Release**
+  * If NOT set, it will auto detected by cmake from **PATH**.
 
-- `MAKE_PROG`
+- `GIT_PROG`, git programe used for clone external project.
 
-The GNU make progame used for external project building.
-If NOT set, it will auto detected by cmake from **PATH**.
+  * If NOT set, it will auto detected by cmake from **PATH**.
 
-- `GIT_PROG`
-
-The git programe used for clone external project.
-If NOT set, it will auto detected by cmake from **PATH**.
-
-- `DEPS_DOWNLOAD_DIR`
-
-Download root directory, default is **.deps/downloads**
-
-- `DEPS_BUILD_DIR`
-
-External project build directory, default is **.deps/build**
-
-- `DEPS_INSTALL_DIR`
-
-External project install perfix, default is **.deps/usr**
-
-- `DEPS_BIN_DIR`
-
-External project binary install directory, default is **.deps/usr/bin**
-
-- `DEPS_LIB_DIR`
-
-External project library install directory, default is **.deps/usr/lib**
-
-- `DEPS_INCLUDE_DIR`
-
-External project header install directory, default is **.deps/usr/include**
-
+- `DEPS_DOWNLOAD_DIR`, download root directory, default **.deps/downloads**
+- `DEPS_BUILD_DIR`, deps build directory, default **.deps/build**
+- `DEPS_INSTALL_DIR`, deps install perfix, default **.deps/usr**
+- `DEPS_BIN_DIR`, deps binary install directory, default **.deps/usr/bin**
+- `DEPS_LIB_DIR`, deps library install directory, default **.deps/usr/lib**
+- `DEPS_INCLUDE_DIR`, deps header install directory, default **.deps/usr/include**
 
 # Cmake APIs
 
@@ -504,8 +359,8 @@ Append C/C++ compiler flags for code coverage.
 
 ## XmakeInstallHelper
 
-This is a `cmake` **install** wrapper for convenience, here **XXX** the project
-name of upper case, the following variables will auto defined by xmake.
+This is a `cmake` **install** wrapper for convenience,
+the following variables will auto defined by xmake.
 
 - **XXX**`_INSTALL_DIR`     => `${CMAKE_INSTALL_PREFIX}`
 - **XXX**`_INSTALL_BIN_DIR` => `${CMAKE_INSTALL_PREFIX}/bin`
@@ -516,7 +371,7 @@ name of upper case, the following variables will auto defined by xmake.
 - **XXX**`_INSTALL_PLG_DIR` => `${CMAKE_INSTALL_PREFIX}/plugin`
 - **XXX**`_INSTALL_INC_DIR` => `${CMAKE_INSTALL_PREFIX}/include`
 
-The install directory layout is as following:
+The default install directory layout is as following:
 
     ├─ bin/             binaries
     ├─ etc/             configurations
