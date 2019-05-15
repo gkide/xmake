@@ -63,7 +63,7 @@ if(NOT CPACK_PACKAGE_DESCRIPTION_FILE)
     set(CPACK_PACKAGE_DESCRIPTION_FILE "${CPACK_RESOURCE_FILE_LICENSE}")
 endif()
 
-set(CPACK_GENERATOR "TGZ;STGZ;DEB") # *.tar.gz, *.sh, *.deb
+set(CPACK_GENERATOR "TGZ;STGZ") # *.tar.gz, *.sh
 set(CPACK_SOURCE_GENERATOR "TGZ;ZIP") # *.tar.gz, *.zip
 
 # Windows Installers
