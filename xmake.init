@@ -1,0 +1,48 @@
+# The xmake version to downloaded
+xmakeVersion ?= v1.0.0-dev
+xmakeRelease := https://github.com/gkide/xmake/releases/download
+
+TAR ?= $(shell (command -v tar))
+xmakeTarball := xmake-$(xmakeVersion).tar.gz
+UNTGZ := $(TAR) -xvf $(xmakeTarball)
+ifeq ($(TAR),)
+    UNZIP ?= $(shell (command -v unzip))
+    ifeq ($(UNZIP),)
+        $(error do NOT found 'tar' and 'unzip', xmake init STOP.)
+    endif
+    xmakeTarball := xmake-$(xmakeVersion).zip
+    UNTGZ := $(UNZIP) $(xmakeTarball)
+endif
+
+CURL ?= $(shell (command -v curl))
+FETCH := $(CURL) -L -o $(xmakeTarball)
+ifeq ($(CURL),)
+    WGET ?= $(shell (command -v wget))
+    ifeq ($(WGET),)
+        $(error do NOT found 'curl' and 'wget', xmake init STOP.)
+    endif
+    FETCH := $(WGET) -O $(xmakeTarball)
+endif
+
+xmakeInit := cmake/xmake.cmake
+xmakeInit := $(shell if [ -f $(xmakeInit) ]; then echo "true"; else echo ""; fi;)
+
+PHONY += xmake-init
+xmake-init:
+ifeq ($(xmakeInit),)
+    # xmake not init yet, set default goal to init xmake
+	CMAKE="$(PWD)/cmake"; mkdir -p $${CMAKE} && cd $${CMAKE} && $(FETCH) \
+	$(xmakeRelease)/$(xmakeVersion)/$(xmakeTarball) && $(UNTGZ) && \
+	mv xmake-$(xmakeVersion)/cmake/* ./ && rm -rf xmake-$(xmakeVersion)*
+endif
+
+ifneq ($(xmakeInit),)
+    # https://www.gnu.org/software/make/manual/make.html
+    # xmake already inited, do not make it as the default goal
+    ifeq ($(.DEFAULT_GOAL), xmake-init)
+        .DEFAULT_GOAL :=
+    endif
+endif
+
+# The xmake user-friendly template
+-include cmake/xmake/xmake.mk
