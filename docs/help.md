@@ -7,6 +7,7 @@
   <img src="os/apple.svg" width=25 height=25 />
   <img src="os/linux.png" width=25 height=25 />
   <img src="os/windows.png" width=25 height=25 />
+- [Miscellaneous](#miscellaneous)
 
 NOTE:
 - min-cmake version is v2.8.12
@@ -84,6 +85,26 @@ default template to generated one for doxygen to run with.
 - `${CMAKE_SOURCE_DIR}/doc/doxygen/Doxyfile.in`
 - `${CMAKE_SOURCE_DIR}/docs/Doxyfile.in`
 - `${CMAKE_SOURCE_DIR}/docs/doxygen/Doxyfile.in`
+
+## Package LICENSE and COPYRIGHT
+
+when do a binary package, xmake try to find find those two file, use the first
+one it found, if not found just keep related filed empty.
+
+The directory check secquence:
+- `${CMAKE_SOURCE_DIR}`
+- `${CMAKE_SOURCE_DIR}/doc`
+- `${CMAKE_SOURCE_DIR}/docs`
+
+The file name used to check, stop if found one:
+
+- **LICENSE**, **license**, **COPYRIGHT**, **copyright**, **DESCRIPTION**, **description**
+
+NOTE! For each name at the same location, first check the name above, then
+check the name with extension **.txt**, if both not found then try the next.
+
+NOTE! If **description** file not found, then it will set to **license** no matter
+the license file is found or not!
 
 # Project Options
 
@@ -496,6 +517,8 @@ file any where as you want to, can be used combie with **DOMAIN**, and the
   * if not set, the default value is **rwxr-xr-x**, rename if set `RENAME`
 
 
+# Miscellaneous
+
 ## XmakeGetInstallBinaries
 
 Get all the binary targets(executable, library) of [XmakeInstallHelper](#xmakeinstallhelper)
@@ -508,4 +531,26 @@ XmakeGetInstallBinaries(binaries)
 foreach(item ${binaries})
     message(STATUS "Install: ${item}")
 endforeach()
+```
+
+## DistRepoInfo
+
+xmake will auto generated **DistRepoInfo** file to the project root directory,
+which contains the following contents, it may be wise to add it to .gitignore.
+
+- Version: value of PKG_VERSION
+- Branch: git repo current branch name, like 'master'
+- Commit: git repo current commit full SHA1
+- Timestamp: current build time of UTC format
+- Repo: value of PKG_REPO
+- BugReport: value of PKG_BUG_REPORT
+
+
+```
+Version: v1.0.0
+Branch: master
+Commit: 05e77c6ee6c56b4a63784fac02dd13790e75ebf1
+Timestamp: 2019-05-16 01:16:07 +0800
+Repo: https://github.com/gkide/xmake
+BugReport: https://github.com/gkide/xmake/issues
 ```
