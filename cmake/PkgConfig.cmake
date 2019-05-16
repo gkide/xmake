@@ -1,6 +1,6 @@
 # Package Configuration
 
-#set(PKG_NAME)
+set(PKG_NAME "xmake")
 #set(PKG_VERSION)
 #set(PKG_LICENSE)
 #set(PKG_TYPE_GUI)
@@ -48,6 +48,3 @@ set(PKG_PACKAGE_EXCLUDES
 file(COPY ${CMAKE_SOURCE_DIR}/DistRepoInfo
     DESTINATION ${CMAKE_SOURCE_DIR}/cmake/xmake
 )
-
-# overwrite the default source package name for xmake release
-set(xmake_RELEASE_TARBALL true)

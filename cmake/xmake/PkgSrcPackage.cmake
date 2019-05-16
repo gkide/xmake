@@ -19,9 +19,6 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PKG_NAME}-${PKG_VERSION}")
 
 # The source package name, not including the extension
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${PKG_NAME}-${PKG_VERSION}-src")
-if(xmake_RELEASE_TARBALL) # for xmake release only
-    set(CPACK_SOURCE_PACKAGE_FILE_NAME "xmake-${PKG_VERSION}")
-endif()
 
 # NOTE Normally, the debug build should not make the binary package,
 # but to make it consistent, do the following to rename package file.
