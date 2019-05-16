@@ -13,13 +13,13 @@ in the top CMakeLists.txt
 
 # How Do I Use `xmake`
 
-Using **xmake** is much simple:
+Using **xmake** is much simple(`Makefile` and `CMakeLists.txt`):
 
 1. Download the [xmake.init.mk](xmake.init.mk)
 2. Create directory **cmake** at project root and put **xmake.init.mk** there
 3. Create a **Makefile** for the project and add two lines to the top
 
-``` Makefile
+``` makefile
 # This is for local configuration, not necessary
 -include local.mk
 # Include the xmake init makefile
@@ -27,5 +27,28 @@ Using **xmake** is much simple:
 ...
 ```
 
-4. Create a **CmakeLists.txt**
+4. Create a **CmakeLists.txt** and add two lines to the top
+
+``` cmake
+...
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(xmake) # xmake should include in the top CMakeLists.txt
+...
+```
+
 5. That's all, just type `make`
+
+Using **xmake** is much simple(only `CMakeLists.txt`):
+
+1. Download the [xmake.init.cmake](xmake.init.cmake)
+2. Create directory **cmake** at project root and put **xmake.init.cmake** there
+3. Create a **CmakeLists.txt** and add two lines to the top
+
+``` cmake
+...
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(xmake.init) # xmake should include in the top CMakeLists.txt
+...
+```
+
+4. Create a build directory, and do `cd build && cmake ..`, That's all!

@@ -34,6 +34,9 @@ set(PKG_PACKAGE_EXCLUDES
     ${CMAKE_SOURCE_DIR}/CMakeLists.txt
     ${CMAKE_SOURCE_DIR}/DistRepoInfo
 
+    ${CMAKE_SOURCE_DIR}/xmake.init.mk
+    ${CMAKE_SOURCE_DIR}/xmake.init.cmake
+
     ${CMAKE_SOURCE_DIR}/cmake/BuildLibok.cmake
     ${CMAKE_SOURCE_DIR}/cmake/CopyWinDlls.cmake
     ${CMAKE_SOURCE_DIR}/cmake/InstallAstyle.cmake
