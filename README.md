@@ -52,3 +52,7 @@ include(xmake.init) # xmake should include in the top CMakeLists.txt
 ```
 
 4. Create a build directory, and do `cd build && cmake ..`, That's all!
+
+# Usage Manual
+
+xmake usage manual are [here](docs/help.md)
