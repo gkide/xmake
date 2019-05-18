@@ -8,11 +8,9 @@
 if(CPACK_GENERATOR MATCHES "NSIS")
     # For windows start menu link create
     # A pair of value list: targetName => menu/linkName
-    set(CPACK_NSIS_MENU_LINKS "bin/xtest.exe" "xtest")
-endif()
-
-if("${CPACK_GENERATOR}" STREQUAL "PackageMaker")
-
+    set(NSIS_MENU_LINKS "bin/xtest.exe" "xtest")
+    set(NSIS_INSTALLER_LOGO ${CMAKE_SOURCE_DIR}/docs/res/install.ico)
+    set(NSIS_UNINSTALLER_LOGO ${CMAKE_SOURCE_DIR}/docs/res/uninstall.ico)
 endif()
 
 if(CPACK_GENERATOR MATCHES "IFW")

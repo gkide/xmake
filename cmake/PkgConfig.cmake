@@ -9,17 +9,14 @@ set(PKG_NAME "xmake")
 #set(PKG_DOXYGEN_EXCLUDES)
 
 set(PKG_VENDOR "GKIDE")
-set(PKG_BRIEF_SUMMARY "cmake & make quick project template!")
+set(PKG_BRIEF_SUMMARY "cmake and make project quick template!")
 set(PKG_REPO "https://github.com/gkide/xmake")
 set(PKG_BUG_REPORT "https://github.com/gkide/xmake/issues")
 set(PKG_MAINTAINER_EMAIL "Charlie WONG <1213charlie@163.com>")
 set(PKG_LOGO ${CMAKE_SOURCE_DIR}/gkide.png)
-set(PKG_ICON ${CMAKE_SOURCE_DIR}/docs/res/xmake.ico)
-set(PKG_INSTALLER_LOGO ${CMAKE_SOURCE_DIR}/docs/res/install.ico)
-set(PKG_UNINSTALLER_LOGO ${CMAKE_SOURCE_DIR}/docs/res/uninstall.ico)
-set(PKG_HELP "doc/manual/index.html")
+set(PKG_DOC_HELP "doc/manual/index.html")
 
-set(PKG_PACKAGE_EXCLUDES
+set(PKG_SOURCE_EXCLUDES
     ${CMAKE_SOURCE_DIR}/docs
     ${CMAKE_SOURCE_DIR}/scripts
     ${CMAKE_SOURCE_DIR}/source

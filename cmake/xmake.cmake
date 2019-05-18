@@ -100,8 +100,8 @@ endforeach()
 
 include(xmake/PreventInTreeBuilds)
 include(xmake/CheckHostSystem)
-include(xmake/InstallHelper)
 include(xmake/PkgSrcPackage)
+include(xmake/InstallHelper)
 include(xmake/Utils)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")

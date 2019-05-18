@@ -29,6 +29,10 @@ if(DEMO_RUN_QT5)
     option(QT5_AUTOMATIC "Enable Google gtest support" ON)
 endif()
 
+if(DEMO_RUN_IFW)
+    option(XDEMO_ENABLE_IFW "Enable Qt Installer Framework." ON)
+endif()
+
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(xmake) # xmake should include in the top CMakeLists.txt
@@ -70,7 +74,7 @@ XmakeInstallHelper(FILES LICENSE)
 XmakeInstallHelper(FILES docs/local.mk
     DESTINATION ${XDEMO_INSTALL_DOC_DIR}
 )
-XmakeInstallHelper(FILES docs/manual/index.html # PKG_HELP
+XmakeInstallHelper(FILES docs/manual/index.html # PKG_DOC_HELP
     DESTINATION ${XDEMO_INSTALL_DOC_DIR}/manual
 )
 XmakeInstallHelper(PROGRAMS scripts/release

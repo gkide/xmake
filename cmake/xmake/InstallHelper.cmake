@@ -98,6 +98,14 @@ function(XmakeGetInstallBinaries BINS)
     set(${BINS} "${installed_binaries}" PARENT_SCOPE)
 endfunction()
 
+if(${XMAKE}_ENABLE_IFW)
+    cpack_add_component(Runtime
+        DISPLAY_NAME "${PKG_NAME}"
+        DESCRIPTION "${PKG_BRIEF_SUMMARY}"
+        REQUIRED
+    )
+endif()
+
 # The install components: Runtime, Develop, Resource
 function(XmakeInstallHelper)
     cmake_parse_arguments(install_helper # prefix

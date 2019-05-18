@@ -65,6 +65,10 @@ if(NOT CPACK_PACKAGE_DESCRIPTION_FILE)
 endif()
 
 set(CPACK_GENERATOR "TGZ;STGZ") # *.tar.gz, *.sh
+if(${XMAKE}_ENABLE_IFW)
+    list(APPEND CPACK_GENERATOR "IFW")
+endif()
+
 set(CPACK_SOURCE_GENERATOR "TGZ;ZIP") # *.tar.gz, *.zip
 
 # Windows Installers
@@ -128,7 +132,7 @@ set(CPACK_SOURCE_IGNORE_FILES
     "/todo/"
 
     # Extra ignore files set by user
-    "${PKG_PACKAGE_EXCLUDES}"
+    "${PKG_SOURCE_EXCLUDES}"
 )
 
 # Set the options file that needs to be included
@@ -142,4 +146,10 @@ set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_BINARY_DIR}/CPackOptions.cmake")
 # The packing working directory
 set(CPACK_PACKAGE_DIRECTORY "${CMAKE_BINARY_DIR}/ReleasePackage")
 
+include(xmake/QtIFW)
+
 include(CPack)
+
+if(${XMAKE}_ENABLE_IFW)
+    include(CPackIFW)
+endif()
