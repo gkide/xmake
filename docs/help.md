@@ -437,7 +437,7 @@ the C flags have been processed by:
 
 - The C flags have been sort to make pretty
 - The C flags duplicate ones have been removed
-- The replace all '${CMAKE_SOURCE_DIR}' to '${PKG_NAME}'
+- The replace all `${CMAKE_SOURCE_DIR}` to `${PKG_NAME}`
 
 ## XmakeGetCXXFlags
 
