@@ -287,7 +287,10 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 - [XmakeCCRGcovrHtml](#xmakeccrgcovrhtml)
 - [XmakeCCRGcovrText](#xmakeccrgcovrtext)
 - [XmakeInstallHelper](#xmakeinstallhelper)
+- [XmakeGetCFlags](#xmakegetcflags)
+- [XmakeGetCXXFlags](#xmakegetcxxflags)
 - [XmakeGetInstallBinaries](#xmakegetinstallbinaries)
+
 
 ## XmakeQt5SupportSetup
 
@@ -414,6 +417,36 @@ given `EXECUTABLE_FORCE_SUCCESS`.
 ## XmakeCCRAppendFlags
 
 Append C/C++ compiler flags for code coverage.
+
+## XmakeGetCFlags
+
+Get C compiler flags.
+
+- The first arguments is variable for the output C flags, like **CFLAGS**
+- The second arguments is the processed directory by cmake to get attributs
+
+``` cmake
+XmakeGetCFlags(CFLAGS ${CMAKE_CURRENT_LIST_DIR})
+message(STATUS "CFLAGS=[${CFLAGS}]")
+```
+
+NOTE!
+
+The output C flags is not the origninal one to the command line,
+the C flags have been processed by:
+
+- The C flags have been sort to make pretty
+- The C flags duplicate ones have been removed
+- The replace all '${CMAKE_SOURCE_DIR}' to '${PKG_NAME}'
+
+## XmakeGetCXXFlags
+
+The same as `XmakeGetCFlags`, except that to get C++ flags.
+
+``` cmake
+XmakeGetCXXFlags(CXXFLAGS ${CMAKE_CURRENT_LIST_DIR})
+message(STATUS "CXXFLAGS=[${CXXFLAGS}]")
+```
 
 ## XmakeInstallHelper
 

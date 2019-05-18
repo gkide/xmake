@@ -70,7 +70,9 @@ add_subdirectory(source/ctest)
 add_subdirectory(source/gtest)
 add_subdirectory(source/qt5)
 
-XmakeInstallHelper(FILES LICENSE)
+XmakeInstallHelper(FILES LICENSE
+    DESTINATION ${XDEMO_INSTALL_DOC_DIR}
+)
 XmakeInstallHelper(FILES docs/local.mk
     DESTINATION ${XDEMO_INSTALL_DOC_DIR}
 )
