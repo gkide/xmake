@@ -1,15 +1,10 @@
-# DownloadExtract(TARGET ...
-#    URL ...
-#    EXPECTED_SHA256 ...
-#    DOWNLOAD_TO ...
-#    EXTRACT_TO ...
-#)
-function(DownloadExtract)
+function(XmakeDownloadExtract)
     cmake_parse_arguments(tarball
         ""
         "URL;TARGET;EXPECTED_SHA256;DOWNLOAD_TO;EXTRACT_TO"
         ""
-        ${ARGN})
+        ${ARGN}
+    )
 
     if(NOT tarball_TARGET) # Download/Extract target
         message(FATAL_ERROR "TARGET must be passed.")
@@ -59,13 +54,14 @@ function(DownloadExtract)
             return()
         endif()
 
-        message(STATUS "Downloading ... skip")
+        message(STATUS "${tarball_TARGET}: Downloading ... skip")
         message(STATUS "Exists ${SRC_TARBALL}")
     else()
         set(timeout 60)
         set(timeout_msg "${timeout} seconds")
         set(timeout_arg INACTIVITY_TIMEOUT ${timeout})
-        message(STATUS "Downloading ...
+
+        message(STATUS "${tarball_TARGET}: Downloading ...
    Timeout  = ${timeout_msg}
    From URL = ${tarball_URL}
    Save As  = ${SRC_TARBALL}")
@@ -85,23 +81,22 @@ Status Code: ${status_code}
 Status String: ${status_string}
 Log: ${log}")
         endif()
-        message(STATUS "Downloading ... done.")
     endif()
 
     ############
     # Checking #
     ############
     if(tarball_skip_sha256_check)
-        message(STATUS "Checking SHA256 skip.")
+        message(STATUS "${tarball_TARGET}: Checking SHA256 skip.")
     else()
-        message(STATUS "Checking HASH256 ...")
+        message(STATUS "${tarball_TARGET}: Checking SHA256 ...")
+        file(SHA256 ${SRC_TARBALL} ACTUAL_SHA256) # Get tarball actual SHA256
+
         set(NULL_SHA256
             "0000000000000000000000000000000000000000000000000000000000000000")
         set(EMPTY_SHA256
             "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
 
-        # Get the tarball actual SHA256
-        file(SHA256 ${SRC_TARBALL} ACTUAL_SHA256)
         if(ACTUAL_SHA256 STREQUAL "${EMPTY_SHA256}")
             # File was empty. It's likely due to lack of SSL support.
             file(REMOVE ${SRC_TARBALL})
@@ -116,13 +111,12 @@ Please use a version of CMake with proper SSL support and try again.")
 Actual HASH256  : ${ACTUAL_SHA256}
 Expected HASH256: ${tarball_EXPECTED_SHA256}")
         endif()
-        message(STATUS "Checking HASH256 ... done.")
     endif()
 
     ##############
     # Extracting #
     ##############
-    message(STATUS "Extracting ...
+    message(STATUS "${tarball_TARGET}: Extracting ...
    SRC = ${SRC_TARBALL}
    DST = ${SOURCE_DIR}")
 
@@ -142,16 +136,17 @@ Expected HASH256: ${tarball_EXPECTED_SHA256}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E
         tar xzf ${SRC_TARBALL}
         WORKING_DIRECTORY ${tmp_dir}
-        RESULT_VARIABLE extract_status)
+        RESULT_VARIABLE extract_status
+    )
 
     if(NOT extract_status EQUAL 0)
-        message(STATUS "Extracting ... error clean up")
+        message(STATUS "${tarball_TARGET}: Extracting ... error clean up")
         file(REMOVE_RECURSE "${tmp_dir}")
         message(FATAL_ERROR "Error: failed extract ${SRC_TARBALL}")
     endif()
 
     # Analyze what came out from the extracting
-    message(STATUS "extracting ... analysis")
+    message(STATUS "${tarball_TARGET}: Extracting ... analysis")
     file(GLOB contents "${tmp_dir}/*")
     list(LENGTH contents files_nums)
 
@@ -160,14 +155,12 @@ Expected HASH256: ${tarball_EXPECTED_SHA256}")
     endif()
 
     # Move source files to the final directory
-    message(STATUS "Extracting ... rename/move")
+    message(STATUS "${tarball_TARGET}: Extracting ... rename/move")
     file(REMOVE_RECURSE ${SOURCE_DIR})
     get_filename_component(contents ${contents} ABSOLUTE)
     file(RENAME ${contents} ${SOURCE_DIR})
 
     # Clean up:
-    message(STATUS "Extracting ... clean up")
+    message(STATUS "${tarball_TARGET}: Extracting ... clean up")
     file(REMOVE_RECURSE "${tmp_dir}")
-
-    message(STATUS "Extracting ... done.")
 endfunction()

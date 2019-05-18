@@ -42,7 +42,7 @@ function(XmakeDepTarballBuild name)
         set(tarball_INSTALL_CMD "")
     endif()
 
-    DownloadExtract(TARGET "${name}"
+    XmakeDownloadExtract(TARGET "${name}"
         URL "${tarball_URL}"
         EXPECTED_SHA256 "${tarball_SHA256}"
     )
