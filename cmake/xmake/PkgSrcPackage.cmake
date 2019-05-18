@@ -61,7 +61,7 @@ if(NOT CPACK_PACKAGE_DESCRIPTION_FILE)
 endif()
 
 if(NOT CPACK_PACKAGE_DESCRIPTION_FILE)
-    message(FATAL_ERROR "Cpack description do NOT exist, STOP!")
+    message(FATAL_ERROR "Cpack LICENSE do NOT exist, STOP!")
 endif()
 
 set(CPACK_GENERATOR "TGZ;STGZ") # *.tar.gz, *.sh
