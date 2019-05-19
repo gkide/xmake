@@ -128,6 +128,8 @@ demo-ifw:
 	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS) \
 	-DDEMO_RUN_CTEST=ON -DDEMO_RUN_GTEST=ON -DDEMO_RUN_QT5=ON \
 	-DDEMO_RUN_IFW=ON
+	@make I=${PWD}/build/usr
+	@make pkg-binary
 
 PHONY += demo-appimage
 demo-appimage:
@@ -135,6 +137,7 @@ demo-appimage:
 	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS) \
 	-DDEMO_RUN_CTEST=ON -DDEMO_RUN_GTEST=ON -DDEMO_RUN_QT5=ON \
 	-DDEMO_RUN_IFW=ON -DDEMO_APPIMAGE=ON
+	@make I=${PWD}/build/usr
 	$(XMAKE) -C $(BUILD_DIR) install
 	$(XMAKE) -C $(BUILD_DIR) pkg-appimage
 
