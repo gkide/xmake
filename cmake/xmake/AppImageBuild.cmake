@@ -179,7 +179,7 @@ macro(AppImageIcosSetup SIZE)
     if(EXISTS "${PKG_APPIMAGE_ICON${SIZE}}")
         get_filename_component(ext "${PKG_APPIMAGE_ICON${SIZE}}" EXT)
         install(FILES "${PKG_APPIMAGE_ICON${SIZE}}"
-            DESTINATION "${appdir_ROOT}/share/icons/hicolor/${SIZE}x${SIZE}/apps"
+            DESTINATION "${appdir_ROOT}/share/icons/hicolor/${SIZE}x${SIZE}/apps/"
             RENAME "${PKG_NAME}${ext}"
         )
         set(appdir_ICON
@@ -189,6 +189,7 @@ endmacro()
 
 AppImageIcosSetup(16)
 AppImageIcosSetup(32)
+AppImageIcosSetup(48)
 AppImageIcosSetup(64)
 AppImageIcosSetup(128)
 AppImageIcosSetup(256)
@@ -213,7 +214,7 @@ elseif(appdir_ICON)
     )
 else()
     message(FATAL_ERROR "AppDir missing ICON, must set at least one of:
-PKG_LOGO, PKG_APPIMAGE_ICON{16|32|64|128|256}"
+PKG_LOGO, PKG_APPIMAGE_ICON{16|32|48|64|128|256}"
     )
 endif()
 
