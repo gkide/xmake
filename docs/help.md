@@ -72,6 +72,23 @@ It will include the first one founded as following.
 - `${CMAKE_SOURCE_DIR}/ConfigCpack.cmake`
 - `${CMAKE_SOURCE_DIR}/cmake/ConfigCpack.cmake`
 
+Set **XXX**`_ENABLE_APPIMAGE` to enable [AppImage](https://appimage.org) support.
+It is disable by default, if enable, the [appimagetool](https://github.com/AppImage/AppImageKit)
+will auto download and make it executable. The install prefix will force set to
+`${CMAKE_BINARY_DIR}/usr`, as the AppDir for packaging. Call [XmakeInstallHelper](#xmakeinstallhelper)
+to install some files and targets, do `make install && make pkg-appimage`, That is all done!
+
+The AppImage local config file `ConfigAppImage.cmake` can be use to config.
+For more details see the example [here](../cmake/ConfigAppImage.cmake).
+
+- `${CMAKE_SOURCE_DIR}/ConfigAppImage.cmake`
+- `${CMAKE_SOURCE_DIR}/cmake/ConfigAppImage.cmake`
+
+NOTE!
+
+If enable AppImage support, set **XXX**`_APPIMAGE_DOWNLOAD_SKIP_SHA256` true,
+will skip the SHA256 checking for related downloading file.
+
 ## Doxygen Local Configurations
 
 xmake provide a default **Doxyfile** which is generated from a template, but the
@@ -227,7 +244,7 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 
 - `PKG_DOXYGEN_EXCLUDES`, doxygen input files exclude pattren, empty if not set
 
-- `PKG_PACKAGE_EXCLUDES`, only used by cpack to package source tarballs.
+- `PKG_SOURCE_EXCLUDES`, only used by cpack to package source tarballs.
 
     By default, the following will ignored from the source tarballs:
     - Version control files
@@ -257,7 +274,7 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
       * `todo/`
 
     - Extra ignore files set by user
-      * `${PKG_PACKAGE_EXCLUDES}`
+      * `${PKG_SOURCE_EXCLUDES}`
 
 ## External Project Support
 

@@ -368,6 +368,7 @@ xmake-help:
 	@echo "    release          do project release."
 	@echo "    doxygen          generate doxygen mannual."
 	@echo "    pkg-binary       build binary release package."
+	@echo "    pkg-appimage     build AppImage release package."
 	@echo "    pkg-source       build source release package."
 	@echo "-------------------------------------------------------------------------"
 #	@echo "See 'docs/local.mk' for much more setting details."
