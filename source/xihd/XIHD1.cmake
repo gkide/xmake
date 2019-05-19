@@ -7,8 +7,8 @@
 # include/private/bar-private2.h
 # lib/libfoostatic.a
 # lib/libbarstatic.a
-XmakeInstallHelper(TARGETS foostatic)
-XmakeInstallHelper(TARGETS barstatic foobar)
+XmakeInstallHelper(TARGETS fooshared)
+XmakeInstallHelper(TARGETS barshared foobar)
 
 # bin/another
 # bin/xtest

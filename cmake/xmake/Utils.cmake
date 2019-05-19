@@ -7,6 +7,7 @@ function(AutoCopyInstallFiles)
         "FILES;CPY_CMDS_PRE;CPY_CMDS_SUF;" # multi value keywords
         ${ARGN}
     )
+
     if(NOT auto_FILES)
         message(FATAL_ERROR "must set FILES")
     endif()

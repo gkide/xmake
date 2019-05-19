@@ -2,6 +2,12 @@ set(${XMAKE}_INSTALL_DIR ${CMAKE_INSTALL_PREFIX})
 
 # - If a full path (with a leading slash or drive letter) is, used it directly.
 # - If a relative path is given, relative to the value of CMAKE_INSTALL_PREFIX
+# AppImage
+# - https://docs.appimage.org/reference/appdir.html
+# Linux Standard Base
+# - http://refspecs.linuxfoundation.org/lsb.shtml
+# Filesystem Hierarchy Standard
+# - http://refspecs.linuxfoundation.org/fhs.shtml
 set(${XMAKE}_INSTALL_BIN_DIR bin)
 set(${XMAKE}_INSTALL_ETC_DIR etc)
 set(${XMAKE}_INSTALL_DOC_DIR doc)

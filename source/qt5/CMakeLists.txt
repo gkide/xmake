@@ -31,3 +31,5 @@ target_link_libraries(qt5app
     Qt5::Network
     ${XDEMO_AUTO_QT5_LIBRARIES}
 )
+
+XmakeInstallHelper(TARGETS qt5app)

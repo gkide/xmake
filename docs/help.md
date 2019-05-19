@@ -58,13 +58,19 @@ The following cmake variables will auto defined to idenify the host and project:
 
 ## Package Local Configurations
 
+xmake try to find file named `ConfigPkg.cmake` for the package configuration,
+which contains package info definations for variables start by [PKG_](#package-and-release)
+
+- `${CMAKE_SOURCE_DIR}/ConfigPkg.cmake`
+- `${CMAKE_SOURCE_DIR}/cmake/ConfigPkg.cmake`
+
 The cpack run with a generated cmake config file `CPackOptions.cmake`, it will
-check the local config file `PkgInstaller.cmake`, if it exist, the local config
+check the local config file `ConfigCpack.cmake`, if it exist, the local config
 file will be include to provided more detail info for binary & source packaging.
 It will include the first one founded as following.
 
-- `${CMAKE_SOURCE_DIR}/PkgInstaller.cmake`
-- `${CMAKE_SOURCE_DIR}/cmake/PkgInstaller.cmake`
+- `${CMAKE_SOURCE_DIR}/ConfigCpack.cmake`
+- `${CMAKE_SOURCE_DIR}/cmake/ConfigCpack.cmake`
 
 ## Doxygen Local Configurations
 
@@ -211,7 +217,7 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 - `PKG_INSTALLER_LOGO`, GUI installer INSTALL logo, empty if not set
 - `PKG_UNINSTALLER_LOGO`, GUI installer UNINSTALL logo, empty if not set
 
-- `PKG_TYPE_GUI`, set to true if the project is GUI
+- `PKG_APP_GUI`, set to true if the APP is GUI, otherwise for TUI
 
 - `PKG_DOXYGEN_SOURCE`, list of project source files or directories
   * if not set, do the following checking, use the first one founded:
@@ -280,6 +286,8 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 - [XmakeDepRepoBuild](#xmakedeprepobuild)
 - [XmakeDepTarballBuild](#xmakedeptarballbuild)
 - [XmakeDepBinaryInstall](#xmakedepbinaryinstall)
+- [XmakeDownloadFile](#xmakedownloadfile)
+- [XmakeDownloadExtract](xmakedownloadextract)
 - [XmakeCCRLcovHtml](#xmakeccrlcovhtml)
 - [XmakeCCRLcovTrace](#xmakeccrlcovtrace)
 - [XmakeCCRLcovTraceReport](#xmakeccrlcovtracereport)
@@ -339,6 +347,24 @@ This is used for prebuild binary: download and install.
 - `INSTALL_CMD`, The prebuild binary install commands
 - `VERSION`, The prebuild binary version
 - `SHA256`, The prebuild binary SHA256 for tarball checking
+
+## XmakeDownloadFile
+
+Download file and do SHA256 checking.
+
+- `URL`, The file URL to download
+- `SHA256`, The file SHA256 for checking
+- `OUTPUT`, The full file path to download
+
+## XmakeDownloadExtract
+
+Download tarball and extract.
+
+- `TARGET`, The tarball name
+- `URL`, The tarball file URL to download
+- `EXPECTED_SHA256`, The tarball file SHA256 for checking
+- `DOWNLOAD_TO`, The full path to save the download tarball
+- `EXTRACT_TO`, The full path to extract the tarball to
 
 ## XmakeCCRLcovHtml
 

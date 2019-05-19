@@ -71,4 +71,3 @@ endif()
 
 message(STATUS "${PROJECT_NAME} Build Type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "${PROJECT_NAME} Release Version: ${${XMAKE}_RELEASE_VERSION}")
-message(STATUS "${PROJECT_NAME} Install Perfix: ${CMAKE_INSTALL_PREFIX}")

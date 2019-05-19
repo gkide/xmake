@@ -9,10 +9,10 @@
 # message(WARNING/FATAL_ERROR ...) works, can be used to debug!
 
 # User extra configuration for package installer build
-if(EXISTS @CMAKE_SOURCE_DIR@/PkgInstaller.cmake)
-    include(@CMAKE_SOURCE_DIR@/PkgInstaller.cmake)
-elseif(EXISTS @CMAKE_SOURCE_DIR@/cmake/PkgInstaller.cmake)
-    include(@CMAKE_SOURCE_DIR@/cmake/PkgInstaller.cmake)
+if(EXISTS @CMAKE_SOURCE_DIR@/ConfigCpack.cmake)
+    include(@CMAKE_SOURCE_DIR@/ConfigCpack.cmake)
+elseif(EXISTS @CMAKE_SOURCE_DIR@/cmake/ConfigCpack.cmake)
+    include(@CMAKE_SOURCE_DIR@/cmake/ConfigCpack.cmake)
 endif()
 
 # NOTE There is a bug in NSI that does not handle full unix paths properly.
@@ -88,7 +88,7 @@ endif()
 
 # TODO MacOS App packer
 if("${CPACK_GENERATOR}" STREQUAL "PackageMaker")
-    if(NOT PKG_TYPE_GUI)
+    if(NOT PKG_APP_GUI)
         set(CPACK_PACKAGE_DEFAULT_LOCATION "/usr")
     else()
         set(CPACK_PACKAGE_DEFAULT_LOCATION "/Applications")

@@ -1,4 +1,4 @@
-# This file is used by 'build/CPackOptions.cmake', which 
+# This file is used by 'build/CPackOptions.cmake', which
 # is generated from 'xmake/CPackOptions.cmake.in'
 
 # NOTE

@@ -10,8 +10,6 @@ set(xmakeTarball "xmake-${xmakeVersion}.tar.gz")
 set(xmakeInited "${CMAKE_SOURCE_DIR}/cmake/xmake.cmake")
 # The local file for save the download xmake tarball
 set(xmakeLocalTarball "${CMAKE_SOURCE_DIR}/cmake/${xmakeTarball}")
-# The release tarball download base URL
-set(xmakeDownloadUrl "https://github.com/gkide/xmake/releases/download")
 
 # Download the xmake tarball
 function(xmakeInitDownload)
@@ -19,18 +17,31 @@ function(xmakeInitDownload)
         return()
     endif()
 
-    message(STATUS "Downloading ${xmakeTarball} ...")
-    file(DOWNLOAD "${xmakeDownloadUrl}/${xmakeVersion}/${xmakeTarball}"
-        "${xmakeLocalTarball}"
-        SHOW_PROGRESS
-        STATUS status
+    set(timeout 60)
+    set(timeout_msg "${timeout} seconds")
+    set(timeout_arg INACTIVITY_TIMEOUT ${timeout})
+
+    # The release tarball download base URL
+    set(xmakeDownloadUrl "https://github.com/gkide/xmake/releases/download")
+    set(xmakeDownloadUrl "${xmakeDownloadUrl}/${xmakeVersion}/${xmakeTarball}")
+
+    message(STATUS "${xmakeTarball}: Downloading ...
+   Timeout  = ${timeout_msg}
+   From URL = ${xmakeDownloadUrl}
+   Save As  = ${xmakeLocalTarball}")
+
+    file(DOWNLOAD "${xmakeDownloadUrl}" "${xmakeLocalTarball}"
+        ${timeout_arg} SHOW_PROGRESS STATUS status LOG errorLog
     )
 
-    list(GET status 0 rc)
-    list(GET status 1 emsg)
+    list(GET status 0 errorCode)
+    list(GET status 1 errorMsg)
 
-    if(rc)
-        message(FATAL_ERROR "Download ${xmakeTarball} failed => ${emsg}")
+    if(errorCode)
+        message(FATAL_ERROR "${xmakeTarball}: Downloading failed
+Error Code: ${errorCode}
+Error String: ${errorMsg}
+Error Log: ${errorLog}")
     endif()
 endfunction()
 
@@ -44,12 +55,14 @@ function(xmakeInitSha256Check)
         message(FATAL_ERROR "NOT exist ${xmakeLocalTarball}")
     endif()
 
-    message(STATUS "Checking HASH256 ...")
+    message(STATUS "${xmakeTarball}: Checking SHA256 ...")
+    file(SHA256 ${xmakeLocalTarball} ActualSHA256) # Get tarball actual SHA256
+
     set(NullSHA256
         "0000000000000000000000000000000000000000000000000000000000000000")
     set(EmptySHA256
         "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
-    file(SHA256 ${xmakeLocalTarball} ActualSHA256) # Get tarball actual SHA256
+
     if(ActualSHA256 STREQUAL "${EmptySHA256}")
         # File was empty. It's likely due to lack of SSL support.
         file(REMOVE ${xmakeLocalTarball})
@@ -60,9 +73,9 @@ Please use a version of CMake with proper SSL support and try again.")
            AND (NOT xmakeTarballSHA256 STREQUAL ActualSHA256))
         # Was not a NULL SHA256 and did not match
         file(REMOVE ${xmakeLocalTarball})
-        message(FATAL_ERROR "Checking HASH256 failed, remove it and try again.
-Actual HASH256  : ${ActualSHA256}
-Expected HASH256: ${xmakeTarballSHA256}")
+        message(FATAL_ERROR "Checking SHA256 failed, remove it and try again.
+Actually SHA256: ${ActualSHA256}
+Expected SHA256: ${xmakeTarballSHA256}")
     endif()
 endfunction()
 
@@ -77,7 +90,7 @@ function(xmakeInitExtractSetup)
     endif()
 
     set(xmakeExtractLocation ${CMAKE_SOURCE_DIR}/cmake)
-    message(STATUS "Extracting ...
+    message(STATUS "${xmakeTarball}: Extracting ...
        SRC = ${xmakeLocalTarball}
        DST = ${xmakeExtractLocation}"
     )
@@ -88,11 +101,12 @@ function(xmakeInitExtractSetup)
     )
 
     if(NOT extract_status EQUAL 0)
-        message(STATUS "Extracting ... error clean up")
+        message(STATUS "${xmakeTarball}: Extracting ... error clean up")
         file(REMOVE_RECURSE "${xmakeExtractLocation}")
         message(FATAL_ERROR "Error: failed extract ${xmakeLocalTarball}")
     endif()
 
+    message(STATUS "${xmakeTarball}: Setup and clean ...)
     set(xmakeTmpDir ${xmakeExtractLocation}/xmake-${xmakeVersion})
     file(COPY ${xmakeTmpDir}/cmake/xmake
         DESTINATION ${CMAKE_SOURCE_DIR}/cmake)

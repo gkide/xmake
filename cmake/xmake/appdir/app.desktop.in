@@ -1,0 +1,27 @@
+# Free Desktop Specifications
+# https://www.freedesktop.org/wiki/Specifications
+# Desktop Entry Specification
+# https://www.freedesktop.org/wiki/Specifications/desktop-entry-spec
+
+[Desktop Entry]
+
+# Name of the application
+Name=@PKG_NAME@
+Comment="@PKG_BRIEF_SUMMARY@"
+
+# Application, Link or Directory
+Type=Application
+
+# Categories in which the entry should be shown in a menu
+# https://www.freedesktop.org/wiki/Specifications/menu-spec
+Categories=Development;
+
+# Icon to display in file manager, menus, etc. PNG/XPM/SVG
+# https://freedesktop.org/wiki/Specifications/icon-theme-spec
+Icon=@PKG_NAME@
+
+# Program name to execute in '/usr/bin', possibly with arguments.
+Exec=@PKG_APP_EXEC@
+
+# Whether the program runs in a terminal window.
+Terminal=@pkg_app_is_tui@

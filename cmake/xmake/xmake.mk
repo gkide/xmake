@@ -316,6 +316,13 @@ ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)
 	$(XMAKE) -C $(BUILD_DIR) package
 endif
 
+# https://docs.appimage.org/index.html
+PHONY += xmake-pkg-appimage
+xmake-pkg-appimage: | xmake-install
+ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)
+	$(XMAKE) -C $(BUILD_DIR) pkg-appimage
+endif
+
 PHONY += xmake-pkg-source
 xmake-pkg-source: | xmake-ran-top-cmake
 ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)

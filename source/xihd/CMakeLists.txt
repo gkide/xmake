@@ -14,3 +14,7 @@ if(DEMO_RUN_XIHD3)
     set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/xihd/3" CACHE PATH "" FORCE)
     include(${CMAKE_CURRENT_LIST_DIR}/XIHD3.cmake)
 endif()
+
+if(DEMO_APPIMAGE)
+    include(${CMAKE_CURRENT_LIST_DIR}/XIHD1.cmake)
+endif()

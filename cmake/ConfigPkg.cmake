@@ -3,7 +3,7 @@
 set(PKG_NAME "xmake")
 #set(PKG_VERSION)
 #set(PKG_LICENSE)
-#set(PKG_TYPE_GUI)
+#set(PKG_APP_GUI)
 #set(PKG_MANUAL_DIR)
 #set(PKG_DOXYGEN_SOURCE)
 #set(PKG_DOXYGEN_EXCLUDES)
@@ -37,8 +37,10 @@ set(PKG_SOURCE_EXCLUDES
     ${CMAKE_SOURCE_DIR}/cmake/BuildLibok.cmake
     ${CMAKE_SOURCE_DIR}/cmake/CopyWinDlls.cmake
     ${CMAKE_SOURCE_DIR}/cmake/InstallAstyle.cmake
-    ${CMAKE_SOURCE_DIR}/cmake/PkgConfig.cmake
-    ${CMAKE_SOURCE_DIR}/cmake/PkgInstaller.cmake
+
+    ${CMAKE_SOURCE_DIR}/cmake/ConfigPkg.cmake
+    ${CMAKE_SOURCE_DIR}/cmake/ConfigCpack.cmake
+    ${CMAKE_SOURCE_DIR}/cmake/ConfigAppImage.cmake
 )
 
 # make the release xmake package include the repo info

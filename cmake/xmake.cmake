@@ -23,10 +23,10 @@ math(EXPR ${XMAKE}_VERSION_NUMBER
 )
 
 # User extra configuration for package
-if(EXISTS ${CMAKE_SOURCE_DIR}/PkgConfig.cmake)
-    include(${CMAKE_SOURCE_DIR}/PkgConfig.cmake)
-elseif(EXISTS ${CMAKE_SOURCE_DIR}/cmake/PkgConfig.cmake)
-    include(${CMAKE_SOURCE_DIR}/cmake/PkgConfig.cmake)
+if(EXISTS ${CMAKE_SOURCE_DIR}/ConfigPkg.cmake)
+    include(${CMAKE_SOURCE_DIR}/ConfigPkg.cmake)
+elseif(EXISTS ${CMAKE_SOURCE_DIR}/cmake/ConfigPkg.cmake)
+    include(${CMAKE_SOURCE_DIR}/cmake/ConfigPkg.cmake)
 endif()
 
 # If not set, auto use the lower case of project and make it hidden
@@ -328,8 +328,12 @@ macro(XmakeQt5SupportSetup)
     endif()
 endmacro()
 
-if(${XMAKE}_ENABLE_DEPENDENCY)
+if(${XMAKE}_ENABLE_DEPENDENCY OR ${XMAKE}_ENABLE_APPIMAGE)
     include(xmake/Dependencies)
+endif()
+
+if(${XMAKE}_ENABLE_APPIMAGE)
+    include(xmake/AppImageBuild)
 endif()
 
 #include(xmake/PrintCmake)
@@ -362,3 +366,5 @@ if(${XMAKE}_ENABLE_GTEST)
 endif()
 
 include(xmake/DoxygenHelper)
+
+message(STATUS "${PROJECT_NAME} Install Perfix: ${CMAKE_INSTALL_PREFIX}")

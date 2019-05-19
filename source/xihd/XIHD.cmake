@@ -20,7 +20,7 @@ list(APPEND BAR_PUBLIC_HEADERS ${XIHD_SRC}/bar.h)
 list(APPEND BAR_PUBLIC_HEADERS ${XIHD_SRC}/bar2.h)
 list(APPEND BAR_PRIVATE_HEADERS ${XIHD_SRC}/bar-private.h)
 list(APPEND BAR_PRIVATE_HEADERS ${XIHD_SRC}/bar-private2.h)
-add_library(barstatic SHARED ${XIHD_SRC}/bar.c ${XIHD_SRC}/bar-private.c)
+add_library(barstatic STATIC ${XIHD_SRC}/bar.c ${XIHD_SRC}/bar-private.c)
 set_target_properties(barstatic PROPERTIES
     PUBLIC_HEADER "${BAR_PUBLIC_HEADERS}"
     PRIVATE_HEADER "${BAR_PRIVATE_HEADERS}"

@@ -29,6 +29,9 @@ release: xmake-release
 PHONY += pkg-binary
 pkg-binary: xmake-pkg-binary
 
+PHONY += pkg-appimage
+pkg-appimage: xmake-pkg-appimage
+
 PHONY += pkg-source
 pkg-source: xmake-pkg-source
 
@@ -124,6 +127,15 @@ demo-ifw:
 	$(Q)rm -rf $(BUILD_DIR)/CMakeCache.txt # clean cmake cache
 	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS) \
 	-DDEMO_RUN_CTEST=ON -DDEMO_RUN_GTEST=ON -DDEMO_RUN_QT5=ON \
-	-DDEMO_RUN_XIHD1=ON -DDEMO_RUN_IFW=ON
+	-DDEMO_RUN_IFW=ON
+
+PHONY += demo-appimage
+demo-appimage:
+	$(Q)rm -rf $(BUILD_DIR)/CMakeCache.txt # clean cmake cache
+	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS) \
+	-DDEMO_RUN_CTEST=ON -DDEMO_RUN_GTEST=ON -DDEMO_RUN_QT5=ON \
+	-DDEMO_RUN_IFW=ON -DDEMO_APPIMAGE=ON
+	$(XMAKE) -C $(BUILD_DIR) install
+	$(XMAKE) -C $(BUILD_DIR) pkg-appimage
 
 .PHONY: $(PHONY)

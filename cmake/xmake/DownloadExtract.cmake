@@ -1,3 +1,5 @@
+include(CMakeParseArguments)
+
 function(XmakeDownloadExtract)
     cmake_parse_arguments(tarball
         ""
@@ -66,20 +68,18 @@ function(XmakeDownloadExtract)
    From URL = ${tarball_URL}
    Save As  = ${SRC_TARBALL}")
 
-        file(DOWNLOAD ${tarball_URL} ${SRC_TARBALL}
-            ${timeout_arg}
-            SHOW_PROGRESS
-            STATUS status
-            LOG log)
+        file(DOWNLOAD ${tarball_URL} ${SRC_TARBALL} ${timeout_arg}
+            SHOW_PROGRESS STATUS status LOG errorLog
+        )
 
-        list(GET status 0 status_code)
-        list(GET status 1 status_string)
+        list(GET status 0 errorCode)
+        list(GET status 1 errorMsg)
 
-        if(NOT status_code EQUAL 0)
-            message(FATAL_ERROR "Error: failed downloading from ${tarball_URL}
-Status Code: ${status_code}
-Status String: ${status_string}
-Log: ${log}")
+        if(NOT errorCode EQUAL 0)
+            message(FATAL_ERROR "${tarball_TARGET}: Downloading failed
+Error Code: ${errorCode}
+Error String: ${errorMsg}
+Error Log: ${errorLog}")
         endif()
     endif()
 
@@ -107,9 +107,9 @@ Please use a version of CMake with proper SSL support and try again.")
                AND (NOT tarball_EXPECTED_SHA256 STREQUAL ACTUAL_SHA256))
             # Was not a NULL SHA256 and did not match
             file(REMOVE ${SRC_TARBALL})
-            message(FATAL_ERROR "Checking HASH256 failed, remove it and try again.
-Actual HASH256  : ${ACTUAL_SHA256}
-Expected HASH256: ${tarball_EXPECTED_SHA256}")
+            message(FATAL_ERROR "Checking SHA256 failed, remove it and try again.
+Actually SHA256: ${ACTUAL_SHA256}
+Expected SHA256: ${tarball_EXPECTED_SHA256}")
         endif()
     endif()
 
@@ -163,4 +163,90 @@ Expected HASH256: ${tarball_EXPECTED_SHA256}")
     # Clean up:
     message(STATUS "${tarball_TARGET}: Extracting ... clean up")
     file(REMOVE_RECURSE "${tmp_dir}")
+endfunction()
+
+function(XmakeDownloadFile)
+    cmake_parse_arguments(file # prefix
+        "MARK_EXECUTABLE;SKIP_SHA256" # options
+        "URL;SHA256;OUTPUT" # one value keywords
+        "" # multi value keywords
+        ${ARGN}
+    )
+
+    if(NOT file_URL OR NOT file_SHA256 OR NOT file_OUTPUT)
+        message(FATAL_ERROR "URL, SHA256 and OUTPUT must be passed.")
+    endif()
+
+    if(EXISTS "${file_OUTPUT}")
+        return()
+    endif()
+
+    set(timeout 60)
+    set(timeout_msg "${timeout} seconds")
+    set(timeout_arg INACTIVITY_TIMEOUT ${timeout})
+    get_filename_component(fname ${file_OUTPUT} NAME)
+
+    message(STATUS "${fname}: Downloading ...
+   Timeout  = ${timeout_msg}
+   From URL = ${file_URL}
+   Save As  = ${file_OUTPUT}")
+
+    file(DOWNLOAD ${file_URL} ${file_OUTPUT} ${timeout_arg}
+        SHOW_PROGRESS STATUS status LOG errorLog
+    )
+
+    list(GET status 0 errorCode)
+    list(GET status 1 errorMsg)
+
+    if(NOT errorCode EQUAL 0)
+        message(FATAL_ERROR "${fname}: Downloading failed
+Error Code: ${errorCode}
+Error String: ${errorMsg}
+Error Log: ${errorLog}")
+    endif()
+
+    if(file_SKIP_SHA256)
+        return()
+    endif()
+
+    message(STATUS "${fname}: Checking SHA256 ...")
+    file(SHA256 ${file_OUTPUT} ActualSHA256) # Get actual SHA256
+
+    set(NullSHA256
+        "0000000000000000000000000000000000000000000000000000000000000000")
+    set(EmptySHA256
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+
+    if(ActualSHA256 STREQUAL "${EmptySHA256}")
+        # File was empty. It's likely due to lack of SSL support.
+        file(REMOVE ${file_OUTPUT})
+        message(FATAL_ERROR "Failed to download ${fname}.
+The file is empty and likely means CMake was built without SSL support.
+Please use a version of CMake with proper SSL support and try again.")
+    elseif((NOT file_SHA256 STREQUAL NullSHA256)
+           AND (NOT file_SHA256 STREQUAL ActualSHA256))
+        # Was not a NULL SHA256 and did not match
+        file(REMOVE ${file_OUTPUT})
+        message(FATAL_ERROR "Checking SHA256 failed, remove it and try again.
+Actually HASH256: ${ActualSHA256}
+Expected HASH256: ${file_SHA256}")
+    endif()
+
+    if(NOT file_MARK_EXECUTABLE)
+        return()
+    endif()
+
+    # setup for executable premission
+    get_filename_component(tmp_PATH ${file_OUTPUT} PATH)
+    set(tmpbin_PATH "${tmp_PATH}/tmpbin")
+    set(tmpbin_FILE "${tmpbin_PATH}/${fname}")
+    file(COPY ${file_OUTPUT} DESTINATION ${tmpbin_PATH}
+        FILE_PERMISSIONS
+            OWNER_READ OWNER_WRITE OWNER_EXECUTE
+            GROUP_READ GROUP_EXECUTE
+            WORLD_READ WORLD_EXECUTE
+    )
+    file(REMOVE ${file_OUTPUT})
+    file(RENAME "${tmpbin_FILE}" "${file_OUTPUT}")
+    file(REMOVE_RECURSE ${tmpbin_PATH})
 endfunction()

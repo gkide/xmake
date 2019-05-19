@@ -33,6 +33,11 @@ if(DEMO_RUN_IFW)
     option(XDEMO_ENABLE_IFW "Enable Qt Installer Framework." ON)
 endif()
 
+if(DEMO_APPIMAGE)
+    option(XDEMO_ENABLE_APPIMAGE "Enable AppImage support for linux" ON)
+    #option(XDEMO_APPIMAGE_DOWNLOAD_SKIP_SHA256 "Do NOT check SHA256" OFF)
+endif()
+
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(xmake) # xmake should include in the top CMakeLists.txt
