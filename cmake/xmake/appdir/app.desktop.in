@@ -17,7 +17,10 @@ Type=Application
 Categories=Development;
 
 # Icon to display in file manager, menus, etc. PNG/XPM/SVG
-# https://freedesktop.org/wiki/Specifications/icon-theme-spec
+#
+# If the value is an absolute path, the given file will be used.
+# If the value is not absolute path, use algorithm to to locate the icon.
+# - https://freedesktop.org/wiki/Specifications/icon-theme-spec
 Icon=@PKG_NAME@
 
 # Program name to execute in '/usr/bin', possibly with arguments.

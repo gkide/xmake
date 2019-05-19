@@ -1,7 +1,13 @@
 # AppImage Configuration
 
 # The App Entry Point
-set(PKG_APP_EXEC xtest)
+if(true)
+    set(PKG_APP_GUI true)
+    set(PKG_APP_EXEC qt5app)
+else()
+    set(PKG_APP_GUI false)
+    set(PKG_APP_EXEC xtest)
+endif()
 
 # If set, then just copy it to the root of AppDir
 # if not, create it from a template shell script
