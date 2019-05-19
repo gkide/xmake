@@ -1,5 +1,5 @@
 # The xmake version to downloaded
-set(xmakeVersion v1.0.0-dev) # This is the tag version string
+set(xmakeVersion "v1.0.0-dev") # This is the tag version string
 set(xmakeTarballSHA256 # The tarball SHA256 to checking
     "315f975262aba7376a05ee2128a091e9a7e10fb0560c0f6c8850cc502093cb91"
 )
@@ -30,7 +30,7 @@ function(xmakeInitDownload)
    From URL = ${xmakeDownloadUrl}
    Save As  = ${xmakeLocalTarball}")
 
-    file(DOWNLOAD "${xmakeDownloadUrl}" "${xmakeLocalTarball}"
+    file(DOWNLOAD ${xmakeDownloadUrl} ${xmakeLocalTarball}
         ${timeout_arg} SHOW_PROGRESS STATUS status LOG errorLog
     )
 
@@ -91,9 +91,9 @@ function(xmakeInitExtractSetup)
 
     set(xmakeExtractLocation ${CMAKE_SOURCE_DIR}/cmake)
     message(STATUS "${xmakeTarball}: Extracting ...
-       SRC = ${xmakeLocalTarball}
-       DST = ${xmakeExtractLocation}"
-    )
+   SRC = ${xmakeLocalTarball}
+   DST = ${xmakeExtractLocation}")
+
     execute_process(COMMAND ${CMAKE_COMMAND} -E
         tar xzf ${xmakeLocalTarball}
         WORKING_DIRECTORY ${xmakeExtractLocation}
@@ -106,7 +106,7 @@ function(xmakeInitExtractSetup)
         message(FATAL_ERROR "Error: failed extract ${xmakeLocalTarball}")
     endif()
 
-    message(STATUS "${xmakeTarball}: Setup and clean ...)
+    message(STATUS "${xmakeTarball}: Setup and clean ...")
     set(xmakeTmpDir ${xmakeExtractLocation}/xmake-${xmakeVersion})
     file(COPY ${xmakeTmpDir}/cmake/xmake
         DESTINATION ${CMAKE_SOURCE_DIR}/cmake)

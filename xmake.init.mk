@@ -1,6 +1,6 @@
-# The xmake version to downloaded
-xmakeVersion ?= v1.0.0-dev # This is the tag version string
 xmakeDownloadUrl := https://github.com/gkide/xmake/releases/download
+# The xmake version to downloaded, git tag version string
+xmakeVersion ?= v1.0.0-dev
 
 # tar/unzip tools for decompress the xmake tarball
 TAR ?= $(shell (command -v tar))
@@ -16,14 +16,14 @@ ifeq ($(TAR),)
 endif
 
 # curl/wget tools for download the xmake tarball
-CURL ?= $(shell (command -v curl))
-FETCH := $(CURL) -L -o $(xmakeTarball)
-ifeq ($(CURL),)
-    WGET ?= $(shell (command -v wget))
-    ifeq ($(WGET),)
+WGET ?= $(shell (command -v wget))
+FETCH := $(WGET) -O $(xmakeTarball)
+ifeq ($(WGET),)
+    CURL ?= $(shell (command -v curl))
+    ifeq ($(CURL),)
         $(error do NOT found 'curl' and 'wget', xmake init STOP.)
     endif
-    FETCH := $(WGET) -O $(xmakeTarball)
+    FETCH := $(CURL) -L -o $(xmakeTarball)
 endif
 
 # check if xmake is inited or not
