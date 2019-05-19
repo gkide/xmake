@@ -75,8 +75,9 @@ It will include the first one founded as following.
 Set **XXX**`_ENABLE_APPIMAGE` to enable [AppImage](https://appimage.org) support.
 It is disable by default, if enable, the [appimagetool](https://github.com/AppImage/AppImageKit)
 will auto download and make it executable. The install prefix will force set to
-`${CMAKE_BINARY_DIR}/usr`, as the AppDir for packaging. Call [XmakeInstallHelper](#xmakeinstallhelper)
-to install some files and targets, do `make install && make pkg-appimage`, That is all done!
+`${CMAKE_BINARY_DIR}/usr`, as the [AppDir](https://docs.appimage.org/reference/appdir.html)
+for packaging. Call [XmakeInstallHelper](#xmakeinstallhelper) to install some
+files and targets, do `make install && make pkg-appimage`, That's all!
 
 The AppImage local config file `ConfigAppImage.cmake` can be use to config.
 For more details see the example [here](../cmake/ConfigAppImage.cmake).
