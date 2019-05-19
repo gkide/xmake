@@ -65,10 +65,6 @@ if(NOT CPACK_PACKAGE_DESCRIPTION_FILE)
 endif()
 
 set(CPACK_GENERATOR "TGZ;STGZ") # *.tar.gz, *.sh
-if(${XMAKE}_ENABLE_IFW)
-    list(APPEND CPACK_GENERATOR "IFW")
-endif()
-
 set(CPACK_SOURCE_GENERATOR "TGZ;ZIP") # *.tar.gz, *.zip
 
 # Windows Installers
@@ -91,6 +87,10 @@ if(HOST_WINDOWS)
     endif()
     # Registry key used to store info about the installation
     set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CPACK_NSIS_PACKAGE_NAME}")
+endif()
+
+if(${XMAKE}_ENABLE_IFW)
+    list(APPEND CPACK_GENERATOR "IFW")
 endif()
 
 # The source package files do NOT stripping

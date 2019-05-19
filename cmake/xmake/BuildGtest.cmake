@@ -1,4 +1,4 @@
-if(true)
+if(false)
     # Download git repo & build
     XmakeDepRepoBuild(  libgtest
         REPO_URL    https://github.com/google/googletest.git
@@ -16,7 +16,7 @@ else()
         URL          https://github.com/google/googletest/archive/release-1.8.1.tar.gz
         SHA256       9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c
         CONFIG_CMD   ${CMAKE_COMMAND} -E make_directory build
-            COMMAND  cd build && ${CMAKE_COMMAND}
+            COMMAND  cd build && ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}"
                 -DCMAKE_BUILD_TYPE=${DEPS_BUILD_TYPE}
                 -DCMAKE_INSTALL_PREFIX=${DEPS_INSTALL_DIR} ..
         BUILD_CMD   ${MAKE_PROG} -C build
