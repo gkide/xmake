@@ -83,3 +83,4 @@ target_link_libraries(qt5app
 )
 
 XmakeInstallHelper(TARGETS qt5app)
+XmakeCopyWinAppDlls(qt5app)

@@ -315,6 +315,8 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 - [XmakeInstallHelper](#xmakeinstallhelper)
 - [XmakeGetCFlags](#xmakegetcflags)
 - [XmakeGetCXXFlags](#xmakegetcxxflags)
+- [XmakeCopyWinAppDlls](#xmakecopywinappdlls)
+- [XmakeCopyInstallFiles](#xmakecopyinstallfiles)
 - [XmakeGetInstallBinaries](#xmakegetinstallbinaries)
 
 
@@ -593,6 +595,22 @@ file any where as you want to, can be used combie with **DOMAIN**, and the
 - install `PROGRAMS` into `DESTINATION` with optional `FILE_PERMISSIONS`
   * if not set, the default value is **rwxr-xr-x**, rename if set `RENAME`
 
+## XmakeCopyWinAppDlls
+
+Use `ldd` to find the DLLs of given target **execTarget**, then find out the
+NOT build & system ones, do copy and install on those DLLs file. Only works
+for windows, do nothing for other OS.
+
+## XmakeCopyInstallFiles
+
+Copy and install the given files.
+
+- `INS_DEST`, The install destionation for DLLs
+- `CPY_DEST`, The copy destionation for DLLs
+- `CPY_TARGET`, The target for the copy DLLs
+- `FILES`, The DLLs files to operation
+- `CPY_CMDS_PRE`, The commands before the DLLs copy
+- `CPY_CMDS_SUF`, The commands after the DLLs copy
 
 # Miscellaneous
 

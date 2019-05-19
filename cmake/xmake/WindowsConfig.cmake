@@ -19,7 +19,7 @@ endmacro()
 
 if(HOST_WINDOWS_MSYS)
     SetWinDllName(msys20_dll "2.0") # msys-2.0.dll
-    AutoCopyInstallFiles(
+    XmakeCopyInstallFiles(
         FILES       "${WIN_DLLS_DIR}/${msys20_dll}"
         INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
         CPY_TARGET  "copy-${msys20_dll}"
@@ -27,7 +27,7 @@ if(HOST_WINDOWS_MSYS)
     )
 elseif(HOST_WINDOWS_CYGWIN)
     SetWinDllName(cygwin_dll "win1") # cygwin1.dll
-    AutoCopyInstallFiles(
+    XmakeCopyInstallFiles(
         FILES       "${WIN_DLLS_DIR}/${cygwin_dll}"
         INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
         CPY_TARGET  "copy-${cygwin_dll}"
@@ -38,7 +38,7 @@ endif()
 # copy {lib|msys-|cyg-}stdc++-6.dll
 if(NOT ${XMAKE}_USE_STATIC_GCC_LIBS)
     SetWinDllName(gcc_s_seh_1_dll "gcc_s_seh-1") # {lib|msys-|cyg-}gcc_s_seh-1.dll
-    AutoCopyInstallFiles(
+    XmakeCopyInstallFiles(
         FILES       "${WIN_DLLS_DIR}/${gcc_s_seh_1_dll}"
         INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
         CPY_TARGET  "copy-${gcc_s_seh_1_dll}"
@@ -46,7 +46,7 @@ if(NOT ${XMAKE}_USE_STATIC_GCC_LIBS)
     )
 
     SetWinDllName(gcc_s_dw2_1_dll "gcc_s_dw2-1") # {lib|msys-|cyg-}gcc_s_dw2-1.dll
-    AutoCopyInstallFiles(
+    XmakeCopyInstallFiles(
         FILES       "${WIN_DLLS_DIR}/${gcc_s_dw2_1_dll}"
         INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
         CPY_TARGET  "copy-${gcc_s_dw2_1_dll}"
@@ -54,7 +54,7 @@ if(NOT ${XMAKE}_USE_STATIC_GCC_LIBS)
     )
 
     SetWinDllName(stdcxx_6_dll "stdc++-6") # {lib|msys-|cyg-}stdc++-6.dll
-    AutoCopyInstallFiles(
+    XmakeCopyInstallFiles(
         FILES       "${WIN_DLLS_DIR}/${stdcxx_6_dll}"
         INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
         CPY_TARGET  "copy-${stdcxx_6_dll}"
@@ -62,17 +62,10 @@ if(NOT ${XMAKE}_USE_STATIC_GCC_LIBS)
     )
 
     SetWinDllName(winpthread_1_dll "winpthread-1") # {lib|msys-|cyg-}winpthread-1.dll
-    AutoCopyInstallFiles(
+    XmakeCopyInstallFiles(
         FILES       "${WIN_DLLS_DIR}/${winpthread_1_dll}"
         INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
         CPY_TARGET  "copy-${winpthread_1_dll}"
         CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
     )
-endif()
-
-# User extra configuration for shared linked Qt5
-if(EXISTS ${CMAKE_SOURCE_DIR}/CopyWinDlls.cmake)
-    include(${CMAKE_SOURCE_DIR}/CopyWinDlls.cmake)
-elseif(EXISTS ${CMAKE_SOURCE_DIR}/cmake/CopyWinDlls.cmake)
-    include(${CMAKE_SOURCE_DIR}/cmake/CopyWinDlls.cmake)
 endif()

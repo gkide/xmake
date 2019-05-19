@@ -40,7 +40,11 @@ set_target_properties(foobar PROPERTIES
 )
 
 # barfoo shared library
-add_library(barfoo SHARED ${XIHD_SRC}/foobar.c)
+add_library(barfoo SHARED
+    ${XIHD_SRC}/foobar.c
+    ${XIHD_SRC}/bar.c
+    ${XIHD_SRC}/bar-private.c
+)
 set_target_properties(barfoo PROPERTIES
     PUBLIC_HEADER
         ${XIHD_SRC}/foobar.h
