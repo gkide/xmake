@@ -1,4 +1,4 @@
-if(false)
+if(true)
     # Download git repo & build
     XmakeDepRepoBuild(  libgtest
         REPO_URL    https://github.com/google/googletest.git
