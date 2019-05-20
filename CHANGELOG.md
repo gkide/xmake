@@ -7,10 +7,10 @@
 
 ## 2019-05-20 22:12:20 +0800 Release [v1.0.0-rc](https://github.com/gkide/xmake/releases/tag/v1.0.0-rc)
 
-[[☕](#<span id = "v_Features_201905202212200800"></span>)]
-[[☀](#<span id = "v_Fixed_201905202212200800"></span>)]
-[[⛭](#<span id = "v_Changed_201905202212200800"></span>)]
-[[☂](#<span id = "v_Dependencies_201905202212200800"></span>)]
+[[☕](#v_Features_201905202212200800)]
+[[☀](#v_Fixed_201905202212200800)]
+[[⛭](#v_Changed_201905202212200800)]
+[[☂](#v_Dependencies_201905202212200800)]
 comparing with [v1.0.0-rc-dev](https://github.com/gkide/xmake/compare/v1.0.0-rc-dev...v1.0.0-rc)
 
 <span id = "v_Features_201905202212200800"></span>
@@ -46,10 +46,10 @@ comparing with [v1.0.0-rc-dev](https://github.com/gkide/xmake/compare/v1.0.0-rc-
 
 ## 2019-05-16 03:18:49 +0800 Release [v1.0.0-rc-dev](https://github.com/gkide/xmake/releases/tag/v1.0.0-rc-dev)
 
-[[☕](#<span id = "v_Features_201905160318490800"></span>)]
-[[☀](#<span id = "v_Fixed_201905160318490800"></span>)]
-[[⛭](#<span id = "v_Changed_201905160318490800"></span>)]
-[[☂](#<span id = "v_Dependencies_201905160318490800"></span>)]
+[[☕](#v_Features_201905160318490800)]
+[[☀](#v_Fixed_201905160318490800)]
+[[⛭](#v_Changed_201905160318490800)]
+[[☂](#v_Dependencies_201905160318490800)]
 
 <span id = "v_Features_201905160318490800"></span>
 ### ☕ Features
