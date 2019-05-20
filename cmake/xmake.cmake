@@ -1,5 +1,6 @@
 # xmake git repo is https://github.com/gkide/xmake
 cmake_minimum_required(VERSION 2.8.12)
+include(xmake/PreventInTreeBuilds)
 
 if(MSVC)
     message(FATAL_ERROR "do NOT support MSVC for now!")
@@ -28,6 +29,8 @@ if(EXISTS ${CMAKE_SOURCE_DIR}/ConfigPkg.cmake)
 elseif(EXISTS ${CMAKE_SOURCE_DIR}/cmake/ConfigPkg.cmake)
     include(${CMAKE_SOURCE_DIR}/cmake/ConfigPkg.cmake)
 endif()
+
+include(xmake/CheckHostSystem)
 
 # If not set, auto use the lower case of project and make it hidden
 if(NOT PKG_NAME)
@@ -98,8 +101,6 @@ foreach(type ${CMAKE_CONFIGURATION_TYPES})
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${TYPE} ${CMAKE_BINARY_DIR}/${type}/lib)
 endforeach()
 
-include(xmake/PreventInTreeBuilds)
-include(xmake/CheckHostSystem)
 include(xmake/PkgSrcPackage)
 include(xmake/InstallHelper)
 include(xmake/CompileFlags)
