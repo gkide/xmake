@@ -4,7 +4,7 @@ project(xdemo)
 set(XDEMO_VERSION_MAJOR 1)
 set(XDEMO_VERSION_MINOR 0)
 set(XDEMO_VERSION_PATCH 0)
-set(XDEMO_VERSION_TWEAK "dev+bd5998caff") # date & HASH auto update at build time
+set(XDEMO_VERSION_TWEAK "rc") # date & HASH auto update at build time
 
 #option(XDEMO_XMAKE_VERBOSE "Show verbose xmake message" ON)
 
