@@ -49,7 +49,7 @@ OutFile "@CPACK_TOPLEVEL_DIRECTORY@/@CPACK_OUTPUT_FILE_NAME@"
 SetCompressor @CPACK_NSIS_COMPRESSOR@
 
 # Require administrator access
-RequestExecutionLevel admin
+# RequestExecutionLevel admin
 
 @CPACK_NSIS_DEFINES@
 
