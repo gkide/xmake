@@ -5,5 +5,5 @@
 - [ ] [busted](http://olivinelabs.com/busted) elegant unit testing by lua.
 - [x] [AppImage](https://appimage.org/)
 - [ ] [dmg]
-- [ ] windows installer for NSIS/IFW
+- [x] windows installer for NSIS/IFW
 - [ ] Macos

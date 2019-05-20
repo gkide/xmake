@@ -78,9 +78,16 @@ function(XmakeCopyWinAppDlls execTarget)
         return() # skip for none executable
     endif()
 
-    get_target_property(targetLoc ${execTarget}
-        LOCATION_${CMAKE_BUILD_TYPE}
-    )
+    set(tmpTgtLocFile "${CMAKE_BINARY_DIR}/tmp.loc.${execTarget}")
+    if(EXISTS "${tmpTgtLocFile}")
+        file(READ "${tmpTgtLocFile}" targetLoc)
+    else()
+        file(GENERATE OUTPUT "${tmpTgtLocFile}"
+            CONTENT "$<TARGET_FILE:${execTarget}>"
+        )
+        return() # do not generated yet, just skip
+    endif()
+
     if(NOT EXISTS ${targetLoc})
         return() # do NOT build yet, skip
     endif()
