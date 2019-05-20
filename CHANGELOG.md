@@ -5,7 +5,46 @@
 - REPOSITORY COMMITS ADHERE TO [CONVENTIONAL COMMITS](https://conventionalcommits.org).
 
 
-## 2019-05-16 03:18:49 +0800 Release [v1.0.0-dev](https://github.com/gkide/xmake/releases/tag/v1.0.0-dev)
+## 2019-05-20 22:12:20 +0800 Release [v1.0.0-rc](https://github.com/gkide/xmake/releases/tag/v1.0.0-rc)
+
+[[☕](#<span id = "v_Features_201905202212200800"></span>)]
+[[☀](#<span id = "v_Fixed_201905202212200800"></span>)]
+[[⛭](#<span id = "v_Changed_201905202212200800"></span>)]
+[[☂](#<span id = "v_Dependencies_201905202212200800"></span>)]
+comparing with [v1.0.0-rc-dev](https://github.com/gkide/xmake/compare/v1.0.0-rc-dev...v1.0.0-rc)
+
+<span id = "v_Features_201905202212200800"></span>
+### ☕ Features
+- **feat**(`win`): copy DLLs for windows app, more cmake API ([abe80a0](https://github.com/gkide/xmake/commit/abe80a0))
+- **feat**: qt5 app hard-coded and dynamic rcc file ([5636bfa](https://github.com/gkide/xmake/commit/5636bfa))
+- **feat**: init AppImage packaging ([8bf00c4](https://github.com/gkide/xmake/commit/8bf00c4))
+- **feat**: get c/c++ compiler flags ([a884777](https://github.com/gkide/xmake/commit/a884777))
+- **feat**: qt IFW support ([2515128](https://github.com/gkide/xmake/commit/2515128))
+- **feat**: xmake cmake init ([0c65968](https://github.com/gkide/xmake/commit/0c65968))
+- **feat**: xmake.init => xmake.init.mk, add xmake.init.cmake ([1e8cec9](https://github.com/gkide/xmake/commit/1e8cec9))
+- **feat**: xmake.init makefile ([1c1e868](https://github.com/gkide/xmake/commit/1c1e868))
+
+<span id = "v_Fixed_201905202212200800"></span>
+### ☀ Fixed
+- **fix**(`win`): remove copy app DLLs cmake warnings ([7423547](https://github.com/gkide/xmake/commit/7423547))
+- **fix**: when do not have ccr tools just warning, do not as error ([86be15a](https://github.com/gkide/xmake/commit/86be15a))
+- **fix**: pkg license current year ([650f1a5](https://github.com/gkide/xmake/commit/650f1a5))
+- **fix**(`win`): nsis set NSIS windows build fix ([9f673f4](https://github.com/gkide/xmake/commit/9f673f4))
+- **fix**: appimage icon files install into apps/ directory ([b890541](https://github.com/gkide/xmake/commit/b890541))
+- **fix**: xmake init bug fix ([e5e3727](https://github.com/gkide/xmake/commit/e5e3727))
+- **fix**: cpack must provided license/destcription file ([c77698d](https://github.com/gkide/xmake/commit/c77698d))
+
+<span id = "v_Changed_201905202212200800"></span>
+### ⛭ Changed
+- **perf**(`win`): windows MinGW64 IFM/NSIS package ([1f67b3a](https://github.com/gkide/xmake/commit/1f67b3a))
+
+<span id = "v_Dependencies_201905202212200800"></span>
+### ☂ Dependencies
+- **build**: google test use git repo ([6559a55](https://github.com/gkide/xmake/commit/6559a55))
+- **build**(`win`): package NSIS do not require admin ([aac9259](https://github.com/gkide/xmake/commit/aac9259))
+- **build**: xmake source package build name ([f6831ad](https://github.com/gkide/xmake/commit/f6831ad))
+
+## 2019-05-16 03:18:49 +0800 Release [v1.0.0-rc-dev](https://github.com/gkide/xmake/releases/tag/v1.0.0-rc-dev)
 
 [[☕](#<span id = "v_Features_201905160318490800"></span>)]
 [[☀](#<span id = "v_Fixed_201905160318490800"></span>)]
