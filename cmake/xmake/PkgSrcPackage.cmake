@@ -1,5 +1,4 @@
 if(${XMAKE}_DEBUG_BUILD AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
-    message(AUTHOR_WARNING "Skip src/bin package for Dev/Coverage build")
     return()
 endif()
 

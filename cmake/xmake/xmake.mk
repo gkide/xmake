@@ -314,6 +314,10 @@ PHONY += xmake-pkg-binary
 xmake-pkg-binary: | xmake-ran-top-cmake
 ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)
 	$(XMAKE) -C $(BUILD_DIR) package
+else
+	@echo "#################################################"
+	@echo "# SKIP Binary Packaging for Dev/Coverage Build! #"
+	@echo "#################################################"
 endif
 
 # https://docs.appimage.org/index.html
@@ -321,12 +325,20 @@ PHONY += xmake-pkg-appimage
 xmake-pkg-appimage: | xmake-install
 ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)
 	$(XMAKE) -C $(BUILD_DIR) pkg-appimage
+else
+	@echo "###################################################"
+	@echo "# SKIP AppImage Packaging for Dev/Coverage Build! #"
+	@echo "###################################################"
 endif
 
 PHONY += xmake-pkg-source
 xmake-pkg-source: | xmake-ran-top-cmake
 ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)
 	$(XMAKE) -C $(BUILD_DIR) package_source
+else
+	@echo "#################################################"
+	@echo "# SKIP Source Packaging for Dev/Coverage Build! #"
+	@echo "#################################################"
 endif
 
 PHONY += xmake-clean
