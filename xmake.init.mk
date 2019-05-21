@@ -31,20 +31,12 @@ xmakeInit := cmake/xmake.cmake
 xmakeInit := $(shell if [ -f $(xmakeInit) ]; then echo "true"; else echo ""; fi;)
 
 # The target to init xmake
+ifeq ($(xmakeInit),)
 PHONY += xmake-init
 xmake-init:
-ifeq ($(xmakeInit),)
 	CMAKE="$(PWD)/cmake"; mkdir -p $${CMAKE} && cd $${CMAKE} && $(FETCH) \
 	$(xmakeDownloadUrl)/$(xmakeVersion)/$(xmakeTarball) && $(UNTGZ) && \
 	mv xmake-$(xmakeVersion)/cmake/* ./ && rm -rf xmake-$(xmakeVersion)*
-endif
-
-ifneq ($(xmakeInit),)
-    # https://www.gnu.org/software/make/manual/make.html
-    # xmake already inited, do not make it as the default goal
-    ifeq ($(.DEFAULT_GOAL), xmake-init)
-        .DEFAULT_GOAL :=
-    endif
 endif
 
 # The xmake user-friendly template
