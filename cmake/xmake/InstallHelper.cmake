@@ -112,14 +112,20 @@ if(${XMAKE}_ENABLE_IFW)
     )
 endif()
 
+# export project information
+include(xmake/PackageConfig)
+
 # The install components: Runtime, Develop, Resource
 function(XmakeInstallHelper)
+    set(options         EXPORT_LIBRARY_INFO)
+    set(oneValueArgs    RENAME  DOMAIN    DIRECTORY  DESTINATION)
+    set(multiValueArgs  FILES   PROGRAMS  TARGETS    FILE_PERMISSIONS
+        DIRECTORY_PERMISSIONS   EXPORT_LIBRARY_WITH_EXTRA_LIBS
+    )
+
     cmake_parse_arguments(install_helper # prefix
-        "" # options
-        "DESTINATION;DIRECTORY;RENAME;DOMAIN" # one value keywords
-        # multi value keywords
-        "FILES;PROGRAMS;TARGETS;DIRECTORY_PERMISSIONS;FILE_PERMISSIONS"
-        ${ARGN})
+        "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
+    )
 
     if(NOT install_helper_FILES
        AND NOT install_helper_TARGETS
@@ -170,6 +176,7 @@ function(XmakeInstallHelper)
         endif()
 
         if(install_helper_DOMAIN)
+            set(export_lib_DOMAIN DOMAIN ${install_helper_DOMAIN})
             set(DomainBin ${DomainBin}/${install_helper_DOMAIN})
             set(DomainLib ${DomainLib}/${install_helper_DOMAIN})
             set(DomainShare ${DomainShare}/${install_helper_DOMAIN})
@@ -234,6 +241,8 @@ function(XmakeInstallHelper)
                 set(lib_type "Module Library")
             elseif(target_type STREQUAL INTERFACE_LIBRARY)
                 set(lib_type "Interface Library")
+            else()
+                message(FATAL_ERROR "do NOT support internal target install")
             endif()
 
             if(${XMAKE}_XMAKE_VERBOSE)
@@ -280,6 +289,15 @@ function(XmakeInstallHelper)
             # Create directory with the correct permissions.
             CreateDestDirWithPerms(DESTINATION ${DomainLib})
 
+            set(do_EXPORT)
+            if(install_helper_EXPORT_LIBRARY_INFO)
+                set(do_EXPORT EXPORT ${target})
+                XmakePackageConfig(NAME ${target}
+                    ${export_lib_DOMAIN}
+                    "${install_helper_EXPORT_LIBRARY_WITH_EXTRA_LIBS}"
+                )
+            endif()
+
             get_target_property(macosx_framework ${target} FRAMEWORK)
             if(HOST_MACOS AND macosx_framework)
                 # install(TARGETS ${target}
@@ -287,14 +305,15 @@ function(XmakeInstallHelper)
                 #    COMPONENT Runtime)
                 message(FATAL_ERROR "MACOSX: framework shared libraries")
             else()
-                install(TARGETS ${target} ${install_resources}
+                install(TARGETS ${target} ${do_EXPORT} ${install_resources}
                     # Shared Library(DLL)
                     RUNTIME DESTINATION ${DomainBin} COMPONENT Runtime
                     # Module Library, Shared Library(non-DLL)
                     LIBRARY DESTINATION ${DomainLib} COMPONENT Runtime
                     # Static Library, Shared Import Library(DLL)
                     ARCHIVE DESTINATION ${DomainLib} COMPONENT Develop
-                    ${install_public_headers} ${install_private_headers})
+                    ${install_public_headers} ${install_private_headers}
+                )
             endif()
 
             set(installed_binaries "${installed_binaries}"

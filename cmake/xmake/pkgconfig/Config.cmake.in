@@ -1,0 +1,40 @@
+set(@pkg_NAME@_VERSION @pkg_VERSION@)
+@PACKAGE_INIT@
+
+#check_required_components(@pkg_NAME@)
+get_filename_component(_cdir "${CMAKE_CURRENT_LIST_FILE}" PATH)
+
+if(false)
+    if("@pkg_DOMAIN@" STREQUAL "")
+        set_and_check(@pkg_NAME@_LIBRARIES "@PACKAGE_LIBRARY_INSTALL_DIR@")
+        set_and_check(@pkg_NAME@_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+    else()
+        set_and_check(@pkg_NAME@_LIBRARIES "@PACKAGE_LIBRARY_INSTALL_DIR@/@pkg_DOMAIN@")
+        set_and_check(@pkg_NAME@_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@/@pkg_DOMAIN@")
+    endif()
+else()
+    set_and_check(@pkg_NAME@_LIBRARIES "@PACKAGE_LIBRARY_INSTALL_DIR@")
+    set_and_check(@pkg_NAME@_INCLUDE_DIRS "@PACKAGE_INCLUDE_INSTALL_DIR@")
+endif()
+
+set_and_check(@pkg_NAME@_cmake "${_cdir}/@pkg_NAME@.cmake")
+include(${@pkg_NAME@_cmake})
+
+unset(@pkg_NAME@_LIBRARIES)
+#list(APPEND @pkg_NAME@_LIBRARIES @pkg_NAME@)
+
+file(GLOB @pkg_NAME@_CONFIG_FILES "${_cdir}/@pkg_NAME@-*.cmake")
+foreach(pcf ${@pkg_NAME@_CONFIG_FILES})
+    include(${pcf})
+    foreach(target ${_IMPORT_CHECK_TARGETS})
+        list(APPEND @pkg_NAME@_LIBRARIES
+            ${PACKAGE_PREFIX_DIR}${_IMPORT_CHECK_FILES_FOR_${target}}
+        )
+        unset(_IMPORT_CHECK_FILES_FOR_${target})
+    endforeach()
+    unset(_IMPORT_CHECK_TARGETS)
+endforeach()
+
+# remove the duplicate ones
+#list(REMOVE_DUPLICATES @pkg_NAME@_LIBRARIES)
+list(REMOVE_DUPLICATES @pkg_NAME@_INCLUDE_DIRS)

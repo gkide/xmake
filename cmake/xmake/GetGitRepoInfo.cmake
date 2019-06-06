@@ -62,12 +62,4 @@ if(${XMAKE}_BRANCH_NAME AND ${XMAKE}_COMMIT_SHA1 AND ${XMAKE}_COMMIT_MDTZ)
     set(${XMAKE}_VERSION_TWEAK ${pkg_version_tweak})
 endif()
 
-if(false)
-    message(STATUS "${PROJECT_NAME} Repo Hash: ${${XMAKE}_COMMIT_HASH}")
-    message(STATUS "${PROJECT_NAME} Repo Branch: ${${XMAKE}_BRANCH_NAME}")
-    message(STATUS "${PROJECT_NAME} Repo Describe: ${${XMAKE}_RECENT_TAG}")
-    message(STATUS "${PROJECT_NAME} Repo Commit Time: ${${XMAKE}_COMMIT_MDTZ}")
-endif()
-
-message(STATUS "${PROJECT_NAME} Build Type: ${CMAKE_BUILD_TYPE}")
-message(STATUS "${PROJECT_NAME} Release Version: ${${XMAKE}_RELEASE_VERSION}")
+set(git_REPO_PRINT_INFO true)

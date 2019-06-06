@@ -11,17 +11,15 @@ mark_as_advanced(GCOV_PROG GCOVR_PROG PYTHON_PROG LCOV_PROG GENHTML_PROG)
 
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang"
    AND "${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS 3)
-    message(WARNING "Clang version must be 3.0.0 or greater, code coverage skip ...")
+    message(AUTHOR_WARNING "Clang version must be 3.0.0 or later, code coverage skip!")
     set(ccr_skip true)
 elseif(NOT CMAKE_COMPILER_IS_GNUCXX)
-    message(WARNING "Compiler is not GNU GCC, code coverage skip ...")
+    message(AUTHOR_WARNING "Compiler is not GNU GCC, code coverage skip!")
     set(ccr_skip true)
 endif()
 
 if(NOT ${XMAKE}_DEBUG_BUILD)
     set(ccr_skip true)
-    message(STATUS "Skip code coverage for ${CMAKE_BUILD_TYPE} build")
-    message(STATUS "* The optimised build results maybe misleading")
 endif()
 
 mark_as_advanced(ccr_skip)
@@ -52,7 +50,6 @@ if(ccr_skip)
     return()
 endif()
 
-message(STATUS "Enable code coverage measurements")
 set(code_coverage_flags "-g -O0 -fprofile-arcs -ftest-coverage --coverage "
     CACHE INTERNAL "")
 mark_as_advanced(code_coverage_flags)
@@ -77,7 +74,7 @@ endif()
 function(XmakeCCRAppendFlags)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${code_coverage_flags}" PARENT_SCOPE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${code_coverage_flags}" PARENT_SCOPE)
-    message(STATUS "Code coverage compiler flags: ${code_coverage_flags}")
+    # message(STATUS "Code coverage compiler flags: ${code_coverage_flags}")
 endfunction()
 
 # code coverage report root directory
@@ -129,17 +126,17 @@ function(XmakeCCRLcovHtml)
     )
 
     if(NOT LCOV_PROG)
-        message(WARNING "NOT found lcov, code coverage skip ...")
+        message(WARNING "NOT found lcov, code coverage skip!")
         return()
     endif()
 
     if(NOT GCOV_PROG)
-        message(WARNING "NOT found gcov, code coverage skip ...")
+        message(WARNING "NOT found gcov, code coverage skip!")
         return()
     endif()
 
     if(NOT GENHTML_PROG)
-        message(WARNING "NOT found genhtml, code coverage skip ...")
+        message(WARNING "NOT found genhtml, code coverage skip!")
         return()
     endif()
 
@@ -251,17 +248,17 @@ function(XmakeCCRLcovTraceReport)
     )
 
     if(NOT LCOV_PROG)
-        message(WARNING "NOT found lcov, code coverage skip ...")
+        message(WARNING "NOT found lcov, code coverage skip!")
         return()
     endif()
 
     if(NOT GCOV_PROG)
-        message(WARNING "NOT found gcov, code coverage skip ...")
+        message(WARNING "NOT found gcov, code coverage skip!")
         return()
     endif()
 
     if(NOT GENHTML_PROG)
-        message(WARNING "NOT found genhtml, code coverage skip ...")
+        message(WARNING "NOT found genhtml, code coverage skip!")
         return()
     endif()
 
@@ -360,17 +357,17 @@ function(XmakeCCRLcovTrace)
     )
 
     if(NOT LCOV_PROG)
-        message(WARNING "NOT found lcov, code coverage skip ...")
+        message(WARNING "NOT found lcov, code coverage skip!")
         return()
     endif()
 
     if(NOT GCOV_PROG)
-        message(WARNING "NOT found gcov, code coverage skip ...")
+        message(WARNING "NOT found gcov, code coverage skip!")
         return()
     endif()
 
     if(NOT GENHTML_PROG)
-        message(WARNING "NOT found genhtml, code coverage skip ...")
+        message(WARNING "NOT found genhtml, code coverage skip!")
         return()
     endif()
 
@@ -441,12 +438,12 @@ function(XmakeCCRGcovrXml)
     )
 
     if(NOT GCOVR_PROG)
-        message(WARNING "NOT found gcovr, code coverage skip ...")
+        message(WARNING "NOT found gcovr, code coverage skip!")
         return()
     endif()
 
     if(NOT PYTHON_PROG)
-        message(WARNING "NOT found python, code coverage skip ...")
+        message(WARNING "NOT found python, code coverage skip!")
         return()
     endif()
 
@@ -545,12 +542,12 @@ function(XmakeCCRGcovrHtml)
     )
 
     if(NOT GCOVR_PROG)
-        message(WARNING "NOT found gcovr, code coverage skip ...")
+        message(WARNING "NOT found gcovr, code coverage skip!")
         return()
     endif()
 
     if(NOT PYTHON_PROG)
-        message(WARNING "NOT found python, code coverage skip ...")
+        message(WARNING "NOT found python, code coverage skip!")
         return()
     endif()
 
@@ -648,12 +645,12 @@ function(XmakeCCRGcovrText)
     )
 
     if(NOT GCOVR_PROG)
-        message(WARNING "NOT found gcovr, code coverage skip ...")
+        message(WARNING "NOT found gcovr, code coverage skip!")
         return()
     endif()
 
     if(NOT PYTHON_PROG)
-        message(WARNING "NOT found python, code coverage skip ...")
+        message(WARNING "NOT found python, code coverage skip!")
         return()
     endif()
 
