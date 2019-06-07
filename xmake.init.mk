@@ -1,6 +1,6 @@
 xmakeDownloadUrl := https://github.com/gkide/xmake/releases/download
 # The xmake version to downloaded, git tag version string
-xmakeVersion ?= v1.0.0-rc
+xmakeVersion ?= v1.1.0
 
 # tar/unzip tools for decompress the xmake tarball
 TAR ?= $(shell (command -v tar))

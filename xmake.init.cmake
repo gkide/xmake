@@ -1,5 +1,5 @@
 # The xmake version to downloaded
-set(xmakeVersion "v1.0.0-rc") # This is the tag version string
+set(xmakeVersion "v1.1.0") # This is the tag version string
 set(xmakeTarballSHA256 # The tarball SHA256 to checking
     "aa85a14d9f7c5d96a13be64d9175f1f8eaee5cdd7feb86c74d4f30bd9bbf0121"
 )
