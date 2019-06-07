@@ -1,7 +1,7 @@
 # The xmake version to downloaded
 set(xmakeVersion "v1.1.0") # This is the tag version string
 set(xmakeTarballSHA256 # The tarball SHA256 to checking
-    "aa85a14d9f7c5d96a13be64d9175f1f8eaee5cdd7feb86c74d4f30bd9bbf0121"
+    "cedefafd2b328d6613effc715ca4ce2ed98ed626bbba055c85fa605596327735"
 )
 
 # The xmake tarball file name to download
