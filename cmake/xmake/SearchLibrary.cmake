@@ -22,8 +22,16 @@ endmacro()
 #  ${pkg_NAME}_LIBRARIES    - The found libraries for linking
 #  ${pkg_NAME}_INCLUDE_DIRS - The directories for include header
 function(XmakeSearchLibrary)
-    set(options        VERBOSE REQUIRED SHARED STATIC)
-    set(oneValueArgs   NAME VERSION)
+    set(options
+        VERBOSE           # Verbose search message, default OFF
+        REQUIRED          # Cmake stop if library not found
+        SHARED            # Search for shared library only
+        STATIC            # Search for static library only
+    )
+    set(oneValueArgs
+        NAME              # The library name to search
+        VERSION           # Major[.Minor[.Patch]]
+    )
     set(multiValueArgs
         FIND_PACKAGE_ARGS # For find_package args
         PKGCONFIG_ARGS    # For pkg_check_modules args

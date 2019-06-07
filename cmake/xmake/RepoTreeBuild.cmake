@@ -1,21 +1,29 @@
 include(CMakeParseArguments)
 
-function(XmakeDepRepoBuild name)
+# The external project name is repoName, will be cmake top target
+function(XmakeDepRepoBuild repoName)
+    set(optionValueArgs)
+    set(oneValueArgs
+        REPO_URL      # The git project repo URL to clone
+    )
+    set(multiValueArgs
+        PATCH_CMD     # The project patch commands
+        CONFIG_CMD    # The project config commands
+        BUILD_CMD     # The project build commands
+        INSTALL_CMD   # The project install commands
+    )
     cmake_parse_arguments(repo # prefix
-        "" # options
-        "REPO_URL" # one value keywords
-        "PATCH_CMD;CONFIG_CMD;BUILD_CMD;INSTALL_CMD" # multi value keywords
-        ${ARGN})
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
+    )
 
     if(NOT repo_REPO_URL)
-        message(FATAL_ERROR "Must set REPO_URL for ${name}.")
+        message(FATAL_ERROR "Must set REPO_URL for project ${repoName}.")
     endif()
 
-    if(NOT repo_CONFIG_CMD AND
-       NOT repo_BUILD_CMD AND
-       NOT repo_INSTALL_CMD)
+    if(NOT repo_CONFIG_CMD AND NOT repo_BUILD_CMD AND NOT repo_INSTALL_CMD)
         message(FATAL_ERROR
-            "Must set one of CONFIG_CMD, BUILD_CMD, INSTALL_CMD for ${name}.")
+            "Must set one of CONFIG_CMD, BUILD_CMD, INSTALL_CMD for ${repoName}."
+        )
     endif()
 
     if(NOT repo_PATCH_CMD)
@@ -34,10 +42,10 @@ function(XmakeDepRepoBuild name)
         set(repo_INSTALL_CMD "")
     endif()
 
-    set(BuildDir ${DEPS_BUILD_DIR}/${name})
-    set(RepoDir ${DEPS_DOWNLOAD_DIR}/${name})
+    set(BuildDir ${DEPS_BUILD_DIR}/${repoName})
+    set(RepoDir ${DEPS_DOWNLOAD_DIR}/${repoName})
 
-    ExternalProject_Add(   ${name}
+    ExternalProject_Add(   ${repoName}
         # General
         PREFIX             ${DEPS_BUILD_DIR}
         STAMP_DIR          ${BuildDir}-stamp
@@ -60,10 +68,10 @@ function(XmakeDepRepoBuild name)
 
     if(NOT (EXISTS ${RepoDir} AND IS_DIRECTORY ${RepoDir}
             AND EXISTS ${RepoDir}/.git AND IS_DIRECTORY ${RepoDir}/.git))
-        ExternalProject_Add_Step(${name} ${name}-repo-clone
-            COMMENT "git clone ${repo_REPO_URL} ${name}"
+        ExternalProject_Add_Step(${repoName} ${repoName}-repo-clone
+            COMMENT "git clone ${repo_REPO_URL} ${repoName}"
                 WORKING_DIRECTORY ${DEPS_DOWNLOAD_DIR}
-            COMMAND ${GIT_PROG} clone ${repo_REPO_URL} ${name}
+            COMMAND ${GIT_PROG} clone ${repo_REPO_URL} ${repoName}
         )
     endif()
 endfunction()

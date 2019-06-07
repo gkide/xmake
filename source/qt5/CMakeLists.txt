@@ -2,8 +2,11 @@ if(NOT DEMO_RUN_QT5)
     return()
 endif()
 
-XmakeQt5SupportSetup(
-    AUTOMATIC ${QT5_AUTOMATIC}
+if(QT5_AUTOMATIC)
+    set(QT5_AUTOMATIC AUTOMATIC)
+endif()
+
+XmakeQt5SupportSetup(${QT5_AUTOMATIC}
     STATIC_PREFIX ${QT5_STATIC_PREFIX}
     SHARED_PREFIX ${QT5_SHARED_PREFIX}
 )

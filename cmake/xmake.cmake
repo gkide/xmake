@@ -304,20 +304,27 @@ else()
 endif()
 
 # Enable static/shared Qt5 support
-#   AUTOMATIC       Enable Qt5 support, auto detect from system
-#   STATIC_PREFIX   full path to Qt5 static install, like: /opt/qt-5.9.1
-#   SHARED_PREFIX   full path to Qt5 static install, like: /opt/Qt5.5.1/5.5/gcc_64
-#   SHARED_PREFIX   full path to Qt5 static install, like: /usr/lib/gcc/x86_64-linux-gnu
+# - AUTOMATIC       Enable Qt5 support, auto detect from system
+# - STATIC_PREFIX   Full path to Qt5 static install, like: /opt/qt-5.9.1
+# - SHARED_PREFIX   Full path to Qt5 static install, like: /opt/Qt5.5.1/5.5/gcc_64
+# - SHARED_PREFIX   Full path to Qt5 static install, like: /usr/lib/gcc/x86_64-linux-gnu
 #
 # This should be used in the top Qt5 directory. With the return(), thus on host
 # that has Qt5 installed, build the Qt5 part; and on host that has no Qt5   
 # installed, just skip the Qt5 build part and continue with other parts
 macro(XmakeQt5SupportSetup)
+    set(optionValueArgs
+        AUTOMATIC
+    )
+    set(oneValueArgs
+        STATIC_PREFIX  # Qt5 static install prefix
+        SHARED_PREFIX  # Qt5 shared install prefix
+    )
+    set(multiValueArgs)
     cmake_parse_arguments(qt5 # prefix
-        "" # options
-        "STATIC_PREFIX;SHARED_PREFIX;AUTOMATIC" # one value keywords
-        "" # multi value keywords
-        ${ARGN})
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
+    )
+
     if(qt5_STATIC_PREFIX OR qt5_SHARED_PREFIX OR qt5_AUTOMATIC)
         include(xmake/Qt5Helper)
     else()

@@ -324,9 +324,21 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 
 ## XmakeQt5SupportSetup
 
+The Qt5 search helper, for example
+
+```cmake
+XmakeQt5SupportSetup(AUTOMATIC
+    STATIC_PREFIX /opt/qt-5.9.1
+    SHARED_PREFIX /usr/lib/gcc/x86_64-linux-gnu
+)
+```
+
+**Option Value Args**
 - `AUTOMATIC` try to find Qt5 from the system wide
-- `STATIC_PREFIX` static build of Qt5 install path
-- `SHARED_PREFIX` shared build of Qt5 install path
+
+**One Value Args**
+- `STATIC_PREFIX`, static build of Qt5 install path
+- `SHARED_PREFIX`, shared build of Qt5 install path
 
 NOTE: static Qt5 need following two auto defined variables
 - **XXX**`_AUTO_QT5_SOURCES`, xmake auto generated source files for statci qt5.
@@ -336,8 +348,22 @@ NOTE: static Qt5 need following two auto defined variables
 
 This is used for building external repo project: clone, build and install.
 
-- `NAME`, The external project name, will be cmake top target
+```cmake
+XmakeDepRepoBuild(libgtest
+    REPO_URL    https://github.com/google/googletest.git
+    CONFIG_CMD  ${CMAKE_COMMAND} -E make_directory build
+        COMMAND cd build && ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}"
+            -DCMAKE_BUILD_TYPE=${DEPS_BUILD_TYPE}
+            -DCMAKE_INSTALL_PREFIX=${DEPS_INSTALL_DIR} ..
+    BUILD_CMD   ${MAKE_PROG} -C build
+    INSTALL_CMD ${MAKE_PROG} -C build install
+)
+```
+
+**One Value Args**
 - `REPO_URL`, The git project repo URL to clone
+
+**Multi Value Args**
 - `PATCH_CMD`, The project patch commands
 - `CONFIG_CMD`, The project config commands
 - `BUILD_CMD`, The project build commands
@@ -347,10 +373,26 @@ This is used for building external repo project: clone, build and install.
 
 This is used for building external project: download, build and install.
 
-- `NAME`, The external project name, will be cmake top target
+```cmake
+XmakeDepTarballBuild(libgtest
+    VERSION      1.8.1
+    URL          https://github.com/google/googletest/archive/release-1.8.1.tar.gz
+    SHA256       9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c
+    CONFIG_CMD   ${CMAKE_COMMAND} -E make_directory build
+        COMMAND  cd build && ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}"
+            -DCMAKE_BUILD_TYPE=${DEPS_BUILD_TYPE}
+            -DCMAKE_INSTALL_PREFIX=${DEPS_INSTALL_DIR} ..
+    BUILD_CMD   ${MAKE_PROG} -C build
+    INSTALL_CMD ${MAKE_PROG} -C build install
+)
+```
+
+**One Value Args**
 - `VERSION`, The project version
 - `URL`, The project tarball URL to download
 - `SHA256`, The tarball SHA256 for tarball checking
+
+**Multi Value Args**
 - `PATCH_CMD`, The project patch command
 - `CONFIG_CMD`, The project config command
 - `BUILD_CMD`, The project build command
@@ -614,6 +656,12 @@ XmakeInstallHelper(TARGETS bar foobar
 
 Found library by using `find_package()`, `pkg-config`, `find_path()`, `find_library()`
 
+The following variables will be set accroding the result:
+- `${LibName}_FOUND`        - Set to true found if found libraries
+- `${LibName}_VERSION`      - The found library version
+- `${LibName}_LIBRARIES`    - The found libraries for linking
+- `${LibName}_INCLUDE_DIRS` - The directories for include header
+
 ```cmake
 XmakeSearchLibrary(NAME LibName [VERBOSE] [REQUIRED] [SHARED] [STATIC]
     VERSION 1.2.3
@@ -626,11 +674,23 @@ XmakeSearchLibrary(NAME LibName [VERBOSE] [REQUIRED] [SHARED] [STATIC]
 )
 ```
 
-The following variables will be set accroding the result:
-- `${LibName}_FOUND`        - Set to true found if found libraries
-- `${LibName}_VERSION`      - The found library version
-- `${LibName}_LIBRARIES`    - The found libraries for linking
-- `${LibName}_INCLUDE_DIRS` - The directories for include header
+**Options Args**
+- `VERBOSE`, Verbose search message, default OFF
+- `REQUIRED`, Cmake stop if library not found
+- `SHARED`, Search for shared library only
+- `STATIC`, Search for static library only
+
+**One-Value Args**
+- `NAME`, The library name to search
+- `VERSION`, The library version `Major[.Minor[.Patch]]`
+
+**Multi-Value Args**
+- `FIND_PACKAGE_ARGS`, For `find_package()` args
+- `PKGCONFIG_ARGS`, For `pkg_check_modules()` args
+- `FIND_PATH_ARGS`, For `find_path()` args
+- `FIND_LIBRARY_ARGS`, For `find_library()` args
+- `HEADER_FILES`, The library header files
+- `EXTRA_SEARCH_DIRS`, The extra directory to search
 
 ## XmakeCopyWinAppDlls
 
