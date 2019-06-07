@@ -335,6 +335,7 @@ XmakeQt5SupportSetup(AUTOMATIC
 
 **Option Value Args**
 - `AUTOMATIC` try to find Qt5 from the system wide
+- `FATAL_ERROR_IF_NOT_FOUND` cmake fatal error if not found Qt5
 
 **One Value Args**
 - `STATIC_PREFIX`, static build of Qt5 install path

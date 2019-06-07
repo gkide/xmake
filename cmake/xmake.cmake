@@ -315,6 +315,7 @@ endif()
 macro(XmakeQt5SupportSetup)
     set(optionValueArgs
         AUTOMATIC
+        FATAL_ERROR_IF_NOT_FOUND
     )
     set(oneValueArgs
         STATIC_PREFIX  # Qt5 static install prefix
@@ -328,6 +329,9 @@ macro(XmakeQt5SupportSetup)
     if(qt5_STATIC_PREFIX OR qt5_SHARED_PREFIX OR qt5_AUTOMATIC)
         include(xmake/Qt5Helper)
     else()
+        if(qt5_FATAL_ERROR_IF_NOT_FOUND)
+            message(FATAL_ERROR "NOT found Qt5 library, STOP!")
+        endif()
         return()
     endif()
 endmacro()
