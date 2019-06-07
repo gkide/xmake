@@ -1,12 +1,25 @@
 include(CMakeParseArguments)
 
 # Download & Install Prebuild Binary
+# The prebuild binary name, will be cmake top target
 function(XmakeDepBinaryInstall name)
+    set(optionValueArgs
+        SKIP        # Skip prebuild binary download and install if true
+        REPO        # Download prebuild binary repo, patch and install
+        TARBALL     # Download prebuild binary tarball, extract, patch and install
+    )
+    set(oneValueArgs
+        URL         # The prebuild binary tarball or repo URL to download
+        SHA256      # The prebuild binary SHA256 for tarball checking
+        VERSION     # The prebuild binary version
+    )
+    set(multiValueArgs
+        PATCH_CMD   # The prebuild binary patch commands
+        INSTALL_CMD # The prebuild binary install commands
+    )
     cmake_parse_arguments(bin # prefix
-        "SKIP;REPO;TARBALL" # options
-        "URL;SHA256;VERSION" # one value keywords
-        "PATCH_CMD;INSTALL_CMD" # multi value keywords
-        ${ARGN})
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
+    )
 
     if(bin_SKIP)
         return() # skip download & install

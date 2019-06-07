@@ -1,17 +1,19 @@
 include(CMakeParseArguments)
 
-# INS_DEST      The install destionation for DLLs
-# CPY_DEST      The copy destionation for DLLs
-# CPY_TARGET    The target for the copy DLLs
-# FILES         The DLLs files to operation
-# CPY_CMDS_PRE  The commands before the DLLs copy
-# CPY_CMDS_SUF  The commands after the DLLs copy
 function(XmakeCopyInstallFiles)
+    set(optionValueArgs)
+    set(oneValueArgs
+        INS_DEST        # The install destionation for DLLs
+        CPY_DEST        # The copy destionation for DLLs
+        CPY_TARGET      # The target for the copy DLLs
+    )
+    set(multiValueArgs
+        FILES           # The DLLs files to operation
+        CPY_CMDS_PRE    # The commands before the DLLs copy
+        CPY_CMDS_SUF    # The commands after the DLLs copy
+    )
     cmake_parse_arguments(auto # prefix
-        "" # options
-        "INS_DEST;CPY_DEST;CPY_TARGET" # one value keywords
-        "FILES;CPY_CMDS_PRE;CPY_CMDS_SUF;" # multi value keywords
-        ${ARGN}
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
     if(NOT auto_FILES)

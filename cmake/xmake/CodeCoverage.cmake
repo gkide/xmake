@@ -105,24 +105,23 @@ mark_as_advanced(LCOV_EXTRA_ARGS)
 # NOTE! The executable should always have a ZERO as exit code otherwise
 # the coverage generation will not complete, but this can be skipped by
 # given EXECUTABLE_FORCE_SUCCESS
-#
-# - TARGET                      Target name, if not set, set to code.coverage-*
-# - EXECUTABLE                  Executable to run
-# - EXECUTABLE_ARGS             Executable arguments
-# - DEPENDENCIES                Dependencies to build first
-#
-# - LCOV_ARGS                   Extra arguments for lcov
-# - GENHTML_ARGS                Extra arguments for genhtml
-# - LCOV_EXCLUDES               Exclude patterns from the report
-#
-# - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
 function(XmakeCCRLcovHtml)
-    cmake_parse_arguments(cct
-        "EXECUTABLE_FORCE_SUCCESS" # options
-        "TARGET" # one value keywords
-        # multi value keywords
-        "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;LCOV_ARGS;LCOV_EXCLUDES;GENHTML_ARGS"
-        ${ARGN}
+    set(optionValueArgs
+        EXECUTABLE_FORCE_SUCCESS  # Executable force success if set
+    )
+    set(oneValueArgs
+        TARGET  # Target name, if not set, set to code.coverage-*
+    )
+    set(multiValueArgs
+        DEPENDENCIES      # Dependencies to build first
+        EXECUTABLE        # Executable to run
+        EXECUTABLE_ARGS   # Executable arguments
+        LCOV_ARGS         # Extra arguments for lcov
+        LCOV_EXCLUDES     # Report exclude patterns, auto remove system ones
+        GENHTML_ARGS      # Extra arguments for genhtml
+    )
+    cmake_parse_arguments(cct # prefix
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
     if(NOT LCOV_PROG)
@@ -230,21 +229,20 @@ endfunction()
 
 # Defines a target for collection code coverage information of given runner.
 # Builds dependencies first, remove system default file and outputs reports.
-#
-# - TARGET              Target name
-# - EXECUTABLE          Executable to run
-# - DEPENDENCIES        Dependencies to build first
-#
-# - LCOV_ARGS           Extra arguments for lcov
-# - GENHTML_ARGS        Extra arguments for genhtml
-# - LCOV_EXCLUDES       Exclude patterns from the report
 function(XmakeCCRLcovTraceReport)
-    cmake_parse_arguments(cct
-        "" # options
-        "TARGET" # one value keywords
-        # multi value keywords
-        "EXECUTABLE;DEPENDENCIES;LCOV_ARGS;LCOV_EXCLUDES;GENHTML_ARGS"
-        ${ARGN}
+    set(optionValueArgs)
+    set(oneValueArgs
+        TARGET        # Target name
+    )
+    set(multiValueArgs
+        EXECUTABLE    # Executable to run
+        DEPENDENCIES  # Dependencies to build first
+        LCOV_ARGS     # Extra arguments for lcov
+        LCOV_EXCLUDES # Exclude patterns from the report
+        GENHTML_ARGS  # Extra arguments for genhtml
+    )
+    cmake_parse_arguments(cct # prefix
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
     if(NOT LCOV_PROG)
@@ -337,23 +335,22 @@ endfunction()
 # NOTE! The executable should always have a ZERO as exit code otherwise
 # the coverage generation will not complete, but this can be skipped by
 # given EXECUTABLE_FORCE_SUCCESS
-#
-# - TEST_NAME                   The test name
-# - EXECUTABLE                  Executable to run
-# - EXECUTABLE_ARGS             Executable arguments
-# - DEPENDENCIES                Dependencies to build first
-#
-# - LCOV_ARGS                   Extra arguments for lcov
-# - LCOV_EXCLUDES               Exclude patterns from the report
-#
-# - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
 function(XmakeCCRLcovTrace)
-    cmake_parse_arguments(cct
-        "EXECUTABLE_FORCE_SUCCESS" # options
-        "TEST_NAME" # one value keywords
-        # multi value keywords
-        "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;LCOV_ARGS;LCOV_EXCLUDES"
-        ${ARGN}
+    set(optionValueArgs
+        EXECUTABLE_FORCE_SUCCESS # Executable force success if set
+    )
+    set(oneValueArgs
+        TEST_NAME # Test name to run with given args for `CodeCoverageLcovTrace`
+    )
+    set(multiValueArgs
+        DEPENDENCIES     # Dependencies to build first
+        EXECUTABLE       # Executable to run
+        EXECUTABLE_ARGS  # Executable arguments
+        LCOV_ARGS        # Extra arguments for lcov
+        LCOV_EXCLUDES    # Report exclude patterns, auto remove system
+    )
+    cmake_parse_arguments(cct # prefix
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
     if(NOT LCOV_PROG)
@@ -419,22 +416,22 @@ endfunction()
 # NOTE! The executable should always have a ZERO as exit code otherwise
 # the coverage generation will not complete, but this can be skipped by
 # given EXECUTABLE_FORCE_SUCCESS
-#
-# - TARGET                      Target name, if not set, set to code.coverage-*
-# - EXECUTABLE                  Executable to run
-# - EXECUTABLE_ARGS             Executable arguments
-# - DEPENDENCIES                Dependencies to build first
-#
-# - GCOVR_ARGS                  Extra arguments for gcovr
-# - GCOVR_EXCLUDES              Extra arguments for gcovr
-#
-# - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
 function(XmakeCCRGcovrXml)
-    cmake_parse_arguments(cct
-        "EXECUTABLE_FORCE_SUCCESS"
-        "TARGET"
-        "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;GCOVR_ARGS;GCOVR_EXCLUDES"
-        ${ARGN}
+    set(optionValueArgs
+        EXECUTABLE_FORCE_SUCCESS # Executable force success if set
+    )
+    set(oneValueArgs
+        TARGET # Target name, if not set, set to code.coverage-*
+    )
+    set(multiValueArgs
+        EXECUTABLE      # Executable to run
+        EXECUTABLE_ARGS # Executable arguments
+        DEPENDENCIES    # Dependencies to build first
+        GCOVR_ARGS      # Extra arguments for gcovr
+        GCOVR_EXCLUDES  # Extra arguments for gcovr
+    )
+    cmake_parse_arguments(cct # prefix
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
     if(NOT GCOVR_PROG)
@@ -523,22 +520,22 @@ endfunction()
 # NOTE! The executable should always have a ZERO as exit code otherwise
 # the coverage generation will not complete, but this can be skipped by
 # given EXECUTABLE_FORCE_SUCCESS
-#
-# - TARGET                      Target name, if not set, set to code.coverage-*
-# - EXECUTABLE                  Executable to run
-# - EXECUTABLE_ARGS             Executable arguments
-# - DEPENDENCIES                Dependencies to build first
-#
-# - GCOVR_ARGS                  Extra arguments for gcovr
-# - GCOVR_EXCLUDES              Extra arguments for gcovr
-#
-# - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
 function(XmakeCCRGcovrHtml)
-    cmake_parse_arguments(cct
-        "EXECUTABLE_FORCE_SUCCESS"
-        "TARGET"
-        "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;GCOVR_ARGS;GCOVR_EXCLUDES"
-        ${ARGN}
+    set(optionValueArgs
+        EXECUTABLE_FORCE_SUCCESS # Executable force success if set
+    )
+    set(oneValueArgs
+        TARGET # Target name, if not set, set to code.coverage-*
+    )
+    set(multiValueArgs
+        EXECUTABLE      # Executable to run
+        EXECUTABLE_ARGS # Executable arguments
+        DEPENDENCIES    # Dependencies to build first
+        GCOVR_ARGS      # Extra arguments for gcovr
+        GCOVR_EXCLUDES  # Extra arguments for gcovr
+    )
+    cmake_parse_arguments(cct # prefix
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
     if(NOT GCOVR_PROG)
@@ -626,22 +623,22 @@ endfunction()
 # NOTE! The executable should always have a ZERO as exit code otherwise
 # the coverage generation will not complete, but this can be skipped by
 # given EXECUTABLE_FORCE_SUCCESS
-#
-# - TARGET                      Target name, if not set, set to code.coverage-*
-# - EXECUTABLE                  Executable to run
-# - EXECUTABLE_ARGS             Executable arguments
-# - DEPENDENCIES                Dependencies to build first
-#
-# - GCOVR_ARGS                  Extra arguments for gcovr
-# - GCOVR_EXCLUDES              Extra arguments for gcovr
-#
-# - EXECUTABLE_FORCE_SUCCESS    Executable force success if set
 function(XmakeCCRGcovrText)
-    cmake_parse_arguments(cct
-        "EXECUTABLE_FORCE_SUCCESS"
-        "TARGET"
-        "EXECUTABLE;EXECUTABLE_ARGS;DEPENDENCIES;GCOVR_ARGS;GCOVR_EXCLUDES"
-        ${ARGN}
+    set(optionValueArgs
+        EXECUTABLE_FORCE_SUCCESS # Executable force success if set
+    )
+    set(oneValueArgs
+        TARGET # Target name, if not set, set to code.coverage-*
+    )
+    set(multiValueArgs
+        EXECUTABLE       # Executable to run
+        EXECUTABLE_ARGS  # Executable arguments
+        DEPENDENCIES     # Dependencies to build first
+        GCOVR_ARGS       # Extra arguments for gcovr
+        GCOVR_EXCLUDES   # Extra arguments for gcovr
+    )
+    cmake_parse_arguments(cct # prefix
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
     if(NOT GCOVR_PROG)

@@ -1,11 +1,17 @@
 include(CMakeParseArguments)
 
 function(XmakeDownloadExtract)
-    cmake_parse_arguments(tarball
-        ""
-        "URL;TARGET;EXPECTED_SHA256;DOWNLOAD_TO;EXTRACT_TO"
-        ""
-        ${ARGN}
+    set(optionValueArgs)
+    set(oneValueArgs
+        URL              # The tarball file URL to download
+        TARGET           # The tarball name
+        EXPECTED_SHA256  # The tarball file SHA256 for checking
+        DOWNLOAD_TO      # The full path to save the download tarball
+        EXTRACT_TO       # The full path to extract the tarball to
+    )
+    set(multiValueArgs)
+    cmake_parse_arguments(tarball # prefix
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
     if(NOT tarball_TARGET) # Download/Extract target
@@ -166,11 +172,18 @@ Expected SHA256: ${tarball_EXPECTED_SHA256}")
 endfunction()
 
 function(XmakeDownloadFile)
+    set(optionValueArgs
+        SKIP_SHA256     # Skip the SHA256 checking
+        MARK_EXECUTABLE # Mark file executable
+    )
+    set(oneValueArgs
+        URL             # The file URL to download
+        SHA256          # The file SHA256 for checking
+        OUTPUT          # The full file path to download
+    )
+    set(multiValueArgs)
     cmake_parse_arguments(file # prefix
-        "MARK_EXECUTABLE;SKIP_SHA256" # options
-        "URL;SHA256;OUTPUT" # one value keywords
-        "" # multi value keywords
-        ${ARGN}
+        "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
     if(NOT file_URL OR NOT file_SHA256 OR NOT file_OUTPUT)

@@ -402,20 +402,49 @@ XmakeDepTarballBuild(libgtest
 
 This is used for prebuild binary: download and install.
 
-- `NAME`, The prebuild binary name, will be cmake top target
+```cmake
+# Binary Tarball Download & Install
+XmakeDepBinaryInstall(astyle TARBALL
+    # SKIP # This can be skip
+    VERSION     3.0.1
+    URL         https://gitlab.com/gkide/prebuild/astyle/-/archive/v3.0.1/astyle-v3.0.1.tar.gz
+    SHA256      1f8676c59cfb58bc15e23a402f6acc34b54156c05841f028a39650dd92075803
+    PATCH_CMD   echo The patch stuff ...
+    INSTALL_CMD echo The install stuff ...
+)
+
+# Binary Repo Download & Install
+XmakeDepBinaryInstall(astyle REPO
+    # SKIP # This can be skip
+    URL         https://gitlab.com/gkide/prebuild/astyle.git
+    PATCH_CMD   echo The patch stuff ...
+    INSTALL_CMD echo The install stuff ...
+)
+```
+
+**Option Value Args**
 - `SKIP`, Skip prebuild binary download and install if true
 - `REPO`, Download prebuild binary repo, patch and install
 - `TARBALL`, Download prebuild binary tarball, extract, patch and install
+
+**One Value Args**
 - `URL`, The prebuild binary tarball or repo URL to download
-- `PATCH_CMD`, The prebuild binary patch commands
-- `INSTALL_CMD`, The prebuild binary install commands
 - `VERSION`, The prebuild binary version
 - `SHA256`, The prebuild binary SHA256 for tarball checking
+
+**Multi Value Args**
+- `PATCH_CMD`, The prebuild binary patch commands
+- `INSTALL_CMD`, The prebuild binary install commands
 
 ## XmakeDownloadFile
 
 Download file and do SHA256 checking.
 
+**Option Value Args**
+- `SKIP_SHA256`, Skip the SHA256 checking
+- `MARK_EXECUTABLE`, Mark file executable
+
+**One Value Args**
 - `URL`, The file URL to download
 - `SHA256`, The file SHA256 for checking
 - `OUTPUT`, The full file path to download
@@ -424,6 +453,7 @@ Download file and do SHA256 checking.
 
 Download tarball and extract.
 
+**One Value Args**
 - `TARGET`, The tarball name
 - `URL`, The tarball file URL to download
 - `EXPECTED_SHA256`, The tarball file SHA256 for checking
@@ -439,14 +469,19 @@ NOTE! The executable should always have a ZERO as exit code otherwise
 the coverage generation will not complete, but this can be skipped by
 given `EXECUTABLE_FORCE_SUCCESS`.
 
+**Option Value Args**
+- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
+
+**One Value Args**
 - `TARGET`, Target name, if not set auto set to `code.coverage-`**name**
+
+**Multi Value Args**
 - `EXECUTABLE`, Executable to run
 - `EXECUTABLE_ARGS`, Executable arguments
 - `DEPENDENCIES`, Dependencies to build first
-- `LCOV_ARGS`, Extra arguments for lcov
+- `LCOV_ARGS`, Extra arguments for `lcov`
 - `LCOV_EXCLUDES`, Report exclude patterns, auto remove system ones
-- `GENHTML_ARGS`, Extra arguments for genhtml
-- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
+- `GENHTML_ARGS`, Extra arguments for `genhtml`
 
 ## XmakeCCRLcovTrace
 
@@ -457,52 +492,75 @@ NOTE! The executable should always have a ZERO as exit code otherwise
 the coverage generation will not complete, but this can be skipped by
 given `EXECUTABLE_FORCE_SUCCESS`.
 
+**Option Value Args**
+- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
+
+**One Value Args**
 - `TEST_NAME`, Test name for executable to run with given args for `CodeCoverageLcovTrace`
+
+**Multi Value Args**
 - `EXECUTABLE`, Executable to run
 - `EXECUTABLE_ARGS`, Executable arguments
 - `DEPENDENCIES`, Dependencies to build first
-- `LCOV_ARGS`, Extra arguments for lcov
+- `LCOV_ARGS`, Extra arguments for `lcov`
 - `LCOV_EXCLUDES`, Report exclude patterns, auto remove system
-- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
 
 ## XmakeCCRLcovTraceReport
 
+**One Value Args**
 - `TARGET`, Target name to create
+
+**Multi Value Args**
 - `EXECUTABLE`, Executable to run
 - `DEPENDENCIES`, Dependencies to build first
-- `LCOV_ARGS`, Extra arguments for lcov
-- `GENHTML_ARGS`, Extra arguments for genhtml
+- `LCOV_ARGS`, Extra arguments for `lcov`
+- `GENHTML_ARGS`, Extra arguments for `genhtml`
 - `LCOV_EXCLUDES`, Report exclude patterns, auto remove system
 
 ## XmakeCCRGcovrXml
 
+**Option Value Args**
+- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
+
+**One Value Args**
 - `TARGET`, Target name, if not set auto set to `code.coverage-`**name**
+
+**Multi Value Args**
 - `EXECUTABLE`, Executable to run
 - `EXECUTABLE_ARGS`, Executable arguments
 - `DEPENDENCIES`, Dependencies to build first
 - `GCOVR_ARGS`, Extra arguments for gcovr
 - `GCOVR_EXCLUDES`, Extra arguments for gcovr, auto remove system
-- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
 
 ## XmakeCCRGcovrHtml
 
+**Option Value Args**
+- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
+
+**One Value Args**
 - `TARGET`, Target name, if not set auto set to `code.coverage-`**name**
+
+**Multi Value Args**
 - `EXECUTABLE`, Executable to run
 - `EXECUTABLE_ARGS`, Executable arguments
 - `DEPENDENCIES`, Dependencies to build first
-- `GCOVR_ARGS`, Extra arguments for gcovr
-- `GCOVR_EXCLUDES`, Extra arguments for gcovr, auto remove system
-- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
+- `GCOVR_ARGS`, Extra arguments for `gcovr`
+- `GCOVR_EXCLUDES`, Extra arguments for `gcovr`, auto remove system
 
 ## XmakeCCRGcovrText
 
+**Option Value Args**
+- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
+
+**One Value Args**
 - `TARGET`, Target name, if not set auto set to `code.coverage-`**name**
+
+**Multi Value Args**
 - `EXECUTABLE`, Executable to run
 - `EXECUTABLE_ARGS`, Executable arguments
 - `DEPENDENCIES`, Dependencies to build first
 - `GCOVR_ARGS`, Extra arguments for gcovr
 - `GCOVR_EXCLUDES`, Extra arguments for gcovr, auto remove system
-- `EXECUTABLE_FORCE_SUCCESS`, Executable force success if set
 
 ## XmakeCCRAppendFlags
 
@@ -515,7 +573,7 @@ Get C compiler flags.
 - The first arguments is variable for the output C flags, like **CFLAGS**
 - The second arguments is the processed directory by cmake to get attributs
 
-``` cmake
+```cmake
 XmakeGetCFlags(CFLAGS ${CMAKE_CURRENT_LIST_DIR})
 message(STATUS "CFLAGS=[${CFLAGS}]")
 ```
@@ -674,17 +732,17 @@ XmakeSearchLibrary(NAME LibName [VERBOSE] [REQUIRED] [SHARED] [STATIC]
 )
 ```
 
-**Options Args**
+**Option Value Args**
 - `VERBOSE`, Verbose search message, default OFF
 - `REQUIRED`, Cmake stop if library not found
 - `SHARED`, Search for shared library only
 - `STATIC`, Search for static library only
 
-**One-Value Args**
+**One Value Args**
 - `NAME`, The library name to search
 - `VERSION`, The library version `Major[.Minor[.Patch]]`
 
-**Multi-Value Args**
+**Multi Value Args**
 - `FIND_PACKAGE_ARGS`, For `find_package()` args
 - `PKGCONFIG_ARGS`, For `pkg_check_modules()` args
 - `FIND_PATH_ARGS`, For `find_path()` args
@@ -702,9 +760,12 @@ for windows, do nothing for other OS.
 
 Copy and install the given files.
 
+**One Value Args**
 - `INS_DEST`, The install destionation for DLLs
 - `CPY_DEST`, The copy destionation for DLLs
 - `CPY_TARGET`, The target for the copy DLLs
+
+**Multi Value Args**
 - `FILES`, The DLLs files to operation
 - `CPY_CMDS_PRE`, The commands before the DLLs copy
 - `CPY_CMDS_SUF`, The commands after the DLLs copy
