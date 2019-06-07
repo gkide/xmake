@@ -9,10 +9,10 @@ macro(SLSetParentVars pkg version varLibaries varIncludes SearchInfo)
         mark_as_advanced(${pkg}_FOUND ${pkg}_VERSION
             ${pkg}_LIBRARIES ${pkg}_INCLUDE_DIRS
         )
-        message(STATUS "OK - ${SearchInfo} => ${pkg}")
+        #message(STATUS "OK - ${SearchInfo} => ${pkg}")
         return()
     endif()
-    message(STATUS "SKIP - ${SearchInfo} => ${pkg}")
+    #message(STATUS "SKIP - ${SearchInfo} => ${pkg}")
 endmacro()
 
 # Found library by using find_package, pkg-config, find_path, find_library
