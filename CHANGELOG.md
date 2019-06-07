@@ -5,13 +5,33 @@
 - REPOSITORY COMMITS ADHERE TO [CONVENTIONAL COMMITS](https://conventionalcommits.org).
 
 
-## 2019-05-20 22:12:20 +0800 Release [v1.0.0-rc](https://github.com/gkide/xmake/releases/tag/v1.0.0-rc)
+## 2019-06-07 16:25:59 +0800 Release [v1.1.0](https://github.com/gkide/xmake/releases/tag/v1.1.0)
+
+[[☕](#v_Features_201906071625590800)]
+[[☀](#v_Fixed_201906071625590800)]
+[[⛭](#v_Changed_201906071625590800)]
+comparing with [v1.1.0-rc](https://github.com/gkide/xmake/compare/v1.1.0-rc...v1.1.0)
+
+<span id = "v_Features_201906071625590800"></span>
+### ☕ Features
+- **feat**: cmake library search, config, pkg-config ([601026b](https://github.com/gkide/xmake/commit/601026b))
+
+<span id = "v_Fixed_201906071625590800"></span>
+### ☀ Fixed
+- **fix**: fix doxygen error for do not found style sheet ([9ad67de](https://github.com/gkide/xmake/commit/9ad67de))
+- **fix**: fix doxygen template location error after generated ([4465084](https://github.com/gkide/xmake/commit/4465084))
+
+<span id = "v_Changed_201906071625590800"></span>
+### ⛭ Changed
+- **perf**: do not show cmake waring for package, do it in the makefile ([28ddf0a](https://github.com/gkide/xmake/commit/28ddf0a))
+
+## 2019-05-20 22:12:20 +0800 Release [v1.1.0-rc](https://github.com/gkide/xmake/releases/tag/v1.1.0-rc)
 
 [[☕](#v_Features_201905202212200800)]
 [[☀](#v_Fixed_201905202212200800)]
 [[⛭](#v_Changed_201905202212200800)]
 [[☂](#v_Dependencies_201905202212200800)]
-comparing with [v1.0.0-rc-dev](https://github.com/gkide/xmake/compare/v1.0.0-rc-dev...v1.0.0-rc)
+comparing with [v1.1.0-rc-dev](https://github.com/gkide/xmake/compare/v1.1.0-rc-dev...v1.1.0-rc)
 
 <span id = "v_Features_201905202212200800"></span>
 ### ☕ Features
@@ -44,7 +64,7 @@ comparing with [v1.0.0-rc-dev](https://github.com/gkide/xmake/compare/v1.0.0-rc-
 - **build**(`win`): package NSIS do not require admin ([aac9259](https://github.com/gkide/xmake/commit/aac9259))
 - **build**: xmake source package build name ([f6831ad](https://github.com/gkide/xmake/commit/f6831ad))
 
-## 2019-05-16 03:18:49 +0800 Release [v1.0.0-rc-dev](https://github.com/gkide/xmake/releases/tag/v1.0.0-rc-dev)
+## 2019-05-16 03:18:49 +0800 Release [v1.1.0-rc-dev](https://github.com/gkide/xmake/releases/tag/v1.1.0-rc-dev)
 
 [[☕](#v_Features_201905160318490800)]
 [[☀](#v_Fixed_201905160318490800)]
