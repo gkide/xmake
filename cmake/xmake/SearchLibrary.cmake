@@ -17,10 +17,10 @@ endmacro()
 
 # Found library by using find_package, pkg-config, find_path, find_library
 #
-#  ${pkg_NAME}_FOUND        - package found
-#  ${pkg_NAME}_VERSION      - package libraries to link
-#  ${pkg_NAME}_LIBRARIES    - package libraries to link
-#  ${pkg_NAME}_INCLUDE_DIRS - package include directories
+#  ${pkg_NAME}_FOUND        - Set to true found if found libraries
+#  ${pkg_NAME}_VERSION      - The found library version
+#  ${pkg_NAME}_LIBRARIES    - The found libraries for linking
+#  ${pkg_NAME}_INCLUDE_DIRS - The directories for include header
 function(XmakeSearchLibrary)
     set(options        VERBOSE REQUIRED SHARED STATIC)
     set(oneValueArgs   NAME VERSION)

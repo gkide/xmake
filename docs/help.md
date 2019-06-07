@@ -313,10 +313,12 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 - [XmakeCCRGcovrHtml](#xmakeccrgcovrhtml)
 - [XmakeCCRGcovrText](#xmakeccrgcovrtext)
 - [XmakeInstallHelper](#xmakeinstallhelper)
+- [XmakeSearchLibrary](#xmakesearchlibrary)
 - [XmakeGetCFlags](#xmakegetcflags)
 - [XmakeGetCXXFlags](#xmakegetcxxflags)
 - [XmakeCopyWinAppDlls](#xmakecopywinappdlls)
 - [XmakeCopyInstallFiles](#xmakecopyinstallfiles)
+- [XmakePrintConfigurationInfo](#xmakeprintconfigurationinfo)
 - [XmakeGetInstallBinaries](#xmakegetinstallbinaries)
 
 
@@ -585,6 +587,19 @@ file any where as you want to, can be used combie with **DOMAIN**, and the
   * group:  `GROUP_READ`, `GROUP_WRITE`, `GROUP_EXECUTE`
   * others: `WORLD_READ`, `WORLD_WRITE`, `WORLD_EXECUTE`
 
+- **EXPORT_LIBRARY_INFO** export cmake config and pkg-config files, for example
+
+```cmake
+XmakeInstallHelper(TARGETS foo
+    DOMAIN xdemo
+    EXPORT_LIBRARY_INFO
+)
+XmakeInstallHelper(TARGETS bar foobar
+    EXPORT_LIBRARY_INFO
+    EXPORT_LIBRARY_WITH_EXTRA_LIBS m
+)
+```
+
 - installs contents of `DIRECTORY` into `DESTINATION` with optional permissions
   * if not set `FILE_PERMISSIONS`, the default value is **rw-r--r--**,
   * if not set `DIRECTORY_PERMISSIONS` the default value is **rwxr-xr-x**
@@ -594,6 +609,28 @@ file any where as you want to, can be used combie with **DOMAIN**, and the
 
 - install `PROGRAMS` into `DESTINATION` with optional `FILE_PERMISSIONS`
   * if not set, the default value is **rwxr-xr-x**, rename if set `RENAME`
+
+## XmakeSearchLibrary
+
+Found library by using `find_package()`, `pkg-config`, `find_path()`, `find_library()`
+
+```cmake
+XmakeSearchLibrary(NAME LibName [VERBOSE] [REQUIRED] [SHARED] [STATIC]
+    VERSION 1.2.3
+    FIND_PACKAGE_ARGS ... # For find_package args
+    PKGCONFIG_ARGS    ... # For pkg_check_modules args
+    FIND_PATH_ARGS    ... # For find_path args
+    FIND_LIBRARY_ARGS ... # For find_library args
+    HEADER_FILES      ... # The library header files
+    EXTRA_SEARCH_DIRS ... # The extra directory to search
+)
+```
+
+The following variables will be set accroding the result:
+- `${LibName}_FOUND`        - Set to true found if found libraries
+- `${LibName}_VERSION`      - The found library version
+- `${LibName}_LIBRARIES`    - The found libraries for linking
+- `${LibName}_INCLUDE_DIRS` - The directories for include header
 
 ## XmakeCopyWinAppDlls
 
@@ -613,6 +650,10 @@ Copy and install the given files.
 - `CPY_CMDS_SUF`, The commands after the DLLs copy
 
 # Miscellaneous
+
+## XmakePrintConfigurationInfo
+
+Print and show xmake configurations, it should be called at the end of cmake.
 
 ## XmakeGetInstallBinaries
 
