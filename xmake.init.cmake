@@ -1,125 +1,160 @@
-# The xmake version to downloaded
-set(xmakeVersion "v1.1.0") # This is the tag version string
-set(xmakeTarballSHA256 # The tarball SHA256 to checking
-    "cedefafd2b328d6613effc715ca4ce2ed98ed626bbba055c85fa605596327735"
-)
+# The xmake entry point cmake file
+set(XmakeMain "${CMAKE_SOURCE_DIR}/cmake/xmake.cmake")
 
-# The xmake tarball file name to download
-set(xmakeTarball "xmake-${xmakeVersion}.tar.gz")
-# Check if xmake is init or not
-set(xmakeInited "${CMAKE_SOURCE_DIR}/cmake/xmake.cmake")
-# The local file for save the download xmake tarball
-set(xmakeLocalTarball "${CMAKE_SOURCE_DIR}/cmake/${xmakeTarball}")
-
-# Download the xmake tarball
-function(xmakeInitDownload)
-    if(EXISTS "${xmakeInited}" OR EXISTS "${xmakeLocalTarball}")
-        return()
+# Init xmake by download tarball, extrat, and do related setup
+#
+# This macro function has two arguments, the first one is required,
+# which is a string variable contains the xmake tag version value,
+# the second one is optional, which is a string variable contains
+# the SHA256 value for the tarball that to be download
+macro(xmakeI_TarballInit)
+    #message(STATUS "ARGC=${ARGC}")
+    #message(STATUS "ARGV0=${ARGV0}")
+    #message(STATUS "ARGV1=${ARGV1}")
+    if(${ARGC})
+        set(xm_version "${${ARGV0}}")
     endif()
 
-    set(timeout 60)
-    set(timeout_msg "${timeout} seconds")
-    set(timeout_arg INACTIVITY_TIMEOUT ${timeout})
+    if(ARGC GREATER 1) # has SHA256
+        set(xm_sha256 "${${ARGV1}}")
+    endif()
 
-    # The release tarball download base URL
-    set(xmakeDownloadUrl "https://github.com/gkide/xmake/releases/download")
-    set(xmakeDownloadUrl "${xmakeDownloadUrl}/${xmakeVersion}/${xmakeTarball}")
+if(NOT EXISTS "${XmakeMain}")
+    # The xmake tarball name for downloading
+    set(xm_tarball "xmake-${xm_version}.tar.gz")
+    # The local file for save the download tarball
+    set(xm_dstfile "${CMAKE_SOURCE_DIR}/cmake/${xm_tarball}")
 
-    message(STATUS "${xmakeTarball}: Downloading ...
+    ####################
+    # Download tarball #
+    ####################
+    if(NOT EXISTS "${xm_dstfile}")
+        set(timeout 60)
+        set(timeout_msg "${timeout} seconds")
+        set(timeout_arg INACTIVITY_TIMEOUT ${timeout})
+
+        # The release tarball download base URL
+        set(xm_downloadUrl "https://github.com/gkide/xmake/releases/download")
+        set(xm_downloadUrl "${xm_downloadUrl}/${xm_version}/${xm_tarball}")
+
+        message(STATUS "${xm_tarball}: Downloading ...
    Timeout  = ${timeout_msg}
-   From URL = ${xmakeDownloadUrl}
-   Save As  = ${xmakeLocalTarball}")
+   From URL = ${xm_downloadUrl}
+   Save As  = ${xm_dstfile}")
 
-    file(DOWNLOAD ${xmakeDownloadUrl} ${xmakeLocalTarball}
-        ${timeout_arg} SHOW_PROGRESS STATUS status LOG errorLog
-    )
+        file(DOWNLOAD ${xm_downloadUrl} ${xm_dstfile}
+            ${timeout_arg} SHOW_PROGRESS STATUS status LOG errorLog
+        )
 
-    list(GET status 0 errorCode)
-    list(GET status 1 errorMsg)
+        list(GET status 0 errorCode)
+        list(GET status 1 errorMsg)
 
-    if(errorCode)
-        message(FATAL_ERROR "${xmakeTarball}: Downloading failed
-Error Code: ${errorCode}
-Error String: ${errorMsg}
-Error Log: ${errorLog}")
-    endif()
-endfunction()
-
-# Checking SHA256
-function(xmakeInitSha256Check)
-    if(EXISTS "${xmakeInited}")
-        return()
+        if(errorCode)
+            set(emsg "${xm_tarball}: Downloading failed\n")
+            set(emsg "${emsg}Error Code: ${errorCode}\n")
+            set(emsg "${emsg}Error String: ${errorMsg}\n")
+            set(emsg "${emsg}Error Log: ${errorLog}")
+            message(FATAL_ERROR "${emsg}")
+        endif()
     endif()
 
-    if(NOT EXISTS "${xmakeLocalTarball}")
-        message(FATAL_ERROR "NOT exist ${xmakeLocalTarball}")
+    ###################
+    # SHA256 Checking #
+    ###################
+    if(NOT EXISTS "${xm_dstfile}")
+        message(FATAL_ERROR "NOT exist tarball file ${xm_dstfile}")
     endif()
 
-    message(STATUS "${xmakeTarball}: Checking SHA256 ...")
-    file(SHA256 ${xmakeLocalTarball} ActualSHA256) # Get tarball actual SHA256
+    if(xm_sha256) # just check if the SHA256 value length is valid
+        string(LENGTH "${xm_sha256}" xm_sha256_len)
+        if(NOT xm_sha256_len EQUAL 64) # SHA256 length is fixed, 64-chars
+            set(wmsg "Invalid SHA256 length, it must be 64-chars")
+            set(wmsg "${wmsg}, but got '${xm_sha256_len}'")
+            message(WARNING "${wmsg}")
+            unset(xm_sha256) # invalid SHA256 value, skip SHA256 checking
+        endif()
+    endif()
 
-    set(NullSHA256
-        "0000000000000000000000000000000000000000000000000000000000000000")
-    set(EmptySHA256
-        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+    if(xm_sha256) # do SHA256 checking
+        message(STATUS "${xm_tarball}: SHA256 Checking ...")
+        file(SHA256 ${xm_dstfile} TB_SHA256) # tarball SHA256
 
-    if(ActualSHA256 STREQUAL "${EmptySHA256}")
-        # File was empty. It's likely due to lack of SSL support.
-        file(REMOVE ${xmakeLocalTarball})
-        message(FATAL_ERROR "Failed to download ${xmakeLocalTarball}.
+        set(zero_SHA256
+            "0000000000000000000000000000000000000000000000000000000000000000")
+        set(empty_SHA256
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+
+        if(TB_SHA256 STREQUAL "${empty_SHA256}")
+            # File was empty. It's likely due to lack of SSL support.
+            file(REMOVE ${xm_dstfile})
+            message(FATAL_ERROR "Failed to download ${xm_dstfile}.
 The file is empty and likely means CMake was built without SSL support.
 Please use a version of CMake with proper SSL support and try again.")
-    elseif((NOT xmakeTarballSHA256 STREQUAL NullSHA256)
-           AND (NOT xmakeTarballSHA256 STREQUAL ActualSHA256))
-        # Was not a NULL SHA256 and did not match
-        file(REMOVE ${xmakeLocalTarball})
-        message(FATAL_ERROR "Checking SHA256 failed, remove it and try again.
-Actually SHA256: ${ActualSHA256}
-Expected SHA256: ${xmakeTarballSHA256}")
-    endif()
-endfunction()
-
-# Extracting tarball and setup
-function(xmakeInitExtractSetup)
-    if(EXISTS "${xmakeInited}")
-        return()
+            elseif((NOT xm_sha256 STREQUAL zero_SHA256)
+                AND (NOT xm_sha256 STREQUAL TB_SHA256))
+                file(REMOVE ${xm_dstfile}) # NOT null SHA256 and NOT match
+                message(FATAL_ERROR "SHA256 checking failed, fix and try again.
+Actually SHA256: ${TB_SHA256}
+Expected SHA256: ${xm_sha256}")
+        endif()
     endif()
 
-    if(NOT EXISTS "${xmakeLocalTarball}")
-        message(FATAL_ERROR "NOT exist ${xmakeLocalTarball}")
-    endif()
-
-    set(xmakeExtractLocation ${CMAKE_SOURCE_DIR}/cmake)
-    message(STATUS "${xmakeTarball}: Extracting ...
-   SRC = ${xmakeLocalTarball}
-   DST = ${xmakeExtractLocation}")
+    ########################
+    # Extracting and Setup #
+    ########################
+    set(xm_extdest ${CMAKE_SOURCE_DIR}/cmake)
+    message(STATUS "${xm_tarball}: Extracting ...
+   SRC = ${xm_dstfile}
+   DST = ${xm_extdest}")
 
     execute_process(COMMAND ${CMAKE_COMMAND} -E
-        tar xzf ${xmakeLocalTarball}
-        WORKING_DIRECTORY ${xmakeExtractLocation}
+        tar xzf ${xm_dstfile}
+        WORKING_DIRECTORY ${xm_extdest}
         RESULT_VARIABLE extract_status
     )
 
     if(NOT extract_status EQUAL 0)
-        message(STATUS "${xmakeTarball}: Extracting ... error clean up")
-        file(REMOVE_RECURSE "${xmakeExtractLocation}")
-        message(FATAL_ERROR "Error: failed extract ${xmakeLocalTarball}")
+        message(STATUS "${xm_tarball}: Extracting ... error clean up")
+        file(REMOVE_RECURSE "${xm_extdest}")
+        message(FATAL_ERROR "Error: failed extract ${xm_dstfile}")
     endif()
 
-    message(STATUS "${xmakeTarball}: Setup and clean ...")
-    set(xmakeTmpDir ${xmakeExtractLocation}/xmake-${xmakeVersion})
-    file(COPY ${xmakeTmpDir}/cmake/xmake
+    message(STATUS "${xm_tarball}: xmake setup and clean ...")
+    set(xm_tmpdir ${xm_extdest}/xmake-${xm_version})
+    file(COPY ${xm_tmpdir}/cmake/xmake
         DESTINATION ${CMAKE_SOURCE_DIR}/cmake)
-    file(COPY ${xmakeTmpDir}/cmake/xmake.cmake
+    file(COPY ${xm_tmpdir}/cmake/xmake.cmake
         DESTINATION ${CMAKE_SOURCE_DIR}/cmake)
-    file(REMOVE_RECURSE "${xmakeTmpDir}")
-    file(REMOVE ${xmakeLocalTarball})
-endfunction()
-
-if(EXISTS "${xmakeInited}")
-    include(xmake) # include xmake
-else()
-    xmakeInitDownload()
-    xmakeInitSha256Check()
-    xmakeInitExtractSetup()
+    file(REMOVE_RECURSE "${xm_tmpdir}")
+    file(REMOVE ${xm_dstfile})
 endif()
+    include(xmake) # include the xmake MAIN ENTRY
+endmacro()
+
+macro(XmakeInit)
+    #message(STATUS "ARGC=${ARGC}")
+    #message(STATUS "ARGV0=${ARGV0}")
+    #message(STATUS "ARGV1=${ARGV1}")
+    if(${ARGC})
+        set(xm_VERSION "${ARGV0}") # the git tag string
+    endif()
+
+    if(${ARGC} GREATER 1)
+        set(xm_SHA256 "${ARGV1}") # the tarball SHA256 value
+    endif()
+
+    if(NOT xm_VERSION MATCHES "^[v|V]([0-9]+)((\\.([0-9]+))?(\\.([0-9]+))?)?$")
+        unset(xm_SHA256)
+        unset(xm_VERSION)
+        set(xm_GIT_CLONE true) # do git clone if invalid version
+    endif()
+
+    message(STATUS "xm_SHA256=${xm_SHA256}")
+    message(STATUS "xm_VERSION=${xm_VERSION}")
+    message(STATUS "xm_GIT_CLONE=${xm_GIT_CLONE}")
+    if(xm_GIT_CLONE)
+
+    else()
+        xmakeI_TarballInit(xm_VERSION xm_SHA256)
+    endif()
+endmacro()
