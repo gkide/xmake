@@ -14,6 +14,7 @@ NOTE:
 - project name should consist of [A-Za-z0-9_-]
 - **XMAKE** variable will auto set to `${PROJECT_NAME}` of uppercase
 - The following **XXX** represent the uppercase of project name
+- `Xmake*`, `xmake*` are preserved cmake veriable name for xmake
 
 # Host Repo Info
 
