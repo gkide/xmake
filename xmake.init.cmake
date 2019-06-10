@@ -7,7 +7,7 @@ set(XmakeMain "${CMAKE_SOURCE_DIR}/cmake/xmake.cmake")
 # which is a string variable contains the xmake tag version value,
 # the second one is optional, which is a string variable contains
 # the SHA256 value for the tarball that to be download
-macro(xmakeI_TarballInit)
+function(xmakeI_InitTarball)
     #message(STATUS "ARGC=${ARGC}")
     #message(STATUS "ARGV0=${ARGV0}")
     #message(STATUS "ARGV1=${ARGV1}")
@@ -19,7 +19,6 @@ macro(xmakeI_TarballInit)
         set(xm_sha256 "${${ARGV1}}")
     endif()
 
-if(NOT EXISTS "${XmakeMain}")
     # The xmake tarball name for downloading
     set(xm_tarball "xmake-${xm_version}.tar.gz")
     # The local file for save the download tarball
@@ -127,9 +126,54 @@ Expected SHA256: ${xm_sha256}")
         DESTINATION ${CMAKE_SOURCE_DIR}/cmake)
     file(REMOVE_RECURSE "${xm_tmpdir}")
     file(REMOVE ${xm_dstfile})
-endif()
-    include(xmake) # include the xmake MAIN ENTRY
-endmacro()
+endfunction()
+
+function(xmakeI_InitGitClone)
+    if(NOT GIT_PROG)
+        find_program(GIT_PROG git)
+        if(NOT GIT_PROG)
+            message(FATAL_ERROR "xmake latest repo clone do NOT found git, STOP!")
+        endif()
+    endif()
+
+    set(xm_repo_url "https://github.com/gkide/xmake")
+
+    message(STATUS "xmake init by git clone ...")
+    execute_process(TIMEOUT 120 # 2-min if not done, just STOP
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake
+        COMMAND ${GIT_PROG} clone --depth=1 ${xm_repo_url} xmake-latest
+        RESULT_VARIABLE is_ok
+        ERROR_VARIABLE  log_msg
+        OUTPUT_VARIABLE log_msg
+    )
+
+    if(NOT is_ok EQUAL 0)
+        message(FATAL_ERROR "xmake init error, git-clone return code is ${is_ok}
+The error log is:\n${log_msg}")
+    endif()
+
+    message(STATUS "xmake init setup ...")
+    execute_process(TIMEOUT 120 # 2-min if not done, just STOP
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake
+        COMMAND mv xmake-latest/cmake/xmake xmake
+        COMMAND mv xmake-latest/cmake/xmake.cmake xmake.cmake
+        RESULT_VARIABLE is_ok
+        ERROR_VARIABLE  log_msg
+        OUTPUT_VARIABLE log_msg
+    )
+
+    if(NOT is_ok EQUAL 0)
+        message(FATAL_ERROR "xmake init setup error, the return code is ${is_ok}
+The error log is:\n${log_msg}")
+    endif()
+
+    if(NOT EXISTS ${CMAKE_SOURCE_DIR}/cmake/xmake)
+        message(FATAL_ERROR "xmake init setup error")
+    endif()
+
+    message(STATUS "xmake init clean up ...")
+    file(REMOVE_RECURSE ${CMAKE_SOURCE_DIR}/cmake/xmake-latest)
+endfunction()
 
 macro(XmakeInit)
     #message(STATUS "ARGC=${ARGC}")
@@ -149,12 +193,13 @@ macro(XmakeInit)
         set(xm_GIT_CLONE true) # do git clone if invalid version
     endif()
 
-    message(STATUS "xm_SHA256=${xm_SHA256}")
-    message(STATUS "xm_VERSION=${xm_VERSION}")
-    message(STATUS "xm_GIT_CLONE=${xm_GIT_CLONE}")
-    if(xm_GIT_CLONE)
-
-    else()
-        xmakeI_TarballInit(xm_VERSION xm_SHA256)
+    if(NOT EXISTS "${XmakeMain}")
+        if(xm_GIT_CLONE)
+            xmakeI_InitGitClone()
+        else()
+            xmakeI_InitTarball(xm_VERSION xm_SHA256)
+        endif()
     endif()
+
+    include(xmake) # include the xmake MAIN ENTRY
 endmacro()
