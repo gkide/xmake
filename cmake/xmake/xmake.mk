@@ -205,7 +205,6 @@ CMAKE_ARGS += $(SOURCE_DIR)
 #
 # - GIT_PROG      full path of git programme
 # - MAKE_PROG     full path of make programme
-# - VALGRIND_PROG full path of valgrind programme
 
 #######################################################
 # Auto Detect System Common Development Tools
@@ -266,6 +265,41 @@ else
     DOXYGEN_PROG := $(Q)$(DOXYGEN_PROG)
 endif
 
+##########################################
+# astyle is a source code style formater #
+##########################################
+# https://gitlab.com/gkide/prebuild/astyle
+# C/C++ source files, OPTIONS file must be .astylerc of project top directory
+ifeq ($(ASTYLE_ARGS),) # empty then use the default value for C/C++
+    ASTYLE_ARGS := --project '*.h' '*.c' '*.cpp'
+endif
+
+ifneq ($(ASTYLE_FILES),) # local setting for project
+    ASTYLE_ARGS := --project $(ASTYLE_FILES)
+endif
+
+AstyleArgs_star := $(shell echo $(ASTYLE_ARGS) | grep '\*')
+ifneq ($(AstyleArgs_star),)
+    AstyleArgs_Wildcard := Has
+endif
+AstyleArgs_quest := $(shell echo $(ASTYLE_ARGS) | grep '\?')
+ifneq ($(AstyleArgs_quest),)
+    AstyleArgs_Wildcard := Has
+endif
+ifeq ($(AstyleArgs_Wildcard),Has) # prepend --recursive
+    ASTYLE_ARGS := --recursive $(ASTYLE_ARGS)
+endif
+
+ifeq ($(ASTYLE_PROG),)
+    ifneq ($(strip $(shell (command -v astyle))),)
+        ASTYLE_PROG := $(Q)$(shell (command -v astyle))
+        ASTYLE_VERSION := $(strip $(shell astyle --version | cut -d' ' -f4))
+    endif
+else
+    ASTYLE_PROG := $(Q)$(ASTYLE_PROG)
+    ASTYLE_VERSION := $(strip $(shell $(ASTYLE_PROG) --version | cut -d' ' -f4))
+endif
+
 ###########################################
 # Debugging and Profiling Generating Tool #
 ###########################################
@@ -281,6 +315,23 @@ else
     VALGRIND_PROG := $(Q)$(VALGRIND_PROG)
 endif
 
+########################################
+# curl/wget tools for file downloading #
+########################################
+# The 1st-arg to DOWNLOAD_AS is full path with file name for output
+# The 2nd-arg to DOWNLOAD_AS is the file URL to the target file
+WGET_PROG ?= $(shell (command -v wget))
+DOWNLOAD_AS := $(Q)$(WGET_PROG) -O
+ifeq ($(WGET_PROG),)
+    CURL_PROG ?= $(shell (command -v curl))
+    ifeq ($(CURL_PROG),)
+        $(info do NOT found 'curl' and 'wget' for file downloading!)
+        DOWNLOAD_AS := echo
+    else
+    DOWNLOAD_AS := $(Q)$(CURL_PROG) -L -o
+    endif
+endif
+
 ###########################
 # xmake predefined target #
 ###########################
@@ -290,6 +341,11 @@ xmake-all: | xmake-ran-top-cmake
 
 PHONY += xmake-ran-top-cmake
 xmake-ran-top-cmake:
+	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS)
+
+PHONY += xmake-ran-top-cmake-force
+xmake-ran-top-cmake-force:
+	@rm -rf $(BUILD_DIR)/CMakeCache.txt # force remove old ones anyway
 	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS)
 
 PHONY += xmake-install

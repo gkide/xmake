@@ -1,4 +1,5 @@
 # xmake git repo is https://github.com/gkide/xmake
+# xmakeI_* is for xmake Internal Variable, Function, Macro
 cmake_minimum_required(VERSION 2.8.12)
 include(xmake/PreventInTreeBuilds)
 
@@ -310,7 +311,7 @@ endif()
 # - SHARED_PREFIX   Full path to Qt5 static install, like: /usr/lib/gcc/x86_64-linux-gnu
 #
 # This should be used in the top Qt5 directory. With the return(), thus on host
-# that has Qt5 installed, build the Qt5 part; and on host that has no Qt5   
+# that has Qt5 installed, build the Qt5 part; and on host that has no Qt5
 # installed, just skip the Qt5 build part and continue with other parts
 macro(XmakeQt5SupportSetup)
     set(optionValueArgs
@@ -322,14 +323,14 @@ macro(XmakeQt5SupportSetup)
         SHARED_PREFIX  # Qt5 shared install prefix
     )
     set(multiValueArgs)
-    cmake_parse_arguments(qt5 # prefix
+    cmake_parse_arguments(xmakeI_QT5 # prefix
         "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
-    if(qt5_STATIC_PREFIX OR qt5_SHARED_PREFIX OR qt5_AUTOMATIC)
+    if(xmakeI_QT5_STATIC_PREFIX OR xmakeI_QT5_SHARED_PREFIX OR xmakeI_QT5_AUTOMATIC)
         include(xmake/Qt5Helper)
     else()
-        if(qt5_FATAL_ERROR_IF_NOT_FOUND)
+        if(xmakeI_QT5_FATAL_ERROR_IF_NOT_FOUND)
             message(FATAL_ERROR "NOT found Qt5 library, STOP!")
         endif()
         return()

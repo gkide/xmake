@@ -65,7 +65,7 @@ Var AR_RegFlags
 
 @CPACK_NSIS_SECTION_SELECTED_VARS@
 
-# Loads the "selected" flag for the section named 
+# Loads the "selected" flag for the section named
 # SecName into the variable VarName.
 !macro LoadSectionSelectedIntoVar SecName VarName
     SectionGetFlags ${${SecName}} $${VarName}
@@ -92,7 +92,7 @@ Var AR_RegFlags
     ReadRegDWORD $AR_RegFlags HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@\Components\${SecName}" "Installed"
 
     IfErrors "default_${SecName}"
-        # Status will stay default if registry value 
+        # Status will stay default if registry value
         # not found(component was never installed)
 
     IntOp $AR_RegFlags $AR_RegFlags & ${SF_SELECTED} # Turn off all other bits
@@ -112,7 +112,7 @@ Var AR_RegFlags
 !macroend
 
 !macro FinishSection SecName
-    # This macro reads section flag set by user and 
+    # This macro reads section flag set by user and
     # removes the section if it is not selected.
     # Then it writes component installed flag to registry
     # Input: section index constant name specified in Section command.
@@ -481,7 +481,7 @@ FunctionEnd
 !insertmacro StrStr ""
 !insertmacro StrStr "un."
 
-Function Trim 
+Function Trim
     Exch $R1
     Push $R2
     Loop:
@@ -626,7 +626,7 @@ Page custom InstallOptionsPage
 # Reserve Files
 # These files should be inserted before other files in the data block
 # Keep these lines before any File command
-# Only for solid compression (by default, solid compression is enabled 
+# Only for solid compression (by default, solid compression is enabled
 # for BZIP2 and LZMA)
 ReserveFile "NSIS.InstallOptions.ini"
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
@@ -814,13 +814,13 @@ Section "Uninstall"
     # MessageBox MB_OK "Start menu is in: $START_MENU"
     ReadRegStr $DO_NOT_ADD_TO_PATH SHCTX \
     "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" "DoNotAddToPath"
-    
+
     ReadRegStr $ADD_TO_PATH_ALL_USERS SHCTX \
     "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" "AddToPathAllUsers"
-    
+
     ReadRegStr $ADD_TO_PATH_CURRENT_USER SHCTX \
     "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" "AddToPathCurrentUser"
-    
+
     # MessageBox MB_OK "Add to path
     # $DO_NOT_ADD_TO_PATH all users: $ADD_TO_PATH_ALL_USERS"
     ReadRegStr $INSTALL_DESKTOP SHCTX \
@@ -873,11 +873,11 @@ Section "Uninstall"
 
     startMenuDeleteLoopDone:
 
-    # If the user changed the shortcut, then untinstall may not work. 
+    # If the user changed the shortcut, then untinstall may not work.
     # This should try to fix it.
     StrCpy $MUI_TEMP "$START_MENU"
     Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
-    
+
     @CPACK_NSIS_DELETE_ICONS_EXTRA@
 
     # Delete empty start menu parent diretories
@@ -943,7 +943,7 @@ Function .onInit
         StrCmp "$IS_DEFAULT_INSTALLDIR" "1" 0 +2
             StrCpy $INSTDIR "$DOCUMENTS\@CPACK_PACKAGE_INSTALL_DIRECTORY@"
             ClearErrors
-        
+
         UserInfo::GetName
         IfErrors noLM
         Pop $0

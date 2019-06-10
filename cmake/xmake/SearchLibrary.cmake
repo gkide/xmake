@@ -17,10 +17,10 @@ endmacro()
 
 # Found library by using find_package, pkg-config, find_path, find_library
 #
-#  ${pkg_NAME}_FOUND        - Set to true found if found libraries
-#  ${pkg_NAME}_VERSION      - The found library version
-#  ${pkg_NAME}_LIBRARIES    - The found libraries for linking
-#  ${pkg_NAME}_INCLUDE_DIRS - The directories for include header
+#  ${pkg_PREFIX}_FOUND         Set to true found if found libraries
+#  ${pkg_PREFIX}_VERSION       The found library version
+#  ${pkg_PREFIX}_LIBRARIES     The found libraries for linking(-L/-l or file)
+#  ${pkg_PREFIX}_INCLUDE_DIRS  The directories for include header
 function(XmakeSearchLibrary)
     set(options
         VERBOSE           # Verbose search message, default OFF
@@ -31,6 +31,7 @@ function(XmakeSearchLibrary)
     set(oneValueArgs
         NAME              # The library name to search
         VERSION           # Major[.Minor[.Patch]]
+        PREFIX            # The prefix name for output variable
     )
     set(multiValueArgs
         FIND_PACKAGE_ARGS # For find_package args
@@ -49,9 +50,13 @@ function(XmakeSearchLibrary)
         message(FATAL_ERROR "Must set NAME for library search")
     endif()
 
+    if(NOT pkg_PREFIX)
+        set(pkg_PREFIX "${pkg_NAME}")
+    endif()
+
     # Skip if already found the library package
-    if(${pkg_NAME}_FOUND)
-        return()
+    if(${pkg_PREFIX}_FOUND)
+        #return()
     endif()
 
     if(pkg_VERSION) # version must be format of X.Y.Z
@@ -97,13 +102,13 @@ function(XmakeSearchLibrary)
             endforeach()
 
             if(static_lfn_FOUND)
-                SLSetParentVars(${pkg_NAME} "${${pkg_NAME}_VERSION}"
+                SLSetParentVars(${pkg_PREFIX} "${${pkg_NAME}_VERSION}"
                     ${pkg_NAME}_LIBRARIES  ${pkg_NAME}_INCLUDE_DIRS
                     "find_package-STATIC" # debug message
                 )
             endif()
         else() # shared or what ever found
-            SLSetParentVars(${pkg_NAME} "${${pkg_NAME}_VERSION}"
+            SLSetParentVars(${pkg_PREFIX} "${${pkg_NAME}_VERSION}"
                 ${pkg_NAME}_LIBRARIES  ${pkg_NAME}_INCLUDE_DIRS
                 "find_package" # debug message
             )
@@ -128,28 +133,29 @@ function(XmakeSearchLibrary)
         endif()
 
         if(NOT pkg_VERSION)
-            pkg_check_modules(${pkg_NAME} ${pkg_NAME} ${keep_QUIET}
+            pkg_check_modules(${pkg_PREFIX} ${pkg_NAME} ${keep_QUIET}
                 ${pkg_PKGCONFIG_ARGS}
             )
         else()
-            pkg_check_modules(${pkg_NAME} ${pkg_NAME}>=${pkg_VERSION}
+            pkg_check_modules(${pkg_PREFIX} ${pkg_NAME}>=${pkg_VERSION}
                 ${keep_QUIET} ${pkg_PKGCONFIG_ARGS}
             )
         endif()
 
         # restore pkg-config environment variable any way
         set(ENV{PKG_CONFIG_PATH} "${old_PKG_CONFIG_PATH}")
-
-        if(pkg_STATIC AND ${pkg_NAME}_STATIC_FOUND)
-            SLSetParentVars(${pkg_NAME} "${${pkg_NAME}_STATIC_VERSION}"
-                ${pkg_NAME}_STATIC_LIBRARIES  ${pkg_NAME}_STATIC_INCLUDE_DIRS
-                "pkg_check_modules-STATIC" # debug message
-            )
-        else(${pkg_NAME}_FOUND) # shared or what ever found
-            SLSetParentVars(${pkg_NAME} "${${pkg_NAME}_VERSION}"
-                ${pkg_NAME}_LIBRARIES  ${pkg_NAME}_INCLUDE_DIRS
-                "pkg_check_modules" # debug message
-            )
+        if(${pkg_PREFIX}_FOUND)
+            if(pkg_STATIC)
+                SLSetParentVars(${pkg_PREFIX} "${${pkg_PREFIX}_VERSION}"
+                    ${pkg_PREFIX}_STATIC_LDFLAGS  ${pkg_PREFIX}_STATIC_INCLUDE_DIRS
+                    "pkg_check_modules-STATIC" # debug message
+                )
+            else() # shared or what ever found
+                SLSetParentVars(${pkg_PREFIX} "${${pkg_PREFIX}_VERSION}"
+                    ${pkg_PREFIX}_LDFLAGS  ${pkg_PREFIX}_INCLUDE_DIRS
+                    "pkg_check_modules" # debug message
+                )
+            endif()
         endif()
     endif()
 
@@ -160,7 +166,7 @@ function(XmakeSearchLibrary)
             if(NOT hdr_dir)
                 message(FATAL_ERROR "NOT found header ${file}")
             endif()
-            set(${pkg_NAME}_HDR_DIRS ${hdr_dir} ${${pkg_NAME}_HDR_DIRS})
+            set(${pkg_PREFIX}_HDR_DIRS ${hdr_dir} ${${pkg_PREFIX}_HDR_DIRS})
             unset(hdr_dir) # clear the cache entry variable
         endforeach()
     endif()
@@ -184,11 +190,11 @@ function(XmakeSearchLibrary)
     endif()
 
     list(APPEND lib_NAMES ${pkg_NAME}) # library name
-    find_library(${pkg_NAME}_LIB_FILES NAMES ${lib_NAMES} ${pkg_FIND_LIBRARY_ARGS})
+    find_library(${pkg_PREFIX}_LIB_FILES NAMES ${lib_NAMES} ${pkg_FIND_LIBRARY_ARGS})
 
-    if(${pkg_NAME}_HDR_DIRS OR ${pkg_NAME}_LIB_FILES)
-        SLSetParentVars(${pkg_NAME} "" ${pkg_NAME}_LIB_FILES  ${pkg_NAME}_HDR_DIRS
-            "find_path-find_library" # debug message
+    if(${pkg_PREFIX}_HDR_DIRS OR ${pkg_PREFIX}_LIB_FILES)
+        SLSetParentVars(${pkg_PREFIX} "" ${pkg_PREFIX}_LIB_FILES
+            ${pkg_PREFIX}_HDR_DIRS "find_path-find_library" # debug message
         )
     endif()
 

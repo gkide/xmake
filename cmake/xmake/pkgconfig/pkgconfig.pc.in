@@ -1,10 +1,10 @@
-libdir=@pkg_LIBRARY_DIR@
-includedir=@pkg_INCLUDE_DIR@
+libdir=@lib_LIBRARY_DIR@
+includedir=@lib_INCLUDE_DIR@
 
-Name: lib@pkg_NAME@
-Version: @pkg_VERSION@
+Name: lib@lib_NAME@
+Version: @lib_VERSION@
 Description: @PKG_BRIEF_SUMMARY@
 URL: @PKG_REPO@
-Libs: -L${libdir} -l@pkg_NAME@
-Libs.private: @pkg_EXTRA_LIBS@
+Libs: -L${libdir} -l@lib_NAME@
+Libs.private: @lib_EXTRA_LIBS@
 Cflags: -I${includedir}

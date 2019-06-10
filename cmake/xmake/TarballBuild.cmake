@@ -58,7 +58,7 @@ function(XmakeDepTarballBuild tbName)
         EXPECTED_SHA256 "${tarball_SHA256}"
     )
 
-    ExternalProject_Add(    ${tbName}
+    ExternalProject_Add(${tbName}
         # General
         PREFIX              ${DEPS_BUILD_DIR}
         STAMP_DIR           ${DEPS_BUILD_DIR}/${tbName}-stamp

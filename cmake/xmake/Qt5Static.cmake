@@ -24,7 +24,7 @@ function(Qt5StaticLibFind name qt5_libs_search_path output)
 endfunction()
 
 # Qt5 Static Library Search Prefix
-set(Qt5SLSPrefix ${qt5_STATIC_PREFIX})
+set(Qt5SLSPrefix ${xmakeI_QT5_STATIC_PREFIX})
 mark_as_advanced(Qt5SLSPrefix)
 
 # Static Qt5 Library: plugins/platforms/libqxcb.a

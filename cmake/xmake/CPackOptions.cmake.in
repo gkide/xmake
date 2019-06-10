@@ -54,9 +54,9 @@ if(CPACK_GENERATOR MATCHES "NSIS")
         ${NSIS_MENU_LINKS}
     )
 
-    # Whether add to system ENV path 
+    # Whether add to system ENV path
     set(CPACK_NSIS_MODIFY_PATH ON)
-    
+
     # URL to a web site providing assistance for installing application
     set(CPACK_NSIS_HELP_LINK "@PKG_REPO@")
 
@@ -71,7 +71,7 @@ if(CPACK_GENERATOR MATCHES "NSIS")
 
     # The windows control panel display name for 'Add/Remove Program'
     set(CPACK_NSIS_DISPLAY_NAME "@CPACK_NSIS_PACKAGE_NAME@ - @PKG_VERSION@")
-    
+
     ##############################################################################
     # NSIS Advanced Configurations to Cpack
     # https://gitlab.kitware.com/cmake/community/wikis/home

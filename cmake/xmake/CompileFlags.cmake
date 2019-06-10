@@ -1,4 +1,4 @@
-macro(XmakeGetCompilerFlags CMAKEC cflags location)
+macro(xmakeI_GetCompilerFlags CMAKEC cflags location)
     # Create template akin to CMAKE_C_COMPILE_OBJECT
     set(compiler_flags
         "<COMPILER> "
@@ -69,9 +69,9 @@ macro(XmakeGetCompilerFlags CMAKEC cflags location)
 endmacro()
 
 function(XmakeGetCFlags cflags location)
-    XmakeGetCompilerFlags(CMAKE_C ${cflags} ${location})
+    xmakeI_GetCompilerFlags(CMAKE_C ${cflags} ${location})
 endfunction()
 
 function(XmakeGetCXXFlags cxxflags location)
-    XmakeGetCompilerFlags(CMAKE_CXX ${cxxflags} ${location})
+    xmakeI_GetCompilerFlags(CMAKE_CXX ${cxxflags} ${location})
 endfunction()

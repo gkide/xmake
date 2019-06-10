@@ -1,4 +1,4 @@
-function(PreventInTreeBuilds)
+function(xmakeI_PreventInTreeBuilds)
     get_filename_component(srcdir "${CMAKE_SOURCE_DIR}" REALPATH)
     get_filename_component(bindir "${CMAKE_BINARY_DIR}" REALPATH)
 
@@ -17,4 +17,4 @@ function(PreventInTreeBuilds)
     endif()
 endfunction()
 
-PreventInTreeBuilds()
+xmakeI_PreventInTreeBuilds()
