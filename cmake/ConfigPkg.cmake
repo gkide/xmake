@@ -9,7 +9,7 @@ set(PKG_NAME "xmake")
 #set(PKG_DOXYGEN_EXCLUDES)
 
 set(PKG_VENDOR "GKIDE")
-set(PKG_BRIEF_SUMMARY "cmake and make project quick template!")
+set(PKG_BRIEF_SUMMARY "The Convenience Out-of-Box Wrapper for Cmake Projects!")
 set(PKG_REPO "https://github.com/gkide/xmake")
 set(PKG_BUG_REPORT "https://github.com/gkide/xmake/issues")
 set(PKG_MAINTAINER_EMAIL "Charlie WONG <1213charlie@163.com>")
