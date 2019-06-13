@@ -262,6 +262,18 @@ list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${Qt5SystemLibrary})
 Qt5SystemLibFind(z Qt5SystemLibrary ON)
 list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${Qt5SystemLibrary})
 
+# System Library: libpcre2
+# http://www.pcre.org/current/doc/html/index.html
+# https://packages.ubuntu.com/xenial/libpcre2-dev
+Qt5SystemLibFind(pcre2-8 Qt5SystemLibrary ON)
+list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${Qt5SystemLibrary})
+Qt5SystemLibFind(pcre2-16 Qt5SystemLibrary ON)
+list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${Qt5SystemLibrary})
+Qt5SystemLibFind(pcre2-32 Qt5SystemLibrary ON)
+list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${Qt5SystemLibrary})
+Qt5SystemLibFind(pcre2-posix Qt5SystemLibrary ON)
+list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${Qt5SystemLibrary})
+
 # Static Qt5 Library: lib/libqtpcre2.a
 Qt5StaticLibFind(qtpcre2 ${Qt5SLSPrefix}/lib Qt5StaticLibrary)
 list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${Qt5StaticLibrary})
