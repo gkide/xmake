@@ -22,6 +22,7 @@ list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_RPATH}" isSy
 if(NOT ${XMAKE}_SKIP_RPATH_ORIGIN AND "${isSysDir}" STREQUAL "-1")
     # For installed target's property INSTALL_RPATH
     # https://www.technovelty.org/linux/exploring-origin.html
+    # NOTE: It is better to add -fPIC flags for shared library
     list(APPEND CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 endif()
 
