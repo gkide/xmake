@@ -16,6 +16,15 @@ set(CMAKE_AUTORCC ON)
 # Find includes in corresponding build & source directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# Qt Repo Branches
+# https://wiki.qt.io/Branches
+#
+# Qt-Version-Compatibility
+# https://wiki.qt.io/Qt-Version-Compatibility
+#
+# Policies/Binary Compatibility Issues With C++
+# https://community.kde.org/Policies/Binary_Compatibility_Issues_With_C%2B%2B
+
 # Download Shared Qt Binary Offline Installer
 # http://download.qt.io/official_releases/qt
 if(xmakeI_QT5_SHARED_PREFIX)
