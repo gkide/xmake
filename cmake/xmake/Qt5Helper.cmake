@@ -16,6 +16,8 @@ set(CMAKE_AUTORCC ON)
 # Find includes in corresponding build & source directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# Download Shared Qt Binary Offline Installer
+# http://download.qt.io/official_releases/qt
 if(xmakeI_QT5_SHARED_PREFIX)
     if(NOT EXISTS ${xmakeI_QT5_SHARED_PREFIX})
         set(wmsg " Qt5 Shared Search Path Not Exist: ${xmakeI_QT5_SHARED_PREFIX}")
