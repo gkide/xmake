@@ -15,7 +15,7 @@ option(XDEMO_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 
 #option(XDEMO_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" ON)
 #option(XDEMO_DISABLE_CCACHE "Enale ccache by default for linux" ON)
-#option(XDEMO_USE_STATIC_GCC_LIBS "Use static c/c++ libraries." ON)
+#option(XDEMO_WIN_USE_STATIC_GCC_LIBS "Use static c/c++ libraries." ON)
 
 if(DEMO_RUN_CTEST)
     option(XDEMO_ENABLE_CTEST "Enable Cmake ctest support" ON)

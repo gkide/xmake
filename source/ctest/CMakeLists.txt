@@ -55,7 +55,6 @@ XmakeCCRLcovHtml(
     LCOV_EXCLUDES
         ${QT5_STATIC_PREFIX}
         ${QT5_SHARED_PREFIX}
-        ${XDEMO_AUTO_QT5_SOURCES}
         ${CMAKE_SOURCE_DIR}/source/qt5
         ${CMAKE_SOURCE_DIR}/source/ctest
         ${CMAKE_SOURCE_DIR}/source/gtest

@@ -73,11 +73,11 @@ qt5_add_binary_resources(app-resource # => app-resource.rcc
 )
 
 add_executable(qt5app WIN32 MACOSX_BUNDLE
-    ${QRC_FILE}
+    # https://forum.qt.io/topic/97983/multiple-definition-of-qinitresources_
+    # ${QRC_FILE} This file will automatically added when add .qrc
     ${qt5app_SRCS}
-    ${XDEMO_AUTO_QT5_SOURCES}
 )
-
+XmakeQt5StaticPluginSrcAdd(qt5app)
 # Use the Widgets module from Qt5
 target_link_libraries(qt5app
     Qt5::Widgets

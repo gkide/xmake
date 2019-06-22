@@ -36,36 +36,34 @@ elseif(HOST_WINDOWS_CYGWIN)
 endif()
 
 # copy {lib|msys-|cyg-}stdc++-6.dll
-if(NOT ${XMAKE}_USE_STATIC_GCC_LIBS)
-    SetWinDllName(gcc_s_seh_1_dll "gcc_s_seh-1") # {lib|msys-|cyg-}gcc_s_seh-1.dll
-    XmakeCopyInstallFiles(
-        FILES       "${WIN_DLLS_DIR}/${gcc_s_seh_1_dll}"
-        INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
-        CPY_TARGET  "copy-${gcc_s_seh_1_dll}"
-        CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
-    )
+SetWinDllName(gcc_s_seh_1_dll "gcc_s_seh-1") # {lib|msys-|cyg-}gcc_s_seh-1.dll
+XmakeCopyInstallFiles(
+    FILES       "${WIN_DLLS_DIR}/${gcc_s_seh_1_dll}"
+    INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
+    CPY_TARGET  "copy-${gcc_s_seh_1_dll}"
+    CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
+)
 
-    SetWinDllName(gcc_s_dw2_1_dll "gcc_s_dw2-1") # {lib|msys-|cyg-}gcc_s_dw2-1.dll
-    XmakeCopyInstallFiles(
-        FILES       "${WIN_DLLS_DIR}/${gcc_s_dw2_1_dll}"
-        INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
-        CPY_TARGET  "copy-${gcc_s_dw2_1_dll}"
-        CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
-    )
+SetWinDllName(gcc_s_dw2_1_dll "gcc_s_dw2-1") # {lib|msys-|cyg-}gcc_s_dw2-1.dll
+XmakeCopyInstallFiles(
+    FILES       "${WIN_DLLS_DIR}/${gcc_s_dw2_1_dll}"
+    INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
+    CPY_TARGET  "copy-${gcc_s_dw2_1_dll}"
+    CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
+)
 
-    SetWinDllName(stdcxx_6_dll "stdc++-6") # {lib|msys-|cyg-}stdc++-6.dll
-    XmakeCopyInstallFiles(
-        FILES       "${WIN_DLLS_DIR}/${stdcxx_6_dll}"
-        INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
-        CPY_TARGET  "copy-${stdcxx_6_dll}"
-        CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
-    )
+SetWinDllName(stdcxx_6_dll "stdc++-6") # {lib|msys-|cyg-}stdc++-6.dll
+XmakeCopyInstallFiles(
+    FILES       "${WIN_DLLS_DIR}/${stdcxx_6_dll}"
+    INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
+    CPY_TARGET  "copy-${stdcxx_6_dll}"
+    CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
+)
 
-    SetWinDllName(winpthread_1_dll "winpthread-1") # {lib|msys-|cyg-}winpthread-1.dll
-    XmakeCopyInstallFiles(
-        FILES       "${WIN_DLLS_DIR}/${winpthread_1_dll}"
-        INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
-        CPY_TARGET  "copy-${winpthread_1_dll}"
-        CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
-    )
-endif()
+SetWinDllName(winpthread_1_dll "winpthread-1") # {lib|msys-|cyg-}winpthread-1.dll
+XmakeCopyInstallFiles(
+    FILES       "${WIN_DLLS_DIR}/${winpthread_1_dll}"
+    INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
+    CPY_TARGET  "copy-${winpthread_1_dll}"
+    CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
+)

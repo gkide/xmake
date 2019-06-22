@@ -227,17 +227,10 @@ add_compile_options(-Wfatal-errors)
 add_compile_options(-Wuninitialized)
 add_compile_options(-Wunused-parameter)
 
+set(${XMAKE}_GENERATED_DIR  "${CMAKE_BINARY_DIR}/generated")
+
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_BINARY_DIR})
-
-if(${XMAKE}_USE_STATIC_GCC_LIBS)
-    # do NOT need the binding gcc runtime library
-    # {lib|msys-|cyg-}gcc_s-seh-1.dll for MinGW/MSYS/Cygwin
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc -static")
-    # do NOT need the binding gcc runtime library
-    # {lib|msys-|cyg-}stdc++-6.dll for MinGW/MSYS/Cygwin
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static")
-endif()
 
 if(${XMAKE}_ENABLE_ASSERTION)
     if(CMAKE_C_FLAGS_${buildType} MATCHES DNDEBUG)
@@ -354,7 +347,16 @@ endif()
 #set(CMAKE_EXE_LINKER_FLAGS --verbose)
 
 if(HOST_WINDOWS)
-    include(xmake/WindowsConfig)
+    if(${XMAKE}_WIN_USE_STATIC_GCC_LIBS)
+        # do NOT need the binding gcc runtime library
+        # {lib|msys-|cyg-}gcc_s-seh-1.dll for MinGW/MSYS/Cygwin
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static-libgcc -static")
+        # do NOT need the binding gcc runtime library
+        # {lib|msys-|cyg-}stdc++-6.dll for MinGW/MSYS/Cygwin
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static")
+    else()
+        include(xmake/WindowsConfig)
+    endif()
 endif()
 
 include(xmake/GetGitRepoInfo)

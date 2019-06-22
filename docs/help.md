@@ -774,6 +774,9 @@ Copy and install the given files.
 
 # Miscellaneous
 
+## `XXX_USE_STATIC_GCC_LIBS` variable for windows to use static GCC library.
+## `XXX_GENERATED_DIR` variable will be set to `${CMAKE_BINARY_DIR}/generated`.
+
 ## XmakePrintConfigurationInfo
 
 Print and show xmake configurations, it should be called at the end of cmake.

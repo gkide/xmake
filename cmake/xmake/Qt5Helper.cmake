@@ -86,31 +86,44 @@ if(NOT ${XMAKE}_DEBUG_BUILD)
     add_definitions("-DQT_NO_EXCEPTIONS")
 endif()
 
-# This determines the thread library of the system, see 'FindThreads.cmake'
-find_package(Threads)
+# find the Qt root directory
+find_package(Qt5Core REQUIRED)
+set(Qt5_SDK_VERSION "${Qt5Core_VERSION}")
+get_filename_component(Qt5_SDK_ROOT_DIR "${Qt5Core_DIR}/../../.." ABSOLUTE)
+message(STATUS "Qt5 SDK Version: ${Qt5_SDK_VERSION}")
+message(STATUS "Qt5 SDK RootDir: ${Qt5_SDK_ROOT_DIR}")
+
+# TODO: to find a better way for check static Qt5
+if(EXISTS "${Qt5_SDK_ROOT_DIR}/lib/libQt5Core.a")
+    set(xmakeI_QT5_STATIC_PREFIX "${Qt5_SDK_ROOT_DIR}")
+endif()
+
+# For circular dependencies
+list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES -Wl,--start-group)
+
+if(NOT HOST_WINDOWS)
+    find_package(Threads) # FindThreads.cmake
+    list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+endif()
 
 if(xmakeI_QT5_STATIC_PREFIX)
-    # Qt5 static qt-plugin
-    set(qt5_plugin_moc "${CMAKE_CURRENT_BINARY_DIR}/xmake_qt5_moc.cpp")
-    mark_as_advanced(qt5_plugin_moc)
-    file(WRITE ${qt5_plugin_moc} "#include <QtPlugin>\n")
-    list(APPEND ${XMAKE}_AUTO_QT5_SOURCES ${qt5_plugin_moc})
+    include(xmake/Qt5Static)
+    include(xmake/Qt5StaticPlugin)
+else()
+    macro(XmakeQt5StaticPluginSrcAdd TARGET)
+        # Nothing Todo
+    endmacro()
+endif()
 
-    if(HOST_WINDOWS)
-        file(APPEND ${qt5_plugin_moc}
-             "Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)\n")
-    else()
-        include(xmake/Qt5Static)
-        list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
-        file(APPEND ${qt5_plugin_moc}
-            "Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)\n")
-        file(APPEND ${qt5_plugin_moc} "Q_IMPORT_PLUGIN(QGifPlugin)\n")
-        file(APPEND ${qt5_plugin_moc} "Q_IMPORT_PLUGIN(QICNSPlugin)\n")
-        file(APPEND ${qt5_plugin_moc} "Q_IMPORT_PLUGIN(QICOPlugin)\n")
-        file(APPEND ${qt5_plugin_moc} "Q_IMPORT_PLUGIN(QJpegPlugin)\n")
-        file(APPEND ${qt5_plugin_moc} "Q_IMPORT_PLUGIN(QTgaPlugin)\n")
-        file(APPEND ${qt5_plugin_moc} "Q_IMPORT_PLUGIN(QTiffPlugin)\n")
-        file(APPEND ${qt5_plugin_moc} "Q_IMPORT_PLUGIN(QWbmpPlugin)\n")
-        file(APPEND ${qt5_plugin_moc} "Q_IMPORT_PLUGIN(QWebpPlugin)\n")
-    endif()
+# For circular dependencies
+list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES -Wl,--end-group)
+
+# It's safe to remove the duplicated ones for circular dependencies link flags
+list(REMOVE_DUPLICATES ${XMAKE}_AUTO_QT5_LIBRARIES)
+
+if(false)
+    foreach(item ${${XMAKE}_AUTO_QT5_LIBRARIES})
+        message(STATUS "Qt5Lib: ${item}")
+    endforeach()
+    message(FATAL_ERROR "STOP")
 endif()
