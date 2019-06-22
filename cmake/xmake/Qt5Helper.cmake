@@ -106,13 +106,14 @@ if(NOT HOST_WINDOWS)
     list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
+# https://doc.qt.io/QtForDeviceCreation/qtee-static-linking.html
 if(xmakeI_QT5_STATIC_PREFIX)
     include(xmake/Qt5Static)
     include(xmake/Qt5StaticPlugin)
 else()
-    macro(XmakeQt5StaticPluginSrcAdd TARGET)
+    function(XmakeQt5StaticPluginSrcAdd TARGET)
         # Nothing Todo
-    endmacro()
+    endfunction()
 endif()
 
 # For circular dependencies
