@@ -50,6 +50,9 @@ xmakeI_Qt5StaticLibFind(Qt5EventDispatcherSupport ${Qt5SLSPrefix}/lib)
 # Static Qt5 Library: lib/libQt5FontDatabaseSupport.a
 xmakeI_Qt5StaticLibFind(Qt5FontDatabaseSupport ${Qt5SLSPrefix}/lib)
 
+# For Qt 5.12.3
+xmakeI_Qt5StaticLibFind(Qt5EdidSupport ${Qt5SLSPrefix}/lib)
+
 # Static Qt5 Library: lib/libQt5Core.a
 find_package(Qt5Core CONFIG REQUIRED)
 mark_as_advanced(Qt5Core_DIR)
@@ -259,6 +262,16 @@ xmakeI_Qt5SystemLibFind(ssl ON)
 #
 # System Library: libglib-2.0.a, libglib-2.0.so
 xmakeI_Qt5SystemLibFind(glib-2.0 ON)
+
+# For Qt 5.12.3
+xmakeI_Qt5SystemLibFind(SM ON) # libSM-devel
+xmakeI_Qt5SystemLibFind(ICE ON) # libice-dev
+xmakeI_Qt5SystemLibFind(tiff ON)
+xmakeI_Qt5SystemLibFind(jpeg ON)
+xmakeI_Qt5SystemLibFind(jasper ON)
+xmakeI_Qt5SystemLibFind(Xrender ON)
+xmakeI_Qt5SystemLibFind(xkbcommon ON)
+xmakeI_Qt5SystemLibFind(xcb-static ON)
 
 ###############
 # Qt5 Plugins #
