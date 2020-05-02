@@ -138,10 +138,10 @@ function(xmakeI_InitGitClone)
 
     set(xm_repo_url "https://github.com/gkide/xmake")
 
-    message(STATUS "xmake init by git clone ...")
+    message(STATUS "xmake init by git clone the latest...")
     execute_process(TIMEOUT 120 # 2-min if not done, just STOP
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake
-        COMMAND ${GIT_PROG} clone --depth=1 ${xm_repo_url} xmake-latest
+        COMMAND ${GIT_PROG} clone --depth=1 ${xm_repo_url}
         RESULT_VARIABLE is_ok
         ERROR_VARIABLE  log_msg
         OUTPUT_VARIABLE log_msg
@@ -199,10 +199,11 @@ macro(XmakeInit)
         else()
             xmakeI_InitTarball(xm_VERSION xm_SHA256)
         endif()
-        # xmake just setup, CMakeCache.txt may not correct, just
-        # exit the current cmake process, makefile will remove it.
-        return()
     endif()
 
     include(xmake) # include the xmake MAIN ENTRY
 endmacro()
+
+XmakeInit() # use the latest repo
+#XmakeInit(v1.2.0) # use version v1.1.0 without SHA256 checking
+#XmakeInit(v1.2.0 cedefafd2b328d6613effc715ca4ce2ed98ed626bbba055c85fa605596327735)

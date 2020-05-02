@@ -11,24 +11,26 @@ in the top CMakeLists.txt
 - [Code Coverage](docs/help.md#code-coverage-support)
 - [Package and Release](docs/help.md#package-and-release)
 
-# How Do I Use `xmake`
+# How to use it?
 
-Using **xmake** is much simple(`Makefile` and `CMakeLists.txt`):
+Using **xmake** is simple with`Makefile` and `CMakeLists.txt`:
 
-1. Download the [xmake.init.mk](xmake.init.mk) and [xmake.init.cmake](xmake.init.cmake)
+1. Download the [xmake.init.mk](cmake/xmake.init.mk) and [xmake.init.cmake](cmake/xmake.init.cmake)
+   - Modify **XmakeInit** cmake calls of [xmake.init.cmake](cmake/xmake.init.cmake)
+   - Modify **XmakeVersion*** to the release tag of [xmake.init.mk](cmake/xmake.init.mk), like **v1.2.0**
 2. Create directory **cmake** at project root and put them there
-3. Create a **Makefile** for the project and add two lines to the top
+3. Create **Makefile** and add two lines to the top, note it can be ignored if do not want to use makefile
 
 ``` makefile
-# This is for local configuration, not necessary
+# The local configurations
 -include local.mk
-# Include the xmake init makefile
+# The xmake init script
 include cmake/xmake.init.mk
 
 ...
 ```
 
-4. Create a **CmakeLists.txt** and add following lines to the top
+4. Create **CmakeLists.txt** and add following lines to the top
 
 ``` cmake
 ...
@@ -44,7 +46,6 @@ set(ABC_VERSION_TWEAK "") # date & HASH auto update at build time
 #############################################################
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(xmake.init) # This should be in the top CMakeLists.txt
-XmakeInit(${XMAKE_VERSION} ${XMAKE_TARBALL_SHA256})
 #############################################################
 
 message(STATUS "XMAKE=${XMAKE}")

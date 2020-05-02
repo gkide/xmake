@@ -40,7 +40,7 @@ endif()
 
 # Cmake modules
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-include(xmake) # xmake should include in the top CMakeLists.txt
+include(xmake.init) # xmake should include in the top CMakeLists.txt
 
 file(GLOB HOSTINFO_SOURCES source/*.c)
 file(GLOB HOSTINFO_HEADERS source/*.h)

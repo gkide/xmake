@@ -10,3 +10,7 @@ build*/
 .deps/
 .github/
 .standard-release/
+
+# xmake
+cmake/xmake/
+cmake/xmake.cmake

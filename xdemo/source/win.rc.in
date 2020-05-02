@@ -35,7 +35,7 @@
 
 // https://docs.microsoft.com/en-us/windows/desktop/menurc/versioninfo-resource
 VS_VERSION_INFO     VERSIONINFO
-FILEVERSION         VER_FILEVERSION // format must be 'X,X,X,X', X is number 
+FILEVERSION         VER_FILEVERSION // format must be 'X,X,X,X', X is number
 PRODUCTVERSION      VER_PRODUCTVERSION // format must be 'X,X,X,X', X is number
 FILEFLAGSMASK       VS_FFI_FILEFLAGSMASK // enable all file flag bits
 FILEFLAGS           0x0L // do NOT set any flags by default

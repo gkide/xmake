@@ -3,7 +3,7 @@ if(NOT DEMO_RUN_GTEST)
 endif()
 
 # gtest use access non-ANSI symbols: fdopen, fileno, strdup
-# '-std=c++11' will disable all of them, them got 'fileno' 
+# '-std=c++11' will disable all of them, them got 'fileno'
 # was not declared in this scope error
 # https://stackoverflow.com/questions/18784112
 #

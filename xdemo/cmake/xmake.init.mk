@@ -1,0 +1,1 @@
+../../cmake/xmake.init.mk

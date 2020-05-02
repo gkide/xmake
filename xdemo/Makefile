@@ -1,13 +1,11 @@
-# The Local configuration
-# - Do cmake config if needed
-# - CMAKE_ARGS += ...
-# - EXTRA_CMAKE_ARGS += ...
+# The local configurations
+# For more details see 'docs/local.mk'
 -include local.mk
 
-# The xmake user-friendly template
-include cmake/xmake/xmake.mk
+# The xmake init script
+include cmake/xmake.init.mk
 
-# xmake predefined targets starts by 'xmake-*'
+# xmake predefined targets start by 'xmake-*'
 PHONY += all
 all: xmake-all
 
@@ -50,7 +48,7 @@ auto-progs: xmake-auto-progs
 
 # if enable ctest, cmake will auto define 'test' target
 PHONY += demo-ctest
-demo-ctest:
+demo-ctest: | demo-ccr
 	$(Q)rm -rf $(BUILD_DIR)/CMakeCache.txt # clean cmake cache
 	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS) -DDEMO_RUN_CTEST=ON
 	$(XMAKE) -C $(BUILD_DIR) test
