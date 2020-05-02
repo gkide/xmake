@@ -5,6 +5,35 @@
 - REPOSITORY COMMITS ADHERE TO [CONVENTIONAL COMMITS](https://conventionalcommits.org).
 
 
+## 2020-05-03 01:03:06 +0800 Release [v1.2.0](https://github.com/gkide/xmake/releases/tag/v1.2.0)
+
+[[☕](#v_Features_202005030103060800)]
+[[☀](#v_Fixed_202005030103060800)]
+[[⛭](#v_Changed_202005030103060800)]
+comparing with [v1.1.0](https://github.com/gkide/xmake/compare/v1.1.0...v1.2.0)
+
+<span id = "v_Features_202005030103060800"></span>
+### ☕ Features
+- **feat**: works for Qt 5.12.3 static build ([bc0838d](https://github.com/gkide/xmake/commit/bc0838d))
+- **feat**: xmake init update ([7c3a307](https://github.com/gkide/xmake/commit/7c3a307))
+- **feat**: xmake cmakes update ([17ca0f2](https://github.com/gkide/xmake/commit/17ca0f2))
+
+<span id = "v_Fixed_202005030103060800"></span>
+### ☀ Fixed
+- **fix**: miss up host-name & user-name ([c694c62](https://github.com/gkide/xmake/commit/c694c62))
+- **fix**: xmake init makefile & cmake script update ([d5ee25b](https://github.com/gkide/xmake/commit/d5ee25b))
+- **fix**: no qml plugin ([fa1906e](https://github.com/gkide/xmake/commit/fa1906e))
+- **fix**: static Qt5 plugin link libraries ([b8aad5b](https://github.com/gkide/xmake/commit/b8aad5b))
+- **fix**: xmake init makefile of tar/unzip ([9348e75](https://github.com/gkide/xmake/commit/9348e75))
+- **fix**: static qt5 link library for libpcre2 ([59874f2](https://github.com/gkide/xmake/commit/59874f2))
+- **fix**: xmake init latest by git clone ([efa40a3](https://github.com/gkide/xmake/commit/efa40a3))
+- **fix**: xmake cmake init update ([f3aaa80](https://github.com/gkide/xmake/commit/f3aaa80))
+- **fix**: qt5 setup options ([abb7fbc](https://github.com/gkide/xmake/commit/abb7fbc))
+
+<span id = "v_Changed_202005030103060800"></span>
+### ⛭ Changed
+- **refactor**: make xdemo more easy to read ([2af2a28](https://github.com/gkide/xmake/commit/2af2a28))
+
 ## 2019-06-07 16:25:59 +0800 Release [v1.1.0](https://github.com/gkide/xmake/releases/tag/v1.1.0)
 
 [[☕](#v_Features_201906071625590800)]
