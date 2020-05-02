@@ -16,7 +16,7 @@ in the top CMakeLists.txt
 Using **xmake** is simple with`Makefile` and `CMakeLists.txt`:
 
 1. Download the [xmake.init.mk](cmake/xmake.init.mk) and [xmake.init.cmake](cmake/xmake.init.cmake)
-   - Modify **XmakeInit** cmake calls of [xmake.init.cmake](cmake/xmake.init.cmake)
+   - Modify **XmakeInit()** cmake calls of [xmake.init.cmake](cmake/xmake.init.cmake)
    - Modify **XmakeVersion*** to the release tag of [xmake.init.mk](cmake/xmake.init.mk), like **v1.2.0**
 2. Create directory **cmake** at project root and put them there
 3. Create **Makefile** and add two lines to the top, note it can be ignored if do not want to use makefile
