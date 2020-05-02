@@ -2,9 +2,9 @@
 
 IS_REPO_HOOKS=false;
 REPO_HOOKS=$(git config core.hookspath);
-SYNC_RELEASE=${REPO_HOOKS}/scripts/sync-release;
-if [ "$REPO_HOOKS" != "" -a -f ${SYNC_RELEASE} ]; then
-    KEY=$(grep REPO_HOOKS_VERSION ${SYNC_RELEASE} | head -1 | awk -F'=' '{ print $1; }');
+MY_RELEASE=${REPO_HOOKS}/scripts/sync-release;
+if [ "$REPO_HOOKS" != "" -a -f ${MY_RELEASE} ]; then
+    KEY=$(grep REPO_HOOKS_VERSION ${MY_RELEASE} | head -1 | awk -F'=' '{ print $1; }');
     if [ "$KEY" = "REPO_HOOKS_VERSION" ]; then
         IS_REPO_HOOKS=true;
     fi
@@ -16,4 +16,4 @@ if ! $IS_REPO_HOOKS; then
 fi
 
 REPO_DIR=$(git rev-parse --show-toplevel);
-${SYNC_RELEASE} CONFIG=${REPO_DIR}/scripts/.sync-release.sh;
+${MY_RELEASE} CONFIG=${REPO_DIR}/scripts/.release.sh;
