@@ -196,10 +196,8 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 
 ## Qt5 Support
 
-- **XXX**`_AUTO_QT5_SOURCES`, auto generated source files for Qt5 if any.
-- **XXX**`_AUTO_QT5_LIBRARIES`, auto collection libraries for linking for Qt5 if any.
-- **XXX**`_AUTO_QT5_SOURCES`, for details see [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
-- **XXX**`_AUTO_QT5_LIBRARIES`, for details see [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
+- **XXX**`_QT5_SOURCES`, for details see [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
+- **XXX**`_QT5_LIBRARIES`, for details see [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
 
 ## Code Coverage Support
 
@@ -328,14 +326,14 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 The Qt5 search helper, for example
 
 ```cmake
-XmakeQt5SupportSetup(AUTOMATIC
+XmakeQt5SupportSetup(SEARCH_SYSTEM
     STATIC_PREFIX /opt/qt-5.9.1
     SHARED_PREFIX /usr/lib/gcc/x86_64-linux-gnu
 )
 ```
 
 **Option Value Args**
-- `AUTOMATIC` try to find Qt5 from the system wide
+- `SEARCH_SYSTEM` try to find Qt5 from the system wide
 - `FATAL_ERROR_IF_NOT_FOUND` cmake fatal error if not found Qt5
 
 **One Value Args**
@@ -343,8 +341,8 @@ XmakeQt5SupportSetup(AUTOMATIC
 - `SHARED_PREFIX`, shared build of Qt5 install path
 
 NOTE: static Qt5 need following two auto defined variables
-- **XXX**`_AUTO_QT5_SOURCES`, xmake auto generated source files for statci qt5.
-- **XXX**`_AUTO_QT5_LIBRARIES`, xmake auto collection libraries to link against.
+- **XXX**`_QT5_SOURCES`, xmake auto generated source files for statci qt5.
+- **XXX**`_QT5_LIBRARIES`, xmake auto collection libraries to link against.
 
 ## XmakeDepRepoBuild
 

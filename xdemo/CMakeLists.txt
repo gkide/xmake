@@ -26,7 +26,7 @@ if(DEMO_RUN_GTEST)
 endif()
 
 if(DEMO_RUN_QT5)
-    option(QT5_AUTOMATIC "Enable Qt5 auto search support" ON)
+    option(XDEMO_SYSTEM_QT5 "Enable Qt5 system search support" ON)
 endif()
 
 if(DEMO_RUN_IFW)

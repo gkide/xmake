@@ -298,7 +298,7 @@ else()
 endif()
 
 # Enable static/shared Qt5 support
-# - AUTOMATIC       Enable Qt5 support, auto detect from system
+# - SEARCH_SYSTEM   Enable Qt5 support, auto detect from system
 # - STATIC_PREFIX   Full path to Qt5 static install, like: /opt/qt-5.9.1
 # - SHARED_PREFIX   Full path to Qt5 static install, like: /opt/Qt5.5.1/5.5/gcc_64
 # - SHARED_PREFIX   Full path to Qt5 static install, like: /usr/lib/gcc/x86_64-linux-gnu
@@ -308,7 +308,7 @@ endif()
 # installed, just skip the Qt5 build part and continue with other parts
 macro(XmakeQt5SupportSetup)
     set(optionValueArgs
-        AUTOMATIC
+        SEARCH_SYSTEM
         FATAL_ERROR_IF_NOT_FOUND
     )
     set(oneValueArgs
@@ -320,7 +320,7 @@ macro(XmakeQt5SupportSetup)
         "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
-    if(xmakeI_QT5_STATIC_PREFIX OR xmakeI_QT5_SHARED_PREFIX OR xmakeI_QT5_AUTOMATIC)
+    if(xmakeI_QT5_STATIC_PREFIX OR xmakeI_QT5_SHARED_PREFIX OR xmakeI_QT5_SEARCH_SYSTEM)
         include(xmake/Qt5Helper)
     else()
         if(xmakeI_QT5_FATAL_ERROR_IF_NOT_FOUND)

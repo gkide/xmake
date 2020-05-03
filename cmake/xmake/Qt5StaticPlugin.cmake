@@ -109,6 +109,6 @@ function(XmakeQt5StaticPluginSrcAdd TARGET)
     endif()
 
     target_sources(${TARGET} PRIVATE ${plg_OUTPUT_SRC})
-    target_link_libraries(${TARGET} ${${XMAKE}_AUTO_QT5_LIBRARIES})
+    target_link_libraries(${TARGET} ${${XMAKE}_QT5_LIBRARIES})
     target_link_libraries(${TARGET} "-u _qt_registerPlatformPlugin")
 endfunction()

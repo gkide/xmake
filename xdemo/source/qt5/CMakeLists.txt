@@ -2,11 +2,11 @@ if(NOT DEMO_RUN_QT5)
     return()
 endif()
 
-if(QT5_AUTOMATIC)
-    set(QT5_AUTOMATIC AUTOMATIC)
+if(XDEMO_SYSTEM_QT5)
+    set(XDEMO_SYSTEM_QT5 SEARCH_SYSTEM)
 endif()
 
-XmakeQt5SupportSetup(${QT5_AUTOMATIC}
+XmakeQt5SupportSetup(${XDEMO_SYSTEM_QT5}
     STATIC_PREFIX ${QT5_STATIC_PREFIX}
     SHARED_PREFIX ${QT5_SHARED_PREFIX}
 )
@@ -82,7 +82,7 @@ XmakeQt5StaticPluginSrcAdd(qt5app)
 target_link_libraries(qt5app
     Qt5::Widgets
     Qt5::Network
-    ${XDEMO_AUTO_QT5_LIBRARIES}
+    ${XDEMO_QT5_LIBRARIES}
 )
 
 XmakeInstallHelper(TARGETS qt5app)

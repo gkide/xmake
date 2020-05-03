@@ -99,11 +99,11 @@ if(EXISTS "${Qt5_SDK_ROOT_DIR}/lib/libQt5Core.a")
 endif()
 
 # For circular dependencies
-list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES -Wl,--start-group)
+list(APPEND ${XMAKE}_QT5_LIBRARIES -Wl,--start-group)
 
 if(NOT HOST_WINDOWS)
     find_package(Threads) # FindThreads.cmake
-    list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+    list(APPEND ${XMAKE}_QT5_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
 # https://doc.qt.io/QtForDeviceCreation/qtee-static-linking.html
@@ -117,13 +117,13 @@ else()
 endif()
 
 # For circular dependencies
-list(APPEND ${XMAKE}_AUTO_QT5_LIBRARIES -Wl,--end-group)
+list(APPEND ${XMAKE}_QT5_LIBRARIES -Wl,--end-group)
 
 # It's safe to remove the duplicated ones for circular dependencies link flags
-list(REMOVE_DUPLICATES ${XMAKE}_AUTO_QT5_LIBRARIES)
+list(REMOVE_DUPLICATES ${XMAKE}_QT5_LIBRARIES)
 
 if(false)
-    foreach(item ${${XMAKE}_AUTO_QT5_LIBRARIES})
+    foreach(item ${${XMAKE}_QT5_LIBRARIES})
         message(STATUS "Qt5Lib: ${item}")
     endforeach()
     message(FATAL_ERROR "STOP")
