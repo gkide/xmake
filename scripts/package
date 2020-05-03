@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+REPO_DIR=$(git rev-parse --show-toplevel);
+_sed=$([ "$(uname)" = "Darwin" ] && echo "sed -E" || echo "sed -r");
+
+KEY_MAJOR="XMAKE_MAJOR_VERSION=";
+KEY_MINOR="XMAKE_MINOR_VERSION=";
+KEY_PATCH="XMAKE_PATCH_VERSION=";
+KEY_TWEAK="XMAKE_TWEAK_VERSION=";
+VERSION_FILE="${REPO_DIR}/Version";
+
+XMAKE_MAJOR=$(grep "${KEY_MAJOR}" ${VERSION_FILE} | ${_sed} "s/^(${KEY_MAJOR}\s*)([0-9]+)(\s*)$/\2/");
+XMAKE_MINOR=$(grep "${KEY_MINOR}" ${VERSION_FILE} | ${_sed} "s/^(${KEY_MINOR}\s*)([0-9]+)(\s*)$/\2/");
+XMAKE_PATCH=$(grep "${KEY_PATCH}" ${VERSION_FILE} | ${_sed} "s/^(${KEY_PATCH}\s*)([0-9]+)(\s*)$/\2/");
+XMAKE_TWEAK=$(grep "${KEY_TWEAK}" ${VERSION_FILE} | ${_sed} "s/^(${KEY_TWEAK}\s*)([a-z0-9\.\+]+)*(\s*)$/\2/");
+
+XMAKE_VERSION="${XMAKE_MAJOR}.${XMAKE_MINOR}.${XMAKE_PATCH}"
+if [ "${XMAKE_TWEAK}" != "" ]; then
+    XMAKE_VERSION="${XMAKE_VERSION}-${XMAKE_TWEAK}"
+fi
+
+mkdir -p ${REPO_DIR}/xmake-v${XMAKE_VERSION}/cmake
+cp -r ${REPO_DIR}/cmake/xmake ${REPO_DIR}/xmake-v${XMAKE_VERSION}/cmake
+cp ${REPO_DIR}/cmake/xmake.cmake ${REPO_DIR}/xmake-v${XMAKE_VERSION}/cmake
+cp ${REPO_DIR}/Version ${REPO_DIR}/xmake-v${XMAKE_VERSION}/cmake/xmake
+
+cd ${REPO_DIR}
+zip -r xmake-v${XMAKE_VERSION}.zip xmake-v${XMAKE_VERSION}
+tar cvf xmake-v${XMAKE_VERSION}.tar xmake-v${XMAKE_VERSION}
+gzip xmake-v${XMAKE_VERSION}.tar
+
+rm -rf ${REPO_DIR}/xmake-v${XMAKE_VERSION}

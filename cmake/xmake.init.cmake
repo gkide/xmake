@@ -141,7 +141,7 @@ function(xmakeI_InitGitClone)
     message(STATUS "xmake init by git clone the latest...")
     execute_process(TIMEOUT 120 # 2-min if not done, just STOP
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake
-        COMMAND ${GIT_PROG} clone --depth=1 ${xm_repo_url}
+        COMMAND ${GIT_PROG} clone --depth=1 ${xm_repo_url} xmake-latest
         RESULT_VARIABLE is_ok
         ERROR_VARIABLE  log_msg
         OUTPUT_VARIABLE log_msg
@@ -204,6 +204,6 @@ macro(XmakeInit)
     include(xmake) # include the xmake MAIN ENTRY
 endmacro()
 
-XmakeInit() # use the latest repo
+#XmakeInit() # use the latest repo
 #XmakeInit(v1.2.0) # use version v1.1.0 without SHA256 checking
-#XmakeInit(v1.2.0 cedefafd2b328d6613effc715ca4ce2ed98ed626bbba055c85fa605596327735)
+XmakeInit(v1.2.0 39c4f9c9bf185f819559724cc5a082b161dcf78156e0ad6ebfb21dd4fcc5d437)
