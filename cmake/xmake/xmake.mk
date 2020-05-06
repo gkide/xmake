@@ -119,6 +119,19 @@ BUILD_DIR := $(OUTPUT)
 # - if not set, default value is '/opt/${PROJECT_NAME}-v${PROJECT_VERSION}'
 #
 # '$ make DESTDIR=/prefix/ ... ', works for only unix like systems of both.
+ifneq ($(INSTALL_PREFIX),)
+    ifeq ($(call hasSpaces,$(INSTALL_PREFIX)),1)
+        $(error Install path can NOT contain spaces: "$(INSTALL_PREFIX)")
+    endif
+    ifeq ($(call hasColons,$(INSTALL_PREFIX)),1)
+        $(error Install path can NOT contain colons: "$(INSTALL_PREFIX)")
+    endif
+
+    # Creat it and make sure to get the full path
+    OUTPUT := $(shell mkdir -p $(INSTALL_PREFIX) && cd $(INSTALL_PREFIX) && pwd)
+    $(if $(OUTPUT),, $(error Failed to create directory: "$(INSTALL_PREFIX)"))
+    CMAKE_ARGS += -DCMAKE_INSTALL_PREFIX=$(OUTPUT)
+endif
 ifeq ("$(origin I)", "command line")
     INSTALL_PREFIX := $(I)
     ifeq ($(call hasSpaces,$(INSTALL_PREFIX)),1)
@@ -206,9 +219,9 @@ CMAKE_ARGS += $(SOURCE_DIR)
 # - GIT_PROG      full path of git programme
 # - MAKE_PROG     full path of make programme
 
-#######################################################
-# Auto Detect System Common Development Tools
-#######################################################
+##########################################
+# Detect System Common Development Tools #
+##########################################
 
 ##########################
 # Removed debug sections #
@@ -331,118 +344,3 @@ ifeq ($(WGET_PROG),)
     DOWNLOAD_AS := $(Q)$(CURL_PROG) -L -o
     endif
 endif
-
-###########################
-# xmake predefined target #
-###########################
-PHONY += xmake-all
-xmake-all: | xmake-ran-top-cmake
-	$(XMAKE) -C $(BUILD_DIR)
-
-PHONY += xmake-ran-top-cmake
-xmake-ran-top-cmake:
-	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS)
-
-PHONY += xmake-ran-top-cmake-force
-xmake-ran-top-cmake-force:
-	@rm -rf $(BUILD_DIR)/CMakeCache.txt # force remove old ones anyway
-	$(Q)cd $(BUILD_DIR) && $(CMAKE_PROG) -G $(GENERATOR) $(CMAKE_ARGS)
-
-PHONY += xmake-install
-xmake-install: | xmake-all
-	$(XMAKE) -C $(BUILD_DIR) install
-
-PHONY += xmake-doxygen
-xmake-doxygen: | xmake-ran-top-cmake
-ifneq ($(Q)$(DOXYGEN_PROG),)
-	$(XMAKE) -C $(BUILD_DIR) doxygen
-endif
-
-PHONY += xmake-release
-xmake-release:
-ifneq (,$(wildcard scripts/release))
-	@scripts/release
-endif
-
-# Use cpack for source/binary packing
-# https://cmake.org/cmake/help/latest/module/CPack.html
-PHONY += xmake-pkg-binary
-xmake-pkg-binary: | xmake-ran-top-cmake
-ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)
-	$(XMAKE) -C $(BUILD_DIR) package
-else
-	@echo "#################################################"
-	@echo "# SKIP Binary Packaging for Dev/Coverage Build! #"
-	@echo "#################################################"
-endif
-
-# https://docs.appimage.org/index.html
-PHONY += xmake-pkg-appimage
-xmake-pkg-appimage: | xmake-install
-ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)
-	$(XMAKE) -C $(BUILD_DIR) pkg-appimage
-else
-	@echo "###################################################"
-	@echo "# SKIP AppImage Packaging for Dev/Coverage Build! #"
-	@echo "###################################################"
-endif
-
-PHONY += xmake-pkg-source
-xmake-pkg-source: | xmake-ran-top-cmake
-ifeq ($(filter Dev Coverage,$(BUILD_TYPE)),)
-	$(XMAKE) -C $(BUILD_DIR) package_source
-else
-	@echo "#################################################"
-	@echo "# SKIP Source Packaging for Dev/Coverage Build! #"
-	@echo "#################################################"
-endif
-
-PHONY += xmake-clean
-xmake-clean:
-	$(Q)rm -rf $(BUILD_DIR)
-
-PHONY += xmake-distclean
-xmake-distclean: xmake-clean
-	$(Q)rm -rf $(DEPS_ROOT_DIR)
-
-PHONY += xmake-auto-progs
-xmake-auto-progs:
-	@echo "STRIP_PROG=$(STRIP_PROG)"
-	@echo "STRIP_ARGS=$(STRIP_ARGS)"
-	@echo ""
-	@echo "EUSTRIP_PROG=$(EUSTRIP_PROG)"
-	@echo "EUSTRIP_ARGS=$(EUSTRIP_ARGS)"
-	@echo ""
-	@echo "DOXYGEN_PROG=$(DOXYGEN_PROG)"
-	@echo "DOXYGEN_ARGS=$(DOXYGEN_ARGS)"
-	@echo ""
-	@echo "CPPCHECK_PROG=$(CPPCHECK_PROG)"
-	@echo "CPPCHECK_ARGS=$(CPPCHECK_ARGS)"
-	@echo "CPPCHECK17_PROG=$(CPPCHECK17_PROG)"
-	@echo "CPPCHECK18_PROG=$(CPPCHECK18_PROG)"
-
-PHONY += xmake-help
-xmake-help:
-	@echo "-------------------------------------------------------------------------"
-	@echo "$$ make V=1 ...      verbose of make & cmake, default is silent."
-	@echo "$$ make O=path ...   build directory abs-path, default is 'build'."
-	@echo "$$ make I=path ...   for set install prefix directory of abs-path."
-	@echo "-------------------------------------------------------------------------"
-	@echo "The <target> of the xmake Makefile are as following:"
-	@echo "    all              build the project."
-	@echo "    clean            clean the build directory."
-	@echo "    distclean        remove all generated files."
-	@echo "    install          install all the targets."
-	@echo "    release          do project release."
-	@echo "    doxygen          generate doxygen mannual."
-	@echo "    pkg-binary       build binary release package."
-	@echo "    pkg-appimage     build AppImage release package."
-	@echo "    pkg-source       build source release package."
-	@echo "-------------------------------------------------------------------------"
-#	@echo "See 'docs/local.mk' for much more setting details."
-#
-#	@echo "*********************************************************"
-#	@echo "* For much more details: https://github.com/gkide/xmake *"
-#	@echo "*********************************************************"
-
-.PHONY: $(PHONY)

@@ -1,4 +1,4 @@
-if(true)
+if(false)
     # Download git repo & build
     XmakeDepRepoBuild(  libgtest
         REPO_URL    https://github.com/google/googletest.git
@@ -32,8 +32,8 @@ find_package(Threads REQUIRED)
 #message(STATUS "THREAD_USE_PTHREADS=${CMAKE_USE_PTHREADS_INIT}") # are we using pthreads
 #message(STATUS "THREAD_HP_PTHREADS=${CMAKE_HP_PTHREADS_INIT}") # are we using hp pthreads
 
-list(APPEND ${XMAKE}_GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgtest.a)
-list(APPEND ${XMAKE}_GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgmock_main.a)
-list(APPEND ${XMAKE}_GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgmock.a)
-list(APPEND ${XMAKE}_GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgtest_main.a)
-list(APPEND ${XMAKE}_GTEST_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+list(APPEND GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgtest.a)
+list(APPEND GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgmock_main.a)
+list(APPEND GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgmock.a)
+list(APPEND GTEST_LIBRARIES ${DEPS_INSTALL_DIR}/lib/libgtest_main.a)
+list(APPEND GTEST_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})

@@ -1,13 +1,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#ifdef XDEMO_EXPORT_AS_CONFIG_FILE
-    #include "config.generated.h"
-#endif
-
+#include "bar/bar.h"
 #include "macros.h"
-
-#include "bar.h"
+#include "generated/config.h"
 
 static int is_big_endian(void)
 {

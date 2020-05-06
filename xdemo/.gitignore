@@ -1,16 +1,6 @@
-*.log
 local.mk
-DistRepoInfo
 CMakeLists.txt.user
 
-tmp/
-temp/
-todo/
 build*/
 .deps/
-.github/
 .standard-release/
-
-# xmake
-cmake/xmake/
-cmake/xmake.cmake

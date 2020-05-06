@@ -1,13 +1,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#ifdef XDEMO_EXPORT_AS_CONFIG_FILE
-    #include "config.generated.h"
-#endif
-
+#include "bar/bar.h"
 #include "macros.h"
-
-#include "foo.h"
+#include "generated/config.h"
 
 static int is_big_endian(void)
 {
@@ -25,7 +21,7 @@ int main(int argc, char **argv)
     UNUSED_ARG(argc);
     UNUSED_ARG(argv);
 
-    foo();
+    bar();
 
     printf("*********************************************************\n");
 

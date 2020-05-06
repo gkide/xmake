@@ -1,20 +1,25 @@
-set(${XMAKE}_INSTALL_DIR ${CMAKE_INSTALL_PREFIX})
-
-# - If a full path (with a leading slash or drive letter) is, used it directly.
-# - If a relative path is given, relative to the value of CMAKE_INSTALL_PREFIX
 # AppImage
 # - https://docs.appimage.org/reference/appdir.html
 # Linux Standard Base
 # - http://refspecs.linuxfoundation.org/lsb.shtml
 # Filesystem Hierarchy Standard
 # - http://refspecs.linuxfoundation.org/fhs.shtml
-set(${XMAKE}_INSTALL_BIN_DIR bin)
-set(${XMAKE}_INSTALL_ETC_DIR etc)
-set(${XMAKE}_INSTALL_DOC_DIR doc)
-set(${XMAKE}_INSTALL_LIB_DIR lib)
-set(${XMAKE}_INSTALL_SHA_DIR share)
-set(${XMAKE}_INSTALL_PLG_DIR plugin)
-set(${XMAKE}_INSTALL_INC_DIR include)
+
+# https://cmake.org/cmake/help/v3.5/module/GNUInstallDirs.html
+include(GNUInstallDirs)
+if(false) # xmake debug message
+    message(STATUS "CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}")
+
+    message(STATUS "CMAKE_INSTALL_BINDIR=${CMAKE_INSTALL_BINDIR}")
+    message(STATUS "CMAKE_INSTALL_LIBDIR=${CMAKE_INSTALL_LIBDIR}")
+    message(STATUS "CMAKE_INSTALL_DATADIR=${CMAKE_INSTALL_DATADIR}")
+    message(STATUS "CMAKE_INSTALL_INCLUDEDIR=${CMAKE_INSTALL_INCLUDEDIR}")
+
+    message(STATUS "CMAKE_INSTALL_FULL_BINDIR=${CMAKE_INSTALL_FULL_BINDIR}")
+    message(STATUS "CMAKE_INSTALL_FULL_LIBDIR=${CMAKE_INSTALL_FULL_LIBDIR}")
+    message(STATUS "CMAKE_INSTALL_FULL_DATADIR=${CMAKE_INSTALL_FULL_DATADIR}")
+    message(STATUS "CMAKE_INSTALL_FULL_INCLUDEDIR=${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+endif()
 
 # If installed targets' default RPATH is NOT system implicit link
 # directories, then reset it to the cmake install library directory
@@ -24,16 +29,6 @@ if(NOT ${XMAKE}_SKIP_RPATH_ORIGIN AND "${isSysDir}" STREQUAL "-1")
     # https://www.technovelty.org/linux/exploring-origin.html
     # NOTE: It is better to add -fPIC flags for shared library
     list(APPEND CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-endif()
-
-if(false) # xmake debug message
-    message(STATUS "${XMAKE}_INSTALL_BIN_DIR=${${XMAKE}_INSTALL_BIN_DIR}")
-    message(STATUS "${XMAKE}_INSTALL_ETC_DIR=${${XMAKE}_INSTALL_ETC_DIR}")
-    message(STATUS "${XMAKE}_INSTALL_DOC_DIR=${${XMAKE}_INSTALL_DOC_DIR}")
-    message(STATUS "${XMAKE}_INSTALL_LIB_DIR=${${XMAKE}_INSTALL_LIB_DIR}")
-    message(STATUS "${XMAKE}_INSTALL_SHA_DIR=${${XMAKE}_INSTALL_SHA_DIR}")
-    message(STATUS "${XMAKE}_INSTALL_PLG_DIR=${${XMAKE}_INSTALL_PLG_DIR}")
-    message(STATUS "${XMAKE}_INSTALL_INC_DIR=${${XMAKE}_INSTALL_INC_DIR}")
 endif()
 
 # This will create any directories that need to be created in the destination
@@ -100,11 +95,6 @@ function(CreateDestDirWithPerms)
     ")
 endfunction()
 
-set(xmakeI_installed_binaries "")
-function(XmakeGetInstallBinaries BINS)
-    set(${BINS} "${xmakeI_installed_binaries}" PARENT_SCOPE)
-endfunction()
-
 if(${XMAKE}_ENABLE_IFW)
     cpack_add_component(Runtime
         DISPLAY_NAME "${PKG_NAME}"
@@ -120,9 +110,9 @@ include(xmake/PackageConfig)
 function(XmakeInstallHelper)
     set(options         EXPORT_LIBRARY_INFO)
     set(oneValueArgs    RENAME  DOMAIN    DIRECTORY  DESTINATION)
-    set(multiValueArgs  FILES   PROGRAMS  TARGETS    FILE_PERMISSIONS
-        DIRECTORY_PERMISSIONS   EXPORT_LIBRARY_WITH_EXTRA_LIBS
-        EXTRA_INSTALL_ARGS
+    set(multiValueArgs  FILES   PROGRAMS  TARGETS
+                        FILE_PERMISSIONS DIRECTORY_PERMISSIONS
+                        EXPORT_LIBRARY_WITH_EXTRA_LIBS EXTRA_INSTALL_ARGS
     )
 
     cmake_parse_arguments(install # prefix
@@ -155,36 +145,33 @@ function(XmakeInstallHelper)
             WORLD_READ WORLD_EXECUTE)
     endif()
 
-    if(install_DOMAIN AND
-       NOT "${install_DOMAIN}" MATCHES "^[A-Za-z0-9]+$")
+    if(install_DOMAIN AND NOT "${install_DOMAIN}" MATCHES "^[A-Za-z0-9]+$")
         message(FATAL_ERROR "DOMAIN must consist of [A-Za-z0-9]")
     endif()
 
     if(install_TARGETS)
         if(install_DESTINATION)
             # The install layout controled by end user
-            set(DomainBin ${install_DESTINATION})
-            set(DomainLib ${install_DESTINATION})
-            set(DomainShare ${install_DESTINATION})
-            set(DomainInclude ${install_DESTINATION})
+            set(INSDES_bin ${install_DESTINATION})
+            set(INSDES_lib ${install_DESTINATION})
+            set(INSDES_share ${install_DESTINATION})
+            set(INSDES_include ${install_DESTINATION})
         else()
             # The default install layout
-            set(DomainBin ${${XMAKE}_INSTALL_BIN_DIR})
-            set(DomainLib ${${XMAKE}_INSTALL_LIB_DIR})
-            set(DomainShare ${${XMAKE}_INSTALL_SHA_DIR})
-            set(DomainInclude ${${XMAKE}_INSTALL_INC_DIR})
+            set(INSDES_bin ${CMAKE_INSTALL_BINDIR})
+            set(INSDES_lib ${CMAKE_INSTALL_LIBDIR})
+            set(INSDES_share ${CMAKE_INSTALL_DATADIR})
+            set(INSDES_include ${CMAKE_INSTALL_INCLUDEDIR})
         endif()
 
         if(install_DOMAIN)
             set(export_lib_DOMAIN DOMAIN ${install_DOMAIN})
-            set(DomainBin ${DomainBin}/${install_DOMAIN})
-            set(DomainLib ${DomainLib}/${install_DOMAIN})
-            set(DomainShare ${DomainShare}/${install_DOMAIN})
-            set(DomainInclude ${DomainInclude}/${install_DOMAIN})
+            set(INSDES_lib ${INSDES_lib}/${install_DOMAIN})
+            set(INSDES_share ${INSDES_share}/${install_DOMAIN})
+            set(INSDES_include ${INSDES_include}/${install_DOMAIN})
         endif()
 
-        string(REGEX REPLACE " +" ";"
-               install_targets "${install_TARGETS}")
+        string(REGEX REPLACE " +" ";" install_targets "${install_TARGETS}")
         foreach(target ${install_targets}) # processed target one by one
             get_target_property(target_type ${target} TYPE)
             get_target_property(target_resources ${target} RESOURCE)
@@ -196,19 +183,19 @@ function(XmakeInstallHelper)
                     message(STATUS "${target} resources")
                     string(REGEX REPLACE " +" ";" items "${target_resources}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
-                           resource_directory "${DomainShare}/resource")
+                           resource_directory "${INSDES_share}/resource")
                     foreach(item ${items}) # pretty output message
                         message(STATUS "* ${item} => ${resource_directory}")
                     endforeach()
                 endif()
-                CreateDestDirWithPerms(DESTINATION ${DomainShare}/resource)
+                CreateDestDirWithPerms(DESTINATION ${INSDES_share}/resource)
                 set(install_resources RESOURCE
-                    DESTINATION ${DomainShare}/resource COMPONENT Resource)
+                    DESTINATION ${INSDES_share}/resource COMPONENT Resource)
             endif()
 
             if(target_type STREQUAL EXECUTABLE) # Executable
                 # Create directory with the correct permissions.
-                CreateDestDirWithPerms(DESTINATION ${DomainBin})
+                CreateDestDirWithPerms(DESTINATION ${INSDES_bin})
 
                 if(HOST_MACOS AND macosx_bundle)
                     # install(TARGETS ${target}
@@ -217,20 +204,16 @@ function(XmakeInstallHelper)
                     message(FATAL_ERROR "MACOSX: Executable")
                 else()
                     install(TARGETS ${target}
-                        RUNTIME DESTINATION ${DomainBin} COMPONENT Runtime
+                        RUNTIME DESTINATION ${INSDES_bin} COMPONENT Runtime
                         ${install_resources} ${install_EXTRA_INSTALL_ARGS}
                     )
                 endif()
 
-                set(xmakeI_installed_binaries "${xmakeI_installed_binaries}"
-                    "EXE => ${DomainBin}/${target}" PARENT_SCOPE)
-
                 if(${XMAKE}_XMAKE_VERBOSE)
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
-                        bin_directory "${DomainBin}")
+                        bin_directory "${INSDES_bin}")
                     message(STATUS "${target} Executable => ${bin_directory}")
                 endif()
-
                 continue()
             endif()
 
@@ -248,7 +231,7 @@ function(XmakeInstallHelper)
 
             if(${XMAKE}_XMAKE_VERBOSE)
                 string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
-                    lib_directory "${DomainLib}")
+                    lib_directory "${INSDES_lib}")
                 message(STATUS "${target} ${lib_type} => ${lib_directory}")
             endif()
 
@@ -261,14 +244,14 @@ function(XmakeInstallHelper)
                     message(STATUS "${target} Library Public Headers")
                     string(REGEX REPLACE " +" ";" items "${public_headers}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
-                        public_inc_directory "${DomainInclude}")
+                        public_inc_directory "${INSDES_include}")
                     foreach(item ${items}) # pretty output message
                         message(STATUS "* ${item} => ${public_inc_directory}")
                     endforeach()
                 endif()
-                CreateDestDirWithPerms(DESTINATION ${DomainInclude})
+                CreateDestDirWithPerms(DESTINATION ${INSDES_include})
                 set(install_public_headers PUBLIC_HEADER
-                    DESTINATION ${DomainInclude} COMPONENT Develop)
+                    DESTINATION ${INSDES_include} COMPONENT Develop)
             endif()
 
             set(install_private_headers)
@@ -277,18 +260,18 @@ function(XmakeInstallHelper)
                     message(STATUS "${target} Library Private Headers")
                     string(REGEX REPLACE " +" ";" items "${private_headers}")
                     string(REGEX REPLACE "${CMAKE_INSTALL_PREFIX}/" ""
-                        private_inc_directory "${DomainInclude}/private")
+                        private_inc_directory "${INSDES_include}/private")
                     foreach(item ${items}) # pretty output message
                         message(STATUS "* ${item} => ${private_inc_directory}")
                     endforeach()
                 endif()
-                CreateDestDirWithPerms(DESTINATION ${DomainInclude}/private)
+                CreateDestDirWithPerms(DESTINATION ${INSDES_include}/private)
                 set(install_private_headers PRIVATE_HEADER
-                    DESTINATION ${DomainInclude}/private COMPONENT Develop)
+                    DESTINATION ${INSDES_include}/private COMPONENT Develop)
             endif()
 
             # Create directory with the correct permissions.
-            CreateDestDirWithPerms(DESTINATION ${DomainLib})
+            CreateDestDirWithPerms(DESTINATION ${INSDES_lib})
 
             set(do_EXPORT)
             if(install_EXPORT_LIBRARY_INFO)
@@ -313,20 +296,16 @@ function(XmakeInstallHelper)
             else()
                 install(TARGETS ${target} ${do_EXPORT} ${install_resources}
                     # Shared Library(DLL)
-                    RUNTIME DESTINATION ${DomainBin} COMPONENT Runtime
+                    RUNTIME DESTINATION ${INSDES_bin} COMPONENT Runtime
                     # Module Library, Shared Library(non-DLL)
-                    LIBRARY DESTINATION ${DomainLib} COMPONENT Runtime
+                    LIBRARY DESTINATION ${INSDES_lib} COMPONENT Runtime
                     # Static Library, Shared Import Library(DLL)
-                    ARCHIVE DESTINATION ${DomainLib} COMPONENT Develop
+                    ARCHIVE DESTINATION ${INSDES_lib} COMPONENT Develop
                     ${install_public_headers} ${install_private_headers}
                     ${install_EXTRA_INSTALL_ARGS}
                 )
             endif()
-
-            set(xmakeI_installed_binaries "${xmakeI_installed_binaries}"
-                "LIB => ${DomainLib}/${target}" PARENT_SCOPE)
         endforeach()
-
         return()
     endif()
 

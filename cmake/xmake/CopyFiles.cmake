@@ -175,7 +175,7 @@ function(XmakeCopyWinAppDlls execTarget)
     # Step4. Just do it
     XmakeCopyInstallFiles(
         FILES       "${copy_install_dlls}"
-        INS_DEST    "${${XMAKE}_INSTALL_BIN_DIR}"
+        INS_DEST    "${CMAKE_INSTALL_BINDIR}"
         CPY_TARGET  "copy-dlls-for-${execTarget}"
         CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
     )

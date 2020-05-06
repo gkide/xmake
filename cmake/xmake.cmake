@@ -31,7 +31,7 @@ elseif(EXISTS ${CMAKE_SOURCE_DIR}/cmake/ConfigPkg.cmake)
     include(${CMAKE_SOURCE_DIR}/cmake/ConfigPkg.cmake)
 endif()
 
-include(xmake/CheckHostSystem)
+include(xmake/CheckHostInfo)
 
 # If not set, auto use the lower case of project and make it hidden
 if(NOT PKG_NAME)
@@ -108,7 +108,7 @@ include(xmake/CompileFlags)
 include(xmake/CopyFiles)
 include(xmake/Utils)
 
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
+if(${XMAKE}_DEBUG_BUILD)
     set(pkg_dir_name "${PKG_NAME}-latest")
 else()
     set(pkg_dir_name "${PKG_NAME}-${PKG_VERSION}")
@@ -135,14 +135,14 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${pkg_install_dir}" CACHE PATH "" FORCE)
 endif()
 
-# Make sure always install to $PKG_NAME-$PKG_VERSION
-if(NOT CMAKE_INSTALL_PREFIX MATCHES ${pkg_dir_name})
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/${pkg_dir_name}")
+# Dev, Coverage, Debug build set default install prefix
+if(${XMAKE}_DEBUG_BUILD)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/usr")
 endif()
 
-# for Dev, Coverage build
-if(${XMAKE}_DEBUG_BUILD AND NOT CMAKE_BUILD_TYPE MATCHES "Debug")
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/usr")
+# Make sure always install to $PKG_NAME-$PKG_VERSION for none debug build
+if(NOT CMAKE_INSTALL_PREFIX MATCHES ${pkg_dir_name})
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/${pkg_dir_name}")
 endif()
 
 #######################################################################
@@ -217,15 +217,19 @@ if(${XMAKE}_VERSION_TWEAK)
     endif()
 endif()
 
-add_compile_options(-Wall)
-add_compile_options(-fPIC)
-add_compile_options(-Wextra)
-add_compile_options(-Wunused)
-add_compile_options(-Winit-self)
-add_compile_options(-Wconversion)
-add_compile_options(-Wfatal-errors)
-add_compile_options(-Wuninitialized)
-add_compile_options(-Wunused-parameter)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
+OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    add_compile_options(-Wall)
+    add_compile_options(-fPIC)
+    add_compile_options(-Wextra)
+    add_compile_options(-Wunused)
+    add_compile_options(-Winit-self)
+    add_compile_options(-Wconversion)
+    add_compile_options(-Wfatal-errors)
+    add_compile_options(-Wuninitialized)
+    add_compile_options(-Wunused-parameter)
+    #add_compile_options(-Wno-unused-parameter)
+endif()
 
 set(${XMAKE}_GENERATED_DIR  "${CMAKE_BINARY_DIR}/generated")
 
@@ -301,15 +305,13 @@ endif()
 # - SEARCH_SYSTEM   Enable Qt5 support, auto detect from system
 # - STATIC_PREFIX   Full path to Qt5 static install, like: /opt/qt-5.9.1
 # - SHARED_PREFIX   Full path to Qt5 static install, like: /opt/Qt5.5.1/5.5/gcc_64
-# - SHARED_PREFIX   Full path to Qt5 static install, like: /usr/lib/gcc/x86_64-linux-gnu
 #
 # This should be used in the top Qt5 directory. With the return(), thus on host
 # that has Qt5 installed, build the Qt5 part; and on host that has no Qt5
 # installed, just skip the Qt5 build part and continue with other parts
-macro(XmakeQt5SupportSetup)
+macro(XmakeQt5InitSetup)
     set(optionValueArgs
         SEARCH_SYSTEM
-        FATAL_ERROR_IF_NOT_FOUND
     )
     set(oneValueArgs
         STATIC_PREFIX  # Qt5 static install prefix
@@ -320,13 +322,23 @@ macro(XmakeQt5SupportSetup)
         "${optionValueArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN}
     )
 
-    if(xmakeI_QT5_STATIC_PREFIX OR xmakeI_QT5_SHARED_PREFIX OR xmakeI_QT5_SEARCH_SYSTEM)
+    if(xmakeI_QT5_STATIC_PREFIX)
+        # Qt5 static build
+        set(xmakeI_QT5_SHARED_PREFIX)
+        set(xmakeI_QT5_SEARCH_SYSTEM)
+        include(xmake/Qt5Helper)
+    elseif(xmakeI_QT5_SHARED_PREFIX)
+        # Qt5 shared build
+        set(xmakeI_QT5_STATIC_PREFIX)
+        set(xmakeI_QT5_SEARCH_SYSTEM)
+        include(xmake/Qt5Helper)
+    elseif(xmakeI_QT5_SEARCH_SYSTEM)
+        # Qt5 system build
+        set(xmakeI_QT5_STATIC_PREFIX)
+        set(xmakeI_QT5_SHARED_PREFIX)
         include(xmake/Qt5Helper)
     else()
-        if(xmakeI_QT5_FATAL_ERROR_IF_NOT_FOUND)
-            message(FATAL_ERROR "NOT found Qt5 library, STOP!")
-        endif()
-        return()
+        message(FATAL_ERROR "NOT Config Qt5 Library, STOP!")
     endif()
 endmacro()
 
@@ -360,20 +372,6 @@ if(HOST_WINDOWS)
 endif()
 
 include(xmake/GetGitRepoInfo)
-
-# https://cmake.org/cmake/help/latest/module/CTest.html
-if(${XMAKE}_ENABLE_CTEST)
-    option(${XMAKE}_BUILD_CTEST "Build ctest by default." ON)
-    include(CTest) # Automatically creates a BUILD_TESTING, ON by default
-endif()
-
-# https://github.com/google/googletest
-if(${XMAKE}_ENABLE_GTEST)
-    include(xmake/BuildGtest)
-    option(${XMAKE}_BUILD_GTEST "Build gtest by default." ON)
-    option(BUILD_TESTING ON) # To make consistent, also set it ON
-endif()
-
 include(xmake/DoxygenHelper)
 include(xmake/SearchLibrary)
 include(xmake/PackageConfig)

@@ -168,36 +168,14 @@ result in the version: `v1.0.0-dev.20190425+4ad12f8dfb`
 - **XXX**`_DISABLE_CCACHE`, enable **ccache** for linux by default.
 - **XXX**`_ENABLE_CI`, disable continuous integration build by default,
   like [Travis](https://github.com/marketplace/travis-ci).
-
-[ctest]: https://cmake.org/cmake/help/latest/module/CTest.html
-- **XXX**`_ENABLE_CTEST`, enable CMake [ctest](ctest), disable by default.
-
-  * **XXX**`_BUILD_CTEST` can be use to control build the tests or not, default is ON.
-
-[gtest]: https://github.com/google/googletest
-- **XXX**`_ENABLE_GTEST`, enable Google [gtest](gtest), disable by default.
-
-  * **XXX**`_GTEST_LIBRARIES` will auto set to the need libraries for linking.
-  * **XXX**`_BUILD_GTEST` can be use to control build the tests or not, default is ON.
-
-- **XXX**`_DEBUG_BUILD`, project is debug build or not
-
-which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
-`Debug`, `Coverage`, then it will be true, otherwise false.
+- **XXX**`_DEBUG_BUILD`, project is debug build or not.
+  which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
+  `Debug`, `Coverage`, then it will be true, otherwise false.
 
 - **XXX**`_SKIP_RPATH_ORIGIN`, default is **OFF**
 
   * if **OFF**, **RPATH** will be set to `$ORIGIN/../lib`;
   * if **ON**, executables & shared libraries rpath will be set to empty.
-
-- **XXX**`_GTEST_LIBRARIES`
-
-  * The collections of link libraries for **XXX**`_ENABLE_GTEST`
-
-## Qt5 Support
-
-- **XXX**`_QT5_SOURCES`, for details see [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
-- **XXX**`_QT5_LIBRARIES`, for details see [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
 
 ## Code Coverage Support
 
@@ -299,7 +277,9 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 
 # Cmake APIs
 
-- [XmakeQt5SupportSetup](#xmakeqt5supportsetup)
+- [XmakeQt5InitSetup](#xmakeqt5initsetup)
+- [XmakeQt5FindPackage](#xmakeqt5findpackage)
+- [XmakeQt5FindPlugins](#xmakeqt5findplugins)
 - [XmakeDepRepoBuild](#xmakedeprepobuild)
 - [XmakeDepTarballBuild](#xmakedeptarballbuild)
 - [XmakeDepBinaryInstall](#xmakedepbinaryinstall)
@@ -318,15 +298,13 @@ which depends on `CMAKE_BUILD_TYPE`, if it is one of `Dev`,
 - [XmakeCopyWinAppDlls](#xmakecopywinappdlls)
 - [XmakeCopyInstallFiles](#xmakecopyinstallfiles)
 - [XmakePrintConfigurationInfo](#xmakeprintconfigurationinfo)
-- [XmakeGetInstallBinaries](#xmakegetinstallbinaries)
 
-
-## XmakeQt5SupportSetup
+## XmakeQt5InitSetup
 
 The Qt5 search helper, for example
 
 ```cmake
-XmakeQt5SupportSetup(SEARCH_SYSTEM
+XmakeQt5InitSetup(SEARCH_SYSTEM
     STATIC_PREFIX /opt/qt-5.9.1
     SHARED_PREFIX /usr/lib/gcc/x86_64-linux-gnu
 )
@@ -334,15 +312,18 @@ XmakeQt5SupportSetup(SEARCH_SYSTEM
 
 **Option Value Args**
 - `SEARCH_SYSTEM` try to find Qt5 from the system wide
-- `FATAL_ERROR_IF_NOT_FOUND` cmake fatal error if not found Qt5
 
 **One Value Args**
 - `STATIC_PREFIX`, static build of Qt5 install path
 - `SHARED_PREFIX`, shared build of Qt5 install path
 
-NOTE: static Qt5 need following two auto defined variables
-- **XXX**`_QT5_SOURCES`, xmake auto generated source files for statci qt5.
-- **XXX**`_QT5_LIBRARIES`, xmake auto collection libraries to link against.
+## XmakeQt5FindPackage
+
+DOCS TODO
+
+## XmakeQt5FindPlugins
+
+DOCS TODO
 
 ## XmakeDepRepoBuild
 
@@ -599,36 +580,13 @@ message(STATUS "CXXFLAGS=[${CXXFLAGS}]")
 ## XmakeInstallHelper
 
 This is a `cmake` **install** wrapper for convenience,
-the following variables will auto defined by xmake.
-
-- **XXX**`_INSTALL_DIR`     => `${CMAKE_INSTALL_PREFIX}`
-- **XXX**`_INSTALL_BIN_DIR` => `${CMAKE_INSTALL_PREFIX}/bin`
-- **XXX**`_INSTALL_ETC_DIR` => `${CMAKE_INSTALL_PREFIX}/etc`
-- **XXX**`_INSTALL_DOC_DIR` => `${CMAKE_INSTALL_PREFIX}/doc`
-- **XXX**`_INSTALL_LIB_DIR` => `${CMAKE_INSTALL_PREFIX}/lib`
-- **XXX**`_INSTALL_SHA_DIR` => `${CMAKE_INSTALL_PREFIX}/share`
-- **XXX**`_INSTALL_PLG_DIR` => `${CMAKE_INSTALL_PREFIX}/plugin`
-- **XXX**`_INSTALL_INC_DIR` => `${CMAKE_INSTALL_PREFIX}/include`
-
-The default install directory layout is as following:
-
-    ├─ bin/             binaries
-    ├─ etc/             configurations
-    ├─ doc/             documentations
-    ├─ lib/             static/shared libraries
-    ├─ include/         header files
-    │  ├─ foo/          header files in subdir
-    │  └─ ...
-    ├─ share/           common share resources
-    │  ├─ resource/     like the app icos
-    │  ├─ bar/          and more
-    │  └─ ...
-    ├─ awesome/         this is also possible
-    └─ plugin/          plugins
+the following variables will auto defined by xmake, also see
+[GNUInstallDirs](https://cmake.org/cmake/help/v3.5/module/GNUInstallDirs.html)
 
 The install prefix can be set by `CMAKE_INSTALL_PREFIX`, the default is:
 - Linux likes: **/opt**`/${PKG_NAME}-${PKG_VERSION}`
 - Windows: **$ENV{PROGRAMFILES}**`\${PKG_NAME}-${PKG_VERSION}`
+- **Dev**, **Coverage** or **Debug** build, it will be set to `${CMAKE_BINARY_DIR}/usr`
 
 NOTE!
 - `PKG_NAME` will be set to the lower case of `${PROJECT_NAME}` if not set.
@@ -778,20 +736,6 @@ Copy and install the given files.
 ## XmakePrintConfigurationInfo
 
 Print and show xmake configurations, it should be called at the end of cmake.
-
-## XmakeGetInstallBinaries
-
-Get all the binary targets(executable, library) of [XmakeInstallHelper](#xmakeinstallhelper)
-
-NOTE! This may not work if the `XmakeGetInstallBinaries`
-is not a sub-scope of the `XmakeInstallHelper` called.
-
-``` cmake
-XmakeGetInstallBinaries(binaries)
-foreach(item ${binaries})
-    message(STATUS "Install: ${item}")
-endforeach()
-```
 
 ## DistRepoInfo
 

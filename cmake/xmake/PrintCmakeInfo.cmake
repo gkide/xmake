@@ -243,7 +243,7 @@ if(xmakeI_QT5_STATIC_PREFIX)
     message(STATUS "> Qt5 Static Search Path ............... ${xmakeI_QT5_STATIC_PREFIX}")
 elseif(xmakeI_QT5_SHARED_PREFIX)
     message(STATUS "> Qt5 Shared Search Path ............... ${xmakeI_QT5_SHARED_PREFIX}")
-elseif(xmakeI_QT5_SYSTEM_PREFIX)
+elseif(xmakeI_QT5_SEARCH_SYSTEM)
     message(STATUS "> Qt5 System Host Search ............... Enable")
 endif()
 

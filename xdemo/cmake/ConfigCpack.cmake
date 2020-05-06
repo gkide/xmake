@@ -2,7 +2,7 @@
 # is generated from 'xmake/CPackOptions.cmake.in'
 
 # NOTE
-# message(STATUS ...) do not working, i do not known why?
+# message(STATUS ...) do not working, don't known why?
 # message(WARNING/FATAL_ERROR ...) works, can be used to debug!
 
 if(CPACK_GENERATOR MATCHES "NSIS")

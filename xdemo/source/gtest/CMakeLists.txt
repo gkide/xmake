@@ -1,7 +1,3 @@
-if(NOT DEMO_RUN_GTEST)
-    return()
-endif()
-
 # gtest use access non-ANSI symbols: fdopen, fileno, strdup
 # '-std=c++11' will disable all of them, them got 'fileno'
 # was not declared in this scope error
@@ -16,7 +12,8 @@ set_source_files_properties(
     PROPERTIES COMPILE_FLAGS -DENABLE_NONE_ANSI_SYMBOLS
 )
 
+include(BuildGtest)
 aux_source_directory(. GTEST_SRCS)
-
 add_executable(gtest ${GTEST_SRCS})
-target_link_libraries(gtest ${XDEMO_GTEST_LIBRARIES})
+target_link_libraries(gtest ${GTEST_LIBRARIES})
+add_dependencies(gtest libgtest)

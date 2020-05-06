@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(xdemo)
 
 set(XDEMO_VERSION_MAJOR 1)
-set(XDEMO_VERSION_MINOR 1)
+set(XDEMO_VERSION_MINOR 0)
 set(XDEMO_VERSION_PATCH 0)
 set(XDEMO_VERSION_TWEAK "") # date & HASH auto update at build time
 
@@ -16,77 +16,52 @@ option(XDEMO_ENABLE_DEPENDENCY "Enable deps download, build and install" ON)
 #option(XDEMO_SKIP_RPATH_ORIGIN "Skip RPATH for dynamic link" ON)
 #option(XDEMO_DISABLE_CCACHE "Enale ccache by default for linux" ON)
 #option(XDEMO_WIN_USE_STATIC_GCC_LIBS "Use static c/c++ libraries." ON)
-
-if(DEMO_RUN_CTEST)
-    option(XDEMO_ENABLE_CTEST "Enable Cmake ctest support" ON)
-endif()
-
-if(DEMO_RUN_GTEST)
-    option(XDEMO_ENABLE_GTEST "Enable Google gtest support" ON)
-endif()
-
-if(DEMO_RUN_QT5)
-    option(XDEMO_SYSTEM_QT5 "Enable Qt5 system search support" ON)
-endif()
-
-if(DEMO_RUN_IFW)
-    option(XDEMO_ENABLE_IFW "Enable Qt Installer Framework." ON)
-endif()
-
-if(DEMO_APPIMAGE)
-    option(XDEMO_ENABLE_APPIMAGE "Enable AppImage support for linux" ON)
-    #option(XDEMO_APPIMAGE_DOWNLOAD_SKIP_SHA256 "Do NOT check SHA256" OFF)
-endif()
-
-# Cmake modules
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-include(xmake.init) # xmake should include in the top CMakeLists.txt
-
-file(GLOB HOSTINFO_SOURCES source/*.c)
-file(GLOB HOSTINFO_HEADERS source/*.h)
-
 #option(XDEMO_EXPORT_AS_COMPILER_ARGS "Export as CC cmd args" ON)
-if(NOT XDEMO_EXPORT_AS_COMPILER_ARGS)
-    configure_file(
-        "${CMAKE_SOURCE_DIR}/source/config.h.in"
-        "${CMAKE_BINARY_DIR}/config.generated.h")
-    list(APPEND SOURCES
-        "${CMAKE_BINARY_DIR}/config.generated.h")
-    add_definitions(-DXDEMO_EXPORT_AS_CONFIG_FILE)
-    list(APPEND HOSTINFO_HEADERS ${CMAKE_BINARY_DIR}/config.generated.h)
-endif()
+#option(XDEMO_APPIMAGE_DOWNLOAD_SKIP_SHA256 "Do NOT check SHA256" OFF)
+#option(XDEMO_ENABLE_APPIMAGE "Enable AppImage support for linux" ON)
+#option(XDEMO_ENABLE_IFW "Enable Qt Installer Framework." ON)
+
+# Cmake User Modules & Xmake
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(xmake.init) # Should init in the top CMakeLists.txt
+
+configure_file("${CMAKE_SOURCE_DIR}/source/config.h.in"
+    "${XDEMO_GENERATED_DIR}/config.h")
 
 if(HOST_WINDOWS)
-    configure_file(
-        "${CMAKE_SOURCE_DIR}/source/win.rc.in"
-        "${CMAKE_BINARY_DIR}/generated.win.rc")
-    list(APPEND HOSTINFO_SOURCES ${CMAKE_BINARY_DIR}/generated.win.rc)
-elseif(HOST_MACOS)
-    # TODO
-    list(APPEND HOSTINFO_SOURCES info.plist)
+    configure_file("${CMAKE_SOURCE_DIR}/source/win.rc.in"
+        "${XDEMO_GENERATED_DIR}/win.rc")
+    set(HOSTINFO_WIN_RC ${CMAKE_BINARY_DIR}/generated.win.rc)
 endif()
 
-list(REMOVE_ITEM HOSTINFO_SOURCES ${CMAKE_SOURCE_DIR}/source/awesome.c)
-add_executable(hostinfo ${HOSTINFO_SOURCES} ${HOSTINFO_HEADERS})
+file(GLOB BARLIB_SOURCES source/bar/*.c)
+file(GLOB BARLIB_HEADERS source/bar/*.h)
 
-# For XmakeInstallHelper demo
-add_subdirectory(source/xihd)
-add_subdirectory(source/ctest)
+add_library(bar SHARED ${BARLIB_SOURCES} ${BARLIB_HEADERS})
+set_target_properties(bar PROPERTIES
+    PUBLIC_HEADER "source/bar/bar.h"
+    PRIVATE_HEADER "source/bar/bar-private.h"
+)
+XmakeInstallHelper(TARGETS bar)
+
+add_executable(hostinfoc source/hostinfo.c)
+target_link_libraries(hostinfoc bar)
+XmakeInstallHelper(TARGETS hostinfoc)
+
+# cd install dir, then 'hostinfocpp' works
+add_executable(hostinfocpp source/hostinfo.cpp)
+target_link_libraries(hostinfocpp bar)
+XmakeInstallHelper(TARGETS hostinfocpp)
+set_target_properties(hostinfocpp PROPERTIES
+    # Shared library search path overwrite the default value
+    # Shared linked tests only work in the build directory if set ""
+    INSTALL_RPATH "../lib"
+#   MACOSX_BUNDLE TRUE
+#   RESOURCE "..."
+)
+
 add_subdirectory(source/gtest)
-add_subdirectory(source/qt5)
 
-XmakeInstallHelper(FILES LICENSE
-    DESTINATION ${XDEMO_INSTALL_DOC_DIR}
-)
-XmakeInstallHelper(FILES docs/local.mk
-    DESTINATION ${XDEMO_INSTALL_DOC_DIR}
-)
-XmakeInstallHelper(FILES docs/manual/index.html # PKG_DOC_HELP
-    DESTINATION ${XDEMO_INSTALL_DOC_DIR}/manual
-)
-XmakeInstallHelper(PROGRAMS scripts/release
-    DESTINATION ${XDEMO_INSTALL_PLG_DIR}/scripts
-)
-XmakeInstallHelper(DIRECTORY cmake/xmake
-    DESTINATION ${XDEMO_INSTALL_SHA_DIR}/xmake
-)
+# https://cmake.org/cmake/help/latest/module/CTest.html
+# include(CTest) # Automatically creates a BUILD_TESTING, ON by default
+# https://github.com/google/googletest
