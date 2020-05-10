@@ -20,16 +20,10 @@ NOTE:
 
 The following cmake variables will auto defined to idenify the host and project:
 
-- `HOST_LINUX`, `HOST_MACOS`, `HOST_WINDOWS`
-- `HOST_WINDOWS_MSYS`, `HOST_WINDOWS_MINGW`, `HOST_WINDOWS_CYGWIN`
-
-- `HOST_ARCH_32`, `HOST_ARCH_64`
-
-- `HOST_NAME`, `HOST_USER`, `HOST_ARCH`
-- `HOST_SYSTEM_NAME`, `HOST_SYSTEM_VERSION`
-- `HOST_OS_DIST_NAME`, `HOST_OS_DIST_VERSION`
-
-- `HOST_BIG_ENDIAN`
+- `IS_BIG_ENDIAN`
+- `HOST_NAME`, `HOST_USER`
+- `ARCH_32`, `ARCH_64`, `ARCH_NAME`
+- `HOST_DIST_NAME`, `HOST_DIST_VERSION`
 
 - **XXX**`_VERSION_MAJOR`, number, like **1**
 - **XXX**`_VERSION_MINOR`, number, like **2**

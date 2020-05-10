@@ -117,7 +117,7 @@ mark_as_advanced(pkg_dir_name)
 
 # Change the default cmake value without overriding the user-provided one
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    if(NOT HOST_WINDOWS)
+    if(NOT WIN32)
         set(pkg_install_dir "/opt/${pkg_dir_name}")
     else()
 # ----------------------------------------------------------------------
@@ -133,16 +133,16 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
     mark_as_advanced(pkg_install_dir)
     set(CMAKE_INSTALL_PREFIX "${pkg_install_dir}" CACHE PATH "" FORCE)
-endif()
 
-# Dev, Coverage, Debug build set default install prefix
-if(${XMAKE}_DEBUG_BUILD)
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/usr")
-endif()
+    # Dev, Coverage, Debug build set default install prefix
+    if(${XMAKE}_DEBUG_BUILD)
+        set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/usr")
+    endif()
 
-# Make sure always install to $PKG_NAME-$PKG_VERSION for none debug build
-if(NOT CMAKE_INSTALL_PREFIX MATCHES ${pkg_dir_name})
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/${pkg_dir_name}")
+    # Make sure always install to $PKG_NAME-$PKG_VERSION for none debug build
+    if(NOT CMAKE_INSTALL_PREFIX MATCHES ${pkg_dir_name})
+        set(CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/${pkg_dir_name}")
+    endif()
 endif()
 
 #######################################################################
@@ -267,7 +267,7 @@ if(${XMAKE}_ENABLE_GCOV)
 endif()
 
 # Enable ccache for linux & likes by default
-if(NOT HOST_WINDOWS AND NOT ${XMAKE}_DISABLE_CCACHE)
+if(NOT WIN32 AND NOT ${XMAKE}_DISABLE_CCACHE)
     find_program(CCACHE_PROG ccache)
     mark_as_advanced(CCACHE_PROG)
     if(CCACHE_PROG)
@@ -358,7 +358,7 @@ endif()
 # --verbose is for debug the linking process of executables
 #set(CMAKE_EXE_LINKER_FLAGS --verbose)
 
-if(HOST_WINDOWS)
+if(WIN32)
     if(${XMAKE}_WIN_USE_STATIC_GCC_LIBS)
         # do NOT need the binding gcc runtime library
         # {lib|msys-|cyg-}gcc_s-seh-1.dll for MinGW/MSYS/Cygwin
@@ -376,4 +376,4 @@ include(xmake/DoxygenHelper)
 include(xmake/SearchLibrary)
 include(xmake/PackageConfig)
 include(xmake/PrintCmakeInfo)
-#XmakePrintConfigurationInfo()
+XmakePrintConfigurationInfo()

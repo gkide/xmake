@@ -67,10 +67,10 @@ set(CPACK_GENERATOR "TGZ;STGZ") # *.tar.gz, *.sh
 set(CPACK_SOURCE_GENERATOR "TGZ;ZIP") # *.tar.gz, *.zip
 
 # Windows Installers
-if(HOST_WINDOWS)
+if(WIN32)
     set(CPACK_SOURCE_GENERATOR "")
 
-    if(HOST_ARCH_32)
+    if(ARCH_32)
         set(CPACK_GENERATOR "NSIS")
     else()
         set(CPACK_GENERATOR "NSIS64")
@@ -78,7 +78,7 @@ if(HOST_WINDOWS)
 
     # Root install directory, displayed to end user at installer-run time
     set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES")
-    if(HOST_ARCH_32)
+    if(ARCH_32)
         # "NSIS Package Display Name", text used in the installer GUI
         set(CPACK_NSIS_PACKAGE_NAME "${PKG_NAME} ${PKG_VERSION} WIN32")
     else()

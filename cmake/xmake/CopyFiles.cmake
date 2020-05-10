@@ -71,7 +71,7 @@ function(XmakeCopyInstallFiles)
 endfunction()
 
 function(XmakeCopyWinAppDlls execTarget)
-    if(NOT HOST_WINDOWS)
+    if(NOT WIN32)
         return() # NOT windows, just skip
     endif()
 

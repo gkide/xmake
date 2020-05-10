@@ -3,7 +3,7 @@ include(CMakeParseArguments)
 # About AppImage
 # https://appimage.org
 # https://docs.appimage.org
-if(HOST_WINDOWS OR HOST_MACOS)
+if(WIN32 OR APPLE)
     message(WARNING "AppImage only support for linux, SKIP!")
     return()
 endif()
@@ -17,7 +17,7 @@ function(AppImageDownload_appimagetool save_as)
         "https://github.com/AppImage/AppImageKit/releases/download/11"
     )
 
-    if(HOST_ARCH_32)
+    if(ARCH_32)
         XmakeDownloadFile(MARK_EXECUTABLE ${download_SKIP_SHA256}
             OUTPUT  ${save_as}
             SHA256  "d691fac50728fe5d46ca584c7843088a306751ff6d3dcf790bf42c0784f7a213"
@@ -37,7 +37,7 @@ function(AppImageDownload_appimageupdate cli_save_as gui_save_as)
         "https://github.com/AppImage/AppImageUpdate/releases/download/continuous"
     )
 
-    if(HOST_ARCH_32)
+    if(ARCH_32)
         if(gui_save_as)
             XmakeDownloadFile(MARK_EXECUTABLE ${download_SKIP_SHA256}
                 OUTPUT  ${gui_save_as}
@@ -77,7 +77,7 @@ function(AppImageDownload_linuxdeploy save_as)
         "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous"
     )
 
-    if(HOST_ARCH_32)
+    if(ARCH_32)
         XmakeDownloadFile(MARK_EXECUTABLE ${download_SKIP_SHA256}
             OUTPUT  ${save_as}
             SHA256  "ea99328a4741af2abe522790c374ffbc7d8b1b37fb263747beff9a8529fb5b7a"
@@ -97,7 +97,7 @@ function(AppImageDownload_linuxdeployqt save_as)
         "https://github.com/probonopd/linuxdeployqt/releases/download/6"
     )
 
-    if(HOST_ARCH_64)
+    if(ARCH_64)
         XmakeDownloadFile(MARK_EXECUTABLE ${download_SKIP_SHA256}
             OUTPUT  ${save_as}
             SHA256  "562d2e4dca44767bbf2410523d50b2834aa3e8c91199716e0f7d5690de47f0d1"

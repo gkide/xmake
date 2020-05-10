@@ -17,7 +17,7 @@ macro(SetWinDllName _var _name)
     set(${_var} ${CMAKE_SHARED_LIBRARY_PREFIX}${_name}${CMAKE_SHARED_LIBRARY_SUFFIX})
 endmacro()
 
-if(HOST_WINDOWS_MSYS)
+if(MSYS)
     SetWinDllName(msys20_dll "2.0") # msys-2.0.dll
     XmakeCopyInstallFiles(
         FILES       "${WIN_DLLS_DIR}/${msys20_dll}"
@@ -25,7 +25,7 @@ if(HOST_WINDOWS_MSYS)
         CPY_TARGET  "copy-${msys20_dll}"
         CPY_DEST    "${CMAKE_BINARY_DIR}/${buildType}/bin"
     )
-elseif(HOST_WINDOWS_CYGWIN)
+elseif(CYGWIN)
     SetWinDllName(cygwin_dll "win1") # cygwin1.dll
     XmakeCopyInstallFiles(
         FILES       "${WIN_DLLS_DIR}/${cygwin_dll}"

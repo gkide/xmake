@@ -58,7 +58,7 @@ extern "C" {
 #endif
 
 // The host system path separator
-#ifdef HOST_WINDOWS
+#ifdef WIN32
     #define PATH_SEP_S  "\\"
     #define PATH_SEP_C  '\\'
 #else

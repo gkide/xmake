@@ -28,7 +28,7 @@ include(xmake.init) # Should init in the top CMakeLists.txt
 configure_file("${CMAKE_SOURCE_DIR}/source/config.h.in"
     "${XDEMO_GENERATED_DIR}/config.h")
 
-if(HOST_WINDOWS)
+if(WIN32)
     configure_file("${CMAKE_SOURCE_DIR}/source/win.rc.in"
         "${XDEMO_GENERATED_DIR}/win.rc")
     set(HOSTINFO_WIN_RC ${CMAKE_BINARY_DIR}/generated.win.rc)

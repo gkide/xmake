@@ -197,7 +197,7 @@ function(XmakeInstallHelper)
                 # Create directory with the correct permissions.
                 CreateDestDirWithPerms(DESTINATION ${INSDES_bin})
 
-                if(HOST_MACOS AND macosx_bundle)
+                if(APPLE AND macosx_bundle)
                     # install(TARGETS ${target}
                     #    BUNDLE DESTINATION ...
                     #    COMPONENT Runtime)
@@ -288,7 +288,7 @@ function(XmakeInstallHelper)
             endif()
 
             get_target_property(macosx_framework ${target} FRAMEWORK)
-            if(HOST_MACOS AND macosx_framework)
+            if(APPLE AND macosx_framework)
                 # install(TARGETS ${target}
                 #    FRAMEWORK DESTINATION
                 #    COMPONENT Runtime)
